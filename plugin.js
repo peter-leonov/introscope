@@ -1,6 +1,18 @@
 module.exports = function(babel) {
-    var t = babel.types;
+    var t = babel.types
     return {
-        visitor: {}
-    };
-};
+        visitor: {
+            ArrayExpression: function(path) {
+                path.replaceWith(
+                    t.callExpression(
+                        t.memberExpression(
+                            t.identifier("mori"),
+                            t.identifier("vector")
+                        ),
+                        path.node.elements
+                    )
+                )
+            }
+        }
+    }
+}
