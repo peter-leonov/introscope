@@ -19,7 +19,11 @@ test("foo", () => {
             // ImportNamespaceSpecifier
             import * as f from "bla"
 
-            const x = 9
+            function fn () {}
+            var x = 1
+            let y = 2
+            const z = 3
+
 
             // ExportDefaultDeclaration
             export default 7

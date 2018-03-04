@@ -1,4 +1,6 @@
 const push = (a, b) => a.push.apply(a, b)
+const flatten = (acc = [], ary) => acc.concat(ary)
+const get = prop => obj => obj[prop]
 
 export default function({ types: t }) {
     const getLocalSpecifierIdentifiers = path => {
@@ -42,6 +44,18 @@ export default function({ types: t }) {
             t.objectProperty(identifier, identifier, undefined, true)
         )
 
+    const byType = type => node => node.type == type
+    const getDeclarators = node => node.declarations
+    const findDeclarationIdentifiers = ary =>
+        ary
+            .filter(byType("VariableDeclaration"))
+            .map(getDeclarators)
+            .reduce(flatten)
+            .map(get("id"))
+
+    const findFunctionIdentifiers = ary =>
+        ary.filter(byType("FunctionDeclaration")).map(get("id"))
+
     return {
         visitor: {
             Program: function(path) {
@@ -55,7 +69,23 @@ export default function({ types: t }) {
                                 identifiersToObjectProperties(importIds)
                             )
                         ],
-                        t.blockStatement(path.node.body)
+                        t.blockStatement(
+                            path.node.body.concat([
+                                t.returnStatement(
+                                    t.objectExpression(
+                                        identifiersToObjectProperties(
+                                            findDeclarationIdentifiers(
+                                                path.node.body
+                                            ).concat(
+                                                findFunctionIdentifiers(
+                                                    path.node.body
+                                                )
+                                            )
+                                        )
+                                    )
+                                )
+                            ])
+                        )
                     )
                 ]
             }
