@@ -1,18 +1,33 @@
+const getLocalSpecifierIdentifiers = (t, path) => {
+    const identifiers = []
+    const getLocalIdentifiers = path => {
+        const local = path.node.local
+        if (t.isIdentifier(local)) identifiers.push(local)
+    }
+    path.traverse({
+        ImportDefaultSpecifier: getLocalIdentifiers,
+        ImportSpecifier: getLocalIdentifiers,
+        ImportNamespaceSpecifier: getLocalIdentifiers
+    })
+    return identifiers
+}
+
 module.exports = function(babel) {
     var t = babel.types
     return {
         visitor: {
-            ArrayExpression: function(path) {
+            ImportDeclaration(path) {
                 path.replaceWith(
                     t.callExpression(
-                        t.memberExpression(
-                            t.identifier("mori"),
-                            t.identifier("vector")
-                        ),
-                        path.node.elements
+                        t.identifier("importing"),
+                        getLocalSpecifierIdentifiers(t, path)
                     )
                 )
             }
+            // Program: function(path) {
+            //     console.log("path.node")
+            //     console.log(path.node)
+            // }
         }
     }
 }
