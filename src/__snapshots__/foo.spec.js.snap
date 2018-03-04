@@ -2,7 +2,11 @@
 
 exports[`plugin ClassDeclaration 1`] = `
 "function wrapper({}) {
-  class cl {}
+  class cl {
+    fn() {
+      const i = 0;
+    }
+  }
   return {
     cl
   };
@@ -29,7 +33,9 @@ exports[`plugin ExportNamedDeclaration 1`] = `
 
 exports[`plugin FunctionDeclaration 1`] = `
 "function wrapper({}) {
-  function fn() {}
+  function fn() {
+    function i() {}
+  }
   return {
     fn
   };
@@ -85,27 +91,43 @@ exports[`plugin ImportSpecifier3 1`] = `
 
 exports[`plugin VariableDeclaration1 1`] = `
 "function wrapper({}) {
-  var x = 1;
+  var x,
+      x1 = 1,
+      x2 = 2,
+      x3 = 4;
   return {
-    x
+    x,
+    x1,
+    x2,
+    x3
   };
 }"
 `;
 
 exports[`plugin VariableDeclaration2 1`] = `
 "function wrapper({}) {
-  let y = 2;
+  let y,
+      y1 = 1,
+      y2 = 2,
+      y3 = 3;
   return {
-    y
+    y,
+    y1,
+    y2,
+    y3
   };
 }"
 `;
 
 exports[`plugin VariableDeclaration3 1`] = `
 "function wrapper({}) {
-  const z = 3;
+  const z1 = 1,
+        z2 = 2,
+        z3 = 3;
   return {
-    z
+    z1,
+    z2,
+    z3
   };
 }"
 `;
@@ -119,15 +141,37 @@ exports[`plugin all 1`] = `
   e,
   f
 }) {
-  class cl {}
-  function fn() {}
-  var x = 1;
-  let y = 2;
-  const z = 3;
+  class cl {
+    fn() {
+      const i = 0;
+    }
+  }
+  function fn() {
+    function i() {}
+  }
+  var x,
+      x1 = 1,
+      x2 = 2,
+      x3 = 4;
+  let y,
+      y1 = 1,
+      y2 = 2,
+      y3 = 3;
+  const z1 = 1,
+        z2 = 2,
+        z3 = 3;
   return {
     x,
+    x1,
+    x2,
+    x3,
     y,
-    z,
+    y1,
+    y2,
+    y3,
+    z1,
+    z2,
+    z3,
     cl,
     fn
   };
