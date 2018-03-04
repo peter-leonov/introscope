@@ -36,16 +36,25 @@ const removeExports = (t, path) => {
     return identifiers
 }
 
+const identifiersToObjectProperties = (t, identifiers) =>
+    identifiers.map(identifier =>
+        t.objectProperty(identifier, identifier, undefined, true)
+    )
+
 export default function({ types: t }) {
     return {
         visitor: {
             Program: function(path) {
-                const imports = getAndRemoveImportedIdentifiers(t, path)
+                const importIds = getAndRemoveImportedIdentifiers(t, path)
                 removeExports(t, path)
                 path.node.body = [
                     t.functionDeclaration(
                         t.identifier("wrapper"),
-                        imports,
+                        [
+                            t.objectPattern(
+                                identifiersToObjectProperties(t, importIds)
+                            )
+                        ],
                         t.blockStatement(path.node.body)
                     )
                 ]
