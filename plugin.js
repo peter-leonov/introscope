@@ -1,6 +1,7 @@
 const push = (a, b) => a.push.apply(a, b)
 const flatten = (acc = [], ary) => acc.concat(ary)
 const get = prop => obj => obj[prop]
+const or = (a, b) => v => a(v) || b(v)
 
 export default function({ types: t }) {
     const getLocalSpecifierIdentifiers = path => {
@@ -53,8 +54,12 @@ export default function({ types: t }) {
             .reduce(flatten)
             .map(get("id"))
 
-    const findFunctionIdentifiers = ary =>
-        ary.filter(byType("FunctionDeclaration")).map(get("id"))
+    const findFunctionAndClassIdentifiers = ary =>
+        ary
+            .filter(
+                or(byType("FunctionDeclaration"), byType("ClassDeclaration"))
+            )
+            .map(get("id"))
 
     return {
         visitor: {
@@ -77,7 +82,7 @@ export default function({ types: t }) {
                                             findDeclarationIdentifiers(
                                                 path.node.body
                                             ).concat(
-                                                findFunctionIdentifiers(
+                                                findFunctionAndClassIdentifiers(
                                                     path.node.body
                                                 )
                                             )

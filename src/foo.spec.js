@@ -19,6 +19,7 @@ test("foo", () => {
             // ImportNamespaceSpecifier
             import * as f from "bla"
 
+            class cl {}
             function fn () {}
             var x = 1
             let y = 2
