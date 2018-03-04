@@ -18,6 +18,15 @@ test("foo", () => {
             import { x as e } from "bla"
             // ImportNamespaceSpecifier
             import * as f from "bla"
+
+            const x = 9
+
+            // ExportDefaultDeclaration
+            export default 7
+            // ExportNamedDeclaration
+            export const v = 0
+            // ExportAllDeclaration
+            export * from 'all'
         `,
         {
             plugins: [plugin]

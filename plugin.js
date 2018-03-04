@@ -25,17 +25,28 @@ const getAndRemoveImportedIdentifiers = (t, path) => {
     return identifiers
 }
 
+const removeExports = (t, path) => {
+    const identifiers = []
+    const remove = path => path.remove()
+    path.traverse({
+        ExportDefaultDeclaration: remove,
+        ExportNamedDeclaration: remove,
+        ExportAllDeclaration: remove
+    })
+    return identifiers
+}
+
 export default function({ types: t }) {
     return {
         visitor: {
             Program: function(path) {
                 const imports = getAndRemoveImportedIdentifiers(t, path)
-                // console.log(imports)
+                removeExports(t, path)
                 path.node.body = [
                     t.functionDeclaration(
                         t.identifier("wrapper"),
                         imports,
-                        t.blockStatement([])
+                        t.blockStatement(path.node.body)
                     )
                 ]
             }
