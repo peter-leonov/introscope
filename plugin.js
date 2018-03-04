@@ -1,3 +1,5 @@
+const push = (a, b) => a.push.apply(a, b)
+
 const getLocalSpecifierIdentifiers = (t, path) => {
     const identifiers = []
     const getLocalIdentifiers = path => {
@@ -12,22 +14,31 @@ const getLocalSpecifierIdentifiers = (t, path) => {
     return identifiers
 }
 
-module.exports = function(babel) {
-    var t = babel.types
+const getAndRemoveImportedIdentifiers = (t, path) => {
+    const identifiers = []
+    path.traverse({
+        ImportDeclaration(path) {
+            push(identifiers, getLocalSpecifierIdentifiers(t, path))
+            path.remove()
+        }
+    })
+    return identifiers
+}
+
+export default function({ types: t }) {
     return {
         visitor: {
-            ImportDeclaration(path) {
-                path.replaceWith(
-                    t.callExpression(
-                        t.identifier("importing"),
-                        getLocalSpecifierIdentifiers(t, path)
+            Program: function(path) {
+                const imports = getAndRemoveImportedIdentifiers(t, path)
+                // console.log(imports)
+                path.node.body = [
+                    t.functionDeclaration(
+                        t.identifier("wrapper"),
+                        imports,
+                        t.blockStatement([])
                     )
-                )
+                ]
             }
-            // Program: function(path) {
-            //     console.log("path.node")
-            //     console.log(path.node)
-            // }
         }
     }
 }

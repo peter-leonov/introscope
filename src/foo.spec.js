@@ -1,7 +1,7 @@
 // import { foo } from "./foo"
 
 import { transform } from "babel-core"
-var plugin = require("../plugin")
+import plugin from "../plugin"
 
 test("foo", () => {
     expect(true).toBe(true)
