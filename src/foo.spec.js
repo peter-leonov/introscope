@@ -1,43 +1,52 @@
-// import { foo } from "./foo"
-
 import { transform } from "babel-core"
 import plugin from "../plugin"
 
-test("foo", () => {
-    expect(true).toBe(true)
+const toPairs = obj => {
+    const pairs = []
+    for (const key in obj) {
+        pairs.push([key, obj[key]])
+    }
+    return pairs
+}
 
-    var out = transform(
-        `
-            // no specifiers
-            import "bla"
-            // ImportDefaultSpecifier
-            import a from "bla"
-            // ImportSpecifier
-            import { b } from "bla"
-            import { c, d } from "bla"
-            import { x as e } from "bla"
-            // ImportNamespaceSpecifier
-            import * as f from "bla"
+const snd = ([_, b]) => b
 
-            class cl {}
-            function fn () {}
-            var x = 1
-            let y = 2
-            const z = 3
+const tests = {
+    ImportDeclaration: 'import "foo"',
+    ImportDefaultSpecifier: 'import a from "foo"',
+    ImportSpecifier1: 'import { b } from "foo"',
+    ImportSpecifier2: 'import { c, d } from "foo"',
+    ImportSpecifier3: 'import { x as e } from "foo"',
+    ImportNamespaceSpecifier: 'import * as f from "foo"',
+    ClassDeclaration: "class cl {}",
+    FunctionDeclaration: "function fn () {}",
+    VariableDeclaration1: "var x = 1",
+    VariableDeclaration2: "let y = 2",
+    VariableDeclaration3: "const z = 3",
+    ExportDefaultDeclaration: "export default true",
+    ExportNamedDeclaration: "export const v = true",
+    ExportAllDeclaration: 'export * from "all"'
+}
 
+describe("plugin", () => {
+    toPairs(tests).forEach(([name, code]) => {
+        it(name, () => {
+            expect(
+                transform(code, {
+                    plugins: [plugin]
+                }).code
+            ).toMatchSnapshot()
+        })
+    })
 
-            // ExportDefaultDeclaration
-            export default 7
-            // ExportNamedDeclaration
-            export const v = 0
-            // ExportAllDeclaration
-            export * from 'all'
-        `,
-        {
-            plugins: [plugin]
-        }
-    )
-
-    // print the generated code to screen
-    console.log(out.code)
+    it("all", () => {
+        const all = toPairs(tests)
+            .map(snd)
+            .join("\n")
+        expect(
+            transform(all, {
+                plugins: [plugin]
+            }).code
+        ).toMatchSnapshot()
+    })
 })

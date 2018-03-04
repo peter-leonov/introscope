@@ -1,5 +1,5 @@
 const push = (a, b) => a.push.apply(a, b)
-const flatten = (acc = [], ary) => acc.concat(ary)
+const flatten = (acc, ary) => acc.concat(ary)
 const get = prop => obj => obj[prop]
 const or = (a, b) => v => a(v) || b(v)
 
@@ -51,7 +51,7 @@ export default function({ types: t }) {
         ary
             .filter(byType("VariableDeclaration"))
             .map(getDeclarators)
-            .reduce(flatten)
+            .reduce(flatten, [])
             .map(get("id"))
 
     const findFunctionAndClassIdentifiers = ary =>

@@ -1,0 +1,135 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`plugin ClassDeclaration 1`] = `
+"function wrapper({}) {
+  class cl {}
+  return {
+    cl
+  };
+}"
+`;
+
+exports[`plugin ExportAllDeclaration 1`] = `
+"function wrapper({}) {
+  return {};
+}"
+`;
+
+exports[`plugin ExportDefaultDeclaration 1`] = `
+"function wrapper({}) {
+  return {};
+}"
+`;
+
+exports[`plugin ExportNamedDeclaration 1`] = `
+"function wrapper({}) {
+  return {};
+}"
+`;
+
+exports[`plugin FunctionDeclaration 1`] = `
+"function wrapper({}) {
+  function fn() {}
+  return {
+    fn
+  };
+}"
+`;
+
+exports[`plugin ImportDeclaration 1`] = `
+"function wrapper({}) {
+  return {};
+}"
+`;
+
+exports[`plugin ImportDefaultSpecifier 1`] = `
+"function wrapper({
+  a
+}) {
+  return {};
+}"
+`;
+
+exports[`plugin ImportNamespaceSpecifier 1`] = `
+"function wrapper({
+  f
+}) {
+  return {};
+}"
+`;
+
+exports[`plugin ImportSpecifier1 1`] = `
+"function wrapper({
+  b
+}) {
+  return {};
+}"
+`;
+
+exports[`plugin ImportSpecifier2 1`] = `
+"function wrapper({
+  c,
+  d
+}) {
+  return {};
+}"
+`;
+
+exports[`plugin ImportSpecifier3 1`] = `
+"function wrapper({
+  e
+}) {
+  return {};
+}"
+`;
+
+exports[`plugin VariableDeclaration1 1`] = `
+"function wrapper({}) {
+  var x = 1;
+  return {
+    x
+  };
+}"
+`;
+
+exports[`plugin VariableDeclaration2 1`] = `
+"function wrapper({}) {
+  let y = 2;
+  return {
+    y
+  };
+}"
+`;
+
+exports[`plugin VariableDeclaration3 1`] = `
+"function wrapper({}) {
+  const z = 3;
+  return {
+    z
+  };
+}"
+`;
+
+exports[`plugin all 1`] = `
+"function wrapper({
+  a,
+  b,
+  c,
+  d,
+  e,
+  f
+}) {
+  class cl {}
+  function fn() {}
+  var x = 1;
+  let y = 2;
+  const z = 3;
+  return {
+    x,
+    y,
+    z,
+    cl,
+    fn
+  };
+}"
+`;
