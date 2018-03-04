@@ -1,1 +1,4 @@
-{ "plugins": ["./plugin.js"] }
+{
+    "presets": ["env"],
+    "plugins": ["./plugin.js"]
+}
