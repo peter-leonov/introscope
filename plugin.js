@@ -29,13 +29,21 @@ export default function({ types: t }) {
         return identifiers
     }
 
-    const removeExports = path => {
+    const unwrapOrRemoveExports = path => {
         const identifiers = []
-        const remove = path => path.remove()
         path.traverse({
-            ExportDefaultDeclaration: remove,
-            ExportNamedDeclaration: remove,
-            ExportAllDeclaration: remove
+            ExportDefaultDeclaration: path =>
+                path.replaceWith(
+                    t.variableDeclaration("const", [
+                        t.variableDeclarator(
+                            t.identifier("defaultExport"),
+                            path.node.declaration
+                        )
+                    ])
+                ),
+            ExportNamedDeclaration: path =>
+                path.replaceWith(path.node.declaration),
+            ExportAllDeclaration: path => path.remove()
         })
         return identifiers
     }
@@ -65,7 +73,7 @@ export default function({ types: t }) {
         visitor: {
             Program: function(path) {
                 const importIds = getAndRemoveImportedIdentifiers(path)
-                removeExports(path)
+                unwrapOrRemoveExports(path)
                 path.node.body = [
                     t.functionDeclaration(
                         t.identifier("wrapper"),
