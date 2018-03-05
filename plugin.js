@@ -42,7 +42,9 @@ export default function({ types: t }) {
                     ])
                 ),
             ExportNamedDeclaration: path =>
-                path.replaceWith(path.node.declaration),
+                path.node.declaration
+                    ? path.replaceWith(path.node.declaration)
+                    : path.remove(),
             ExportAllDeclaration: path => path.remove()
         })
         return identifiers

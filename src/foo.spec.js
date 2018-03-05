@@ -24,7 +24,8 @@ const tests = {
     VariableDeclaration2: "let y, y1 = 1, y2 = 2, y3 = 3",
     VariableDeclaration3: "const z1 = 1, z2 = 2, z3 = 3",
     ExportDefaultDeclaration: "export default true",
-    ExportNamedDeclaration: "export const v = true",
+    ExportNamedDeclaration1: "export const v = true",
+    ExportNamedDeclaration2: "export { a, b, c }",
     ExportAllDeclaration: 'export * from "all"'
 }
 

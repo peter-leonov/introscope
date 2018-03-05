@@ -28,12 +28,18 @@ exports[`plugin ExportDefaultDeclaration 1`] = `
 }"
 `;
 
-exports[`plugin ExportNamedDeclaration 1`] = `
+exports[`plugin ExportNamedDeclaration1 1`] = `
 "function wrapper({}) {
   const v = true;
   return {
     v
   };
+}"
+`;
+
+exports[`plugin ExportNamedDeclaration2 1`] = `
+"function wrapper({}) {
+  return {};
 }"
 `;
 
