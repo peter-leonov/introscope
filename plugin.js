@@ -71,37 +71,34 @@ export default function({ types: t }) {
             )
             .map(get("id"))
 
+    const collectLocalScope = body =>
+        findDeclarationIdentifiers(body).concat(
+            findFunctionAndClassIdentifiers(body)
+        )
+
+    const wrapInFunction = (idsIn, idsOut, body) =>
+        t.functionDeclaration(
+            t.identifier("wrapper"),
+            [t.objectPattern(identifiersToObjectProperties(idsIn))],
+            t.blockStatement(
+                body.concat([
+                    t.returnStatement(
+                        t.objectExpression(
+                            identifiersToObjectProperties(idsOut)
+                        )
+                    )
+                ])
+            )
+        )
+
     return {
         visitor: {
             Program: function(path) {
                 const importIds = getAndRemoveImportedIdentifiers(path)
                 unwrapOrRemoveExports(path)
+                const localIds = collectLocalScope(path.node.body)
                 path.node.body = [
-                    t.functionDeclaration(
-                        t.identifier("wrapper"),
-                        [
-                            t.objectPattern(
-                                identifiersToObjectProperties(importIds)
-                            )
-                        ],
-                        t.blockStatement(
-                            path.node.body.concat([
-                                t.returnStatement(
-                                    t.objectExpression(
-                                        identifiersToObjectProperties(
-                                            findDeclarationIdentifiers(
-                                                path.node.body
-                                            ).concat(
-                                                findFunctionAndClassIdentifiers(
-                                                    path.node.body
-                                                )
-                                            )
-                                        )
-                                    )
-                                )
-                            ])
-                        )
-                    )
+                    wrapInFunction(importIds, localIds, path.node.body)
                 ]
             }
         }
