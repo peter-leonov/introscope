@@ -12,20 +12,22 @@ const toPairs = obj => {
 const snd = ([_, b]) => b
 
 const tests = {
-    ImportDeclaration: 'import "foo"',
-    ImportDefaultSpecifier: 'import a from "foo"',
-    ImportSpecifier1: 'import { b } from "foo"',
-    ImportSpecifier2: 'import { c, d } from "foo"',
-    ImportSpecifier3: 'import { x as e } from "foo"',
-    ImportNamespaceSpecifier: 'import * as f from "foo"',
-    ClassDeclaration: "class cl { fn() { const i = 0 } }",
-    FunctionDeclaration: "function fn () { function i() {} }",
-    VariableDeclaration1: "var x, x1 = 1, x2 = 2, x3 = 4",
-    VariableDeclaration2: "let y, y1 = 1, y2 = 2, y3 = 3",
-    VariableDeclaration3: "const z1 = 1, z2 = 2, z3 = 3",
+    ImportDeclaration: 'import "some-module"',
+    ImportDefaultSpecifier: 'import defaultImport from "some-module"',
+    ImportSpecifier1: 'import { singleNamedImport } from "some-module"',
+    ImportSpecifier2:
+        'import { namedImport1, namedImport2 } from "some-module"',
+    ImportSpecifier3:
+        'import { originalImportName as localImportName } from "some-module"',
+    ImportNamespaceSpecifier: 'import * as namespaceImport from "some-module"',
+    ClassDeclaration: "class className { fn() { const i = 0 } }",
+    FunctionDeclaration: "function functionName () { function i() {} }",
+    VariableDeclaration1: "var undefinedVar, var1 = 1, var2 = 2, var3 = 3",
+    VariableDeclaration2: "let undefinedLet, let1 = 1, let2 = 2, let3 = 3",
+    VariableDeclaration3: "const const1 = 1, const2 = 2, const3 = 3",
     ExportDefaultDeclaration: "export default true",
-    ExportNamedDeclaration1: "export const v = true",
-    ExportNamedDeclaration2: "export { a, b, c }",
+    ExportNamedDeclaration1: "export const namedSingleExport = true",
+    ExportNamedDeclaration2: "export { var1, let2, const3 }",
     ExportAllDeclaration: 'export * from "all"'
 }
 

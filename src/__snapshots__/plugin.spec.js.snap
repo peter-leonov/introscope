@@ -2,13 +2,13 @@
 
 exports[`plugin ClassDeclaration 1`] = `
 "function wrapper({}) {
-  class cl {
+  class className {
     fn() {
       const i = 0;
     }
   }
   return {
-    cl
+    className
   };
 }"
 `;
@@ -30,9 +30,9 @@ exports[`plugin ExportDefaultDeclaration 1`] = `
 
 exports[`plugin ExportNamedDeclaration1 1`] = `
 "function wrapper({}) {
-  const v = true;
+  const namedSingleExport = true;
   return {
-    v
+    namedSingleExport
   };
 }"
 `;
@@ -45,11 +45,11 @@ exports[`plugin ExportNamedDeclaration2 1`] = `
 
 exports[`plugin FunctionDeclaration 1`] = `
 "function wrapper({}) {
-  function fn() {
+  function functionName() {
     function i() {}
   }
   return {
-    fn
+    functionName
   };
 }"
 `;
@@ -62,7 +62,7 @@ exports[`plugin ImportDeclaration 1`] = `
 
 exports[`plugin ImportDefaultSpecifier 1`] = `
 "function wrapper({
-  a
+  defaultImport
 }) {
   return {};
 }"
@@ -70,7 +70,7 @@ exports[`plugin ImportDefaultSpecifier 1`] = `
 
 exports[`plugin ImportNamespaceSpecifier 1`] = `
 "function wrapper({
-  f
+  namespaceImport
 }) {
   return {};
 }"
@@ -78,7 +78,7 @@ exports[`plugin ImportNamespaceSpecifier 1`] = `
 
 exports[`plugin ImportSpecifier1 1`] = `
 "function wrapper({
-  b
+  singleNamedImport
 }) {
   return {};
 }"
@@ -86,8 +86,8 @@ exports[`plugin ImportSpecifier1 1`] = `
 
 exports[`plugin ImportSpecifier2 1`] = `
 "function wrapper({
-  c,
-  d
+  namedImport1,
+  namedImport2
 }) {
   return {};
 }"
@@ -95,7 +95,7 @@ exports[`plugin ImportSpecifier2 1`] = `
 
 exports[`plugin ImportSpecifier3 1`] = `
 "function wrapper({
-  e
+  localImportName
 }) {
   return {};
 }"
@@ -103,93 +103,93 @@ exports[`plugin ImportSpecifier3 1`] = `
 
 exports[`plugin VariableDeclaration1 1`] = `
 "function wrapper({}) {
-  var x,
-      x1 = 1,
-      x2 = 2,
-      x3 = 4;
+  var undefinedVar,
+      var1 = 1,
+      var2 = 2,
+      var3 = 3;
   return {
-    x,
-    x1,
-    x2,
-    x3
+    undefinedVar,
+    var1,
+    var2,
+    var3
   };
 }"
 `;
 
 exports[`plugin VariableDeclaration2 1`] = `
 "function wrapper({}) {
-  let y,
-      y1 = 1,
-      y2 = 2,
-      y3 = 3;
+  let undefinedLet,
+      let1 = 1,
+      let2 = 2,
+      let3 = 3;
   return {
-    y,
-    y1,
-    y2,
-    y3
+    undefinedLet,
+    let1,
+    let2,
+    let3
   };
 }"
 `;
 
 exports[`plugin VariableDeclaration3 1`] = `
 "function wrapper({}) {
-  const z1 = 1,
-        z2 = 2,
-        z3 = 3;
+  const const1 = 1,
+        const2 = 2,
+        const3 = 3;
   return {
-    z1,
-    z2,
-    z3
+    const1,
+    const2,
+    const3
   };
 }"
 `;
 
 exports[`plugin all 1`] = `
 "function wrapper({
-  a,
-  b,
-  c,
-  d,
-  e,
-  f
+  defaultImport,
+  singleNamedImport,
+  namedImport1,
+  namedImport2,
+  localImportName,
+  namespaceImport
 }) {
-  class cl {
+  class className {
     fn() {
       const i = 0;
     }
   }
-  function fn() {
+  function functionName() {
     function i() {}
   }
-  var x,
-      x1 = 1,
-      x2 = 2,
-      x3 = 4;
-  let y,
-      y1 = 1,
-      y2 = 2,
-      y3 = 3;
-  const z1 = 1,
-        z2 = 2,
-        z3 = 3;
+  var undefinedVar,
+      var1 = 1,
+      var2 = 2,
+      var3 = 3;
+  let undefinedLet,
+      let1 = 1,
+      let2 = 2,
+      let3 = 3;
+  const const1 = 1,
+        const2 = 2,
+        const3 = 3;
   const defaultExport = true;
-  const v = true;
+  const namedSingleExport = true;
   return {
-    x,
-    x1,
-    x2,
-    x3,
-    y,
-    y1,
-    y2,
-    y3,
-    z1,
-    z2,
-    z3,
+    undefinedVar,
+    var1,
+    var2,
+    var3,
+    undefinedLet,
+    let1,
+    let2,
+    let3,
+    const1,
+    const2,
+    const3,
     defaultExport,
-    v,
-    cl,
-    fn
+    namedSingleExport,
+    className,
+    functionName
   };
 }"
 `;
