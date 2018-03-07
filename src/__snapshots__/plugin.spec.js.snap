@@ -38,7 +38,11 @@ exports[`plugin ExportNamedDeclaration1 1`] = `
 `;
 
 exports[`plugin ExportNamedDeclaration2 1`] = `
-"function wrapper({}) {
+"function wrapper({
+  var1,
+  let2,
+  const3
+}) {
   return {};
 }"
 `;
@@ -51,6 +55,35 @@ exports[`plugin FunctionDeclaration 1`] = `
   return {
     functionName
   };
+}"
+`;
+
+exports[`plugin GlobalAccess1 1`] = `
+"function wrapper({
+  global1
+}) {
+  global1 = 1;
+  return {};
+}"
+`;
+
+exports[`plugin GlobalAccess2 1`] = `
+"function wrapper({
+  global2
+}) {
+  global2();
+  return {};
+}"
+`;
+
+exports[`plugin GlobalAccess3 1`] = `
+"function wrapper({
+  global3
+}) {
+  !function () {
+    return global3;
+  }();
+  return {};
 }"
 `;
 
@@ -151,7 +184,10 @@ exports[`plugin all 1`] = `
   namedImport1,
   namedImport2,
   localImportName,
-  namespaceImport
+  namespaceImport,
+  global1,
+  global2,
+  global3
 }) {
   class className {
     fn() {
@@ -161,6 +197,11 @@ exports[`plugin all 1`] = `
   function functionName() {
     function i() {}
   }
+  global1 = 1;
+  global2();
+  !function () {
+    return global3;
+  }();
   var undefinedVar,
       var1 = 1,
       var2 = 2,

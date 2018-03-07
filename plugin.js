@@ -3,6 +3,14 @@ const flatten = (acc, ary) => acc.concat(ary)
 const get = prop => obj => obj[prop]
 const or = (a, b) => v => a(v) || b(v)
 
+const toPairs = obj => {
+    const pairs = []
+    for (const key in obj) {
+        pairs.push([key, obj[key]])
+    }
+    return pairs
+}
+
 export default function({ types: t }) {
     const getLocalSpecifierIdentifiers = path => {
         const identifiers = []
@@ -91,12 +99,25 @@ export default function({ types: t }) {
             )
         )
 
+    const getGlobalIdentifiers = scope =>
+        toPairs(scope.globals).map(([_, identifier]) => identifier)
+
+    const getScopeIdentifiers = scope =>
+        []
+            .concat(
+                toPairs(scope.bindings).map(
+                    ([_, binding]) => binding.identifier
+                )
+            )
+            .concat(getGlobalIdentifiers(scope))
+
     return {
         visitor: {
             Program: function(path, state) {
-                console.log(state.file.parserOpts)
-                console.log(state.file.opts)
-                const importIds = getAndRemoveImportedIdentifiers(path)
+                // console.log(getScopeIdentifiers(path.scope))
+                const importIds = []
+                    .concat(getAndRemoveImportedIdentifiers(path))
+                    .concat(getGlobalIdentifiers(path.scope))
                 unwrapOrRemoveExports(path)
                 const localIds = collectLocalScope(path.node.body)
                 path.node.body = [
