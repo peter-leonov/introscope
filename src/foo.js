@@ -68,13 +68,18 @@ var allTheScope = { a, b, c }
 
 import introscope from 'introscope'
 //const introscope = <V>(v: V) => (scope: {}): V => v
-
 export var sumDataIntroscope = introscope(getData)
+// =>
 export var sumDataIntroscope = userScope =>
 (({ a, b, c }) => getData.reduce(sum))({
     ...allTheScope,
     ...userScope
 })
+// or
+export { introscope } from 'introscope'
+// introscope/index.js
+// @flow
+//export const introscope = (cb/*: any*/)/*:any*/ => true
 
 // and then: closure(testPlan({sum: undefined}))(fsdfsdfadfasf)
 
