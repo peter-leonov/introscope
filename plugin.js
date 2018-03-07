@@ -84,9 +84,9 @@ export default function({ types: t }) {
             findFunctionAndClassIdentifiers(body)
         )
 
-    const wrapInFunction = (wrapperId, idsIn, idsOut, body) =>
-        t.functionDeclaration(
-            wrapperId,
+    const wrapInFunction = (idsIn, idsOut, body) =>
+        t.functionExpression(
+            null,
             [t.objectPattern(identifiersToObjectProperties(idsIn))],
             t.blockStatement(
                 body.concat([
@@ -133,15 +133,10 @@ export default function({ types: t }) {
                 unwrapOrRemoveExports(path)
                 const localIds = collectLocalScope(path.node.body)
 
-                const wrapperId = path.scope.generateUidIdentifier("wrapper")
                 path.node.body = [
-                    wrapInFunction(
-                        wrapperId,
-                        importIds,
-                        localIds,
-                        path.node.body
-                    ),
-                    moduleExports(wrapperId)
+                    moduleExports(
+                        wrapInFunction(importIds, localIds, path.node.body)
+                    )
                 ]
             }
         }
