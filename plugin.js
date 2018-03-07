@@ -128,6 +128,15 @@ export default function({ types: t }) {
             )
         )
 
+    const toScope = path => {
+        const scoped = t.memberExpression(t.identifier("__scope"), path.node)
+        // console.log(path.parent)
+        if (path.parent && path.parent.type == "CallExpression") {
+            return t.sequenceExpression([t.numericLiteral(0), scoped])
+        }
+        return scoped
+    }
+
     return {
         visitor: {
             Program: function(path, state) {
@@ -138,6 +147,12 @@ export default function({ types: t }) {
                     .concat(getGlobalIdentifiers(path.scope))
                 unwrapOrRemoveExports(path)
                 const localIds = collectLocalScope(path.node.body)
+
+                toPairs(path.scope.bindings).map(([_, binding]) =>
+                    binding.referencePaths.forEach(path =>
+                        path.replaceWith(toScope(path))
+                    )
+                )
 
                 path.node.body = [
                     moduleExports(
