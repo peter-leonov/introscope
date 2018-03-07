@@ -93,7 +93,9 @@ export default function({ types: t }) {
 
     return {
         visitor: {
-            Program: function(path) {
+            Program: function(path, state) {
+                console.log(state.file.parserOpts)
+                console.log(state.file.opts)
                 const importIds = getAndRemoveImportedIdentifiers(path)
                 unwrapOrRemoveExports(path)
                 const localIds = collectLocalScope(path.node.body)
