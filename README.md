@@ -77,3 +77,13 @@ In case of a dynamic import value ([bindings](http://2ality.com/2015/07/es6-modu
     console.log(ticksCounter) // 1
 
 this import needs to be wrapped in a clojure + `Proxy` to preserve the semantics of ES6 modules.
+
+## Notes
+
+Use for temp vars: path.scope.generateUidIdentifier("uid")
+
+Based on
+
+* https://astexplorer.net
+* https://github.com/jamiebuilds/babel-handbook/blob/master/translations/en/plugin-handbook.md#toc-paths
+* https://babeljs.io/docs/core-packages/babel-types/
