@@ -111,6 +111,11 @@ export default function({ types: t }) {
             )
             .concat(getGlobalIdentifiers(scope))
 
+    // const transformDeclarationsToVar = ary =>
+    //     ary
+    //         .filter(byType("VariableDeclaration"))
+    //         .forEach(node => (node.kind = "var"))
+
     const moduleExports = idendifier =>
         t.expressionStatement(
             t.assignmentExpression(
@@ -127,6 +132,7 @@ export default function({ types: t }) {
         visitor: {
             Program: function(path, state) {
                 // console.log(getScopeIdentifiers(path.scope))
+                // transformDeclarationsToVar(path.node.body)
                 const importIds = []
                     .concat(getAndRemoveImportedIdentifiers(path))
                     .concat(getGlobalIdentifiers(path.scope))
