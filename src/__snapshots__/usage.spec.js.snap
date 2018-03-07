@@ -1,14 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`plugin simple 1`] = `
-"function _wrapper({}) {
-            var x = 1;
-            var fn = () => x;
+"module.exports = function ({}) {
+            let x = 1;
+            let fn = () => x++;
             return {
                         x,
                         fn
             };
-}
-
-module.exports = _wrapper;"
+};"
 `;
