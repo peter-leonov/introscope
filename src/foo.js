@@ -1,4 +1,3 @@
-// @introscope
 
 // the value changes during namespace evaluation
 let x = 0
@@ -9,6 +8,11 @@ let testee = () => val
 val = 7
 
 const recur = () => recur
+
+const i = 0
+const impure = () => i++
+const v1 = impure()
+const v2 = impure()
 
 const getData = _scope.getData || (() => [x, 2, 3])
 const sum = (acc, x) => acc + x
@@ -28,9 +32,12 @@ import introscope from 'introscope'
 
 export var sumDataIntroscope = introscope(getData)
 export var sumDataIntroscope = userScope =>
-    (({ a, b, c }) => getData.reduce(sum))({
-        ...allTheScope,
-        ...userScope
-    })
+(({ a, b, c }) => getData.reduce(sum))({
+    ...allTheScope,
+    ...userScope
+})
 
 // and then: closure(testPlan({sum: undefined}))(fsdfsdfadfasf)
+
+// @introscope ignore: ['map', 'react', '*'] env: 'test'
+// @introscope pure: true -- makes all functions exported independently
