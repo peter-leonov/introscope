@@ -1,7 +1,46 @@
 
+const x = hoistedFunction()
+function hoistedFunction (v) {
+    return v + 1
+}
+// =>
+const x = hoistedFunction()
+var _hoistedFunction
+function hoistedFunction () {
+    if (!_hoistedFunction)
+        _hoistedFunction = __wrap(function hoistedFunction (v) {
+            return v + 1
+        })
+    return _hoistedFunction.apply(this, arguments)
+}
+
+// __wrap lives in test code space
+function __wrap(id, thunk) {
+    __exports[id] = thunk;
+    return __mocks[id]() || thunk()
+}
+
+
 // the value changes during namespace evaluation
 let x = 0
 x++
+let y = () => x + 1 // 1
+// =>
+let x = __wrap(() => 0, {name: 'x', type: 'let'})
+x++
+let y = () => x + 1 // 1
+// provide wrap from tester
+// mock imports with __wrap too
+const map = __wrap(({x,y,z}) => 0, {x,y,z}, {name: 'x', type: 'let'})
+
+
+let random = Math.random()
+const testMe = () => {
+    if (random > 0.5) return 1;
+    random = 6
+}
+
+
 
 let val
 let testee = () => val
@@ -41,3 +80,15 @@ export var sumDataIntroscope = userScope =>
 
 // @introscope ignore: ['map', 'react', '*'] env: 'test'
 // @introscope pure: true -- makes all functions exported independently
+
+
+
+// in a test
+
+// @introscope-import
+import foo from 'foo'
+// =>
+const __introscope_module = process.env.__introscope_module
+process.env.__introscope_module = 'foo'
+import foo from 'foo'
+process.env.__introscope_module = __introscope_module
