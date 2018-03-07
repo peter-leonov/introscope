@@ -1,13 +1,13 @@
-https://astexplorer.net
-https://github.com/jamiebuilds/babel-handbook/blob/master/translations/en/plugin-handbook.md#toc-paths
-https://babeljs.io/docs/core-packages/babel-types/
+# Introscope
 
-Goals:
+A code reflection / introspection tool for testing side effects of functions.
 
-* pass imported DSs
+## Goals
+
+* mock/wrap values for imported IDs
 * allow some imports to be actually imported (using test runner)
 * export any top scope ID in a wrapper
-* allow module IDs refer to original versions of other module IDs
+* allow module IDs refer to original versions of other IDs
 
 ## Usage
 
@@ -76,4 +76,4 @@ In case of a dynamic import value ([bindings](http://2ality.com/2015/07/es6-modu
     tick()
     console.log(ticksCounter) // 1
 
-this import needs to be wrapped in a `Proxy` to preserve the semantics of ES6 modules.
+this import needs to be wrapped in a clojure + `Proxy` to preserve the semantics of ES6 modules.

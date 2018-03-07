@@ -97,3 +97,13 @@ const __introscope_module = process.env.__introscope_module
 process.env.__introscope_module = 'foo'
 import foo from 'foo'
 process.env.__introscope_module = __introscope_module
+
+
+// @introscope ignore: ['ticksCounter']
+import { ticksCounter, tick } from 'date'
+console.log(ticksCounter) // 0
+tick()
+console.log(ticksCounter) // 1
+// =>
+import { ticksCounter, tick as __tick } from 'date'
+const tick = __wrap(() => __tick)
