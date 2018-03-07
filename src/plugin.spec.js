@@ -28,6 +28,7 @@ const tests = {
     VariableDeclaration1: "var undefinedVar, var1 = 1, var2 = 2, var3 = 3",
     VariableDeclaration2: "let undefinedLet, let1 = 1, let2 = 2, let3 = 3",
     VariableDeclaration3: "const const1 = 1, const2 = 2, const3 = 3",
+    BlockScope: "{ let scoped = false }",
     ExportDefaultDeclaration: "export default true",
     ExportNamedDeclaration1: "export const namedSingleExport = true",
     ExportNamedDeclaration2: "export { var1, let2, const3 }",

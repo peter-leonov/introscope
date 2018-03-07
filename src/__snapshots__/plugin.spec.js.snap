@@ -1,5 +1,14 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`plugin BlockScope 1`] = `
+"function wrapper({}) {
+  {
+    let scoped = false;
+  }
+  return {};
+}"
+`;
+
 exports[`plugin ClassDeclaration 1`] = `
 "function wrapper({}) {
   class className {
@@ -213,6 +222,9 @@ exports[`plugin all 1`] = `
   const const1 = 1,
         const2 = 2,
         const3 = 3;
+  {
+    let scoped = false;
+  }
   const defaultExport = true;
   const namedSingleExport = true;
   return {
