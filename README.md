@@ -78,12 +78,17 @@ In case of a dynamic import value ([bindings](http://2ality.com/2015/07/es6-modu
 
 this import needs to be wrapped in a clojure + `Proxy` to preserve the semantics of ES6 modules.
 
-## Notes
+To use with any node-based test environment:
 
-Use for temp vars: path.scope.generateUidIdentifier("uid")
+    import { transformToFile } from 'introscope'
+    const scope = require(transformToFile('./module'))
+
+To copy require-from-a-file semantics the `transformToFile` function will transpile `./module` to `./module-introscoped-3123123` and return the latter.
+
+## Notes
 
 Based on
 
-* https://astexplorer.net
+* https://astexplorer.net (http://astexplorer.net/#/o5NsNwV46z/1)
 * https://github.com/jamiebuilds/babel-handbook/blob/master/translations/en/plugin-handbook.md#toc-paths
 * https://babeljs.io/docs/core-packages/babel-types/
