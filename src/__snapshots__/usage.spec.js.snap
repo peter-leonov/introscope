@@ -35,3 +35,17 @@ exports[`plugin references 1`] = `
             return _scope;
 };"
 `;
+
+exports[`plugin scopes 1`] = `
+"module.exports = function (_scope, {}) {
+            let x = _scope.x = true;
+            for (let x = 0; x != 0; x++);
+            {
+                        let x = false;
+            }
+            !function () {
+                        var x = false;
+            };
+            return _scope;
+};"
+`;

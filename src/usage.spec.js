@@ -35,4 +35,13 @@ describe('plugin', () => {
             var sameDoubleInit = 1, sameDoubleInit = 2
         `)
     })
+
+    it('scopes', () => {
+        shoot(`
+            let x = true;
+            for (let x = 0; x != 0; x++);
+            { let x = false; }
+            !function(){ var x = false; }
+        `)
+    })
 })
