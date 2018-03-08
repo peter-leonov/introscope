@@ -11,7 +11,7 @@ export default function({ types: t }) {
         const identifiers = []
         path.traverse({
             Identifier(path) {
-                console.log(path.node.type, Object.keys(path.scope))
+                // console.log(path.node.type, Object.keys(path.scope))
                 // toPairs(path.scope.bindings).map(([name, binding]) => [
                 //     name,
                 //     binding.scope.uid
@@ -23,7 +23,7 @@ export default function({ types: t }) {
     return {
         visitor: {
             Program(path) {
-                console.log(path.scope)
+                // console.log(path.scope)
                 // findIdentifiersFromScope(path.scope, path.get("body")[1])
             }
         }

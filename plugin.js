@@ -88,8 +88,13 @@ export default function({ types: t }) {
             case 'VariableDeclarator':
                 variableDeclaratorToScope(scopeId)(path)
                 break
+            case 'ImportDefaultSpecifier':
+            case 'ImportSpecifier':
+            case 'ImportNamespaceSpecifier':
+                // ignore
+                break
             default:
-            //throw new TypeError('Unknown node.type = ' + path.node.type)
+                throw new TypeError('Unknown node.type = ' + path.node.type)
             // TODO: log warning here using babel logger
         }
         return scopeId
