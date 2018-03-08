@@ -12,6 +12,7 @@ describe('plugin', () => {
     it('assignments', () => {
         shoot(`
             let x;
+            x++;
             x = 1;
         `)
     })
@@ -19,7 +20,6 @@ describe('plugin', () => {
     it('references', () => {
         shoot(`
             let x;
-            x++;
             x();
             !function(){ x++ };
             () => { return { x } };

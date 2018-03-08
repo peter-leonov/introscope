@@ -110,14 +110,16 @@ export default function({ types: t }) {
     }
 
     const replaceAssignmentWithScope = scopeId => path => {
-        const left = path.get('left')
-        left.replaceWith(t.memberExpression(scopeId, left.node))
+        if (path.node.type == 'AssignmentExpression') {
+            const left = path.get('left')
+            left.replaceWith(t.memberExpression(scopeId, left.node))
+        }
     }
 
     const bindingToScope = scopeId => binding => {
         // declarationToScope(binding.path, scopeId)
         binding.referencePaths.forEach(replaceReferenceWithScope(scopeId))
-        // binding.constantViolations.forEach(replaceAssignmentWithScope(scopeId))
+        binding.constantViolations.forEach(replaceAssignmentWithScope(scopeId))
     }
 
     return {

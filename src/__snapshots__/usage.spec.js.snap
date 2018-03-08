@@ -3,6 +3,7 @@
 exports[`plugin assignments 1`] = `
 "module.exports = function (_scope, {}) {
             let x;
+            _scope.x++;
             _scope.x = 1;
             return _scope;
 };"
@@ -11,7 +12,6 @@ exports[`plugin assignments 1`] = `
 exports[`plugin references 1`] = `
 "module.exports = function (_scope, {}) {
             let x;
-            _scope.x++;
             (0, _scope.x)();
             !function () {
                         _scope.x++;
