@@ -87,13 +87,27 @@ export default function({ types: t }) {
             )
         )
 
-    const variableDeclaratorToScope = path => path.node
+    const variableDeclaratorToScope = scopeId => path => {
+        const init = path.get('init')
+        if (!init.node) return
+        // Q: Why not replace the parent VariableDeclaration node?
+        // A: To not die debugging variable declaration order in a `for` loop if one of the binding should be ignored dew to introscope configuration (expected future feature). And it's simplier to implement :)
+        init.replaceWith(
+            t.assignmentExpression(
+                '=',
+                t.memberExpression(scopeId, path.get('id').node),
+                init.node
+            )
+        )
+    }
 
-    const declarationToScope = (path, scopeId) => {
+    const declarationToScope = scopeId => path => {
         switch (path.node.type) {
             case 'VariableDeclarator':
-                path.replaceWith(variableDeclaratorToScope(path, scopeId))
+                variableDeclaratorToScope(scopeId)(path)
                 break
+            default:
+            // TODO: error out here using babel logger
         }
         return scopeId
     }
@@ -109,7 +123,7 @@ export default function({ types: t }) {
         }
     }
 
-    const replaceAssignmentWithScope = scopeId => path => {
+    const replaceMutationWithScope = scopeId => path => {
         if (path.node.type == 'AssignmentExpression') {
             const left = path.get('left')
             left.replaceWith(t.memberExpression(scopeId, left.node))
@@ -117,9 +131,9 @@ export default function({ types: t }) {
     }
 
     const bindingToScope = scopeId => binding => {
-        // declarationToScope(binding.path, scopeId)
+        declarationToScope(scopeId)(binding.path)
         binding.referencePaths.forEach(replaceReferenceWithScope(scopeId))
-        binding.constantViolations.forEach(replaceAssignmentWithScope(scopeId))
+        binding.constantViolations.forEach(replaceMutationWithScope(scopeId))
     }
 
     return {

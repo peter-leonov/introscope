@@ -25,4 +25,14 @@ describe('plugin', () => {
             () => { return { x } };
         `)
     })
+
+    it('declarations', () => {
+        shoot(`
+            let noInitValue;
+            for (var forVar = 0; forVar != 0; forVar++);
+            let singleInit = 1;
+            let doubleInit1 = 1, doubleInit2 = 2;
+            var sameDoubleInit = 1, sameDoubleInit = 2
+        `)
+    })
 })
