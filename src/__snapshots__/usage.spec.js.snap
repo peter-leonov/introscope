@@ -18,6 +18,8 @@ exports[`plugin declarations 1`] = `
                 doubleInit2 = _scope.doubleInit2 = 2;
             var sameDoubleInit = 1,
                 sameDoubleInit = _scope.sameDoubleInit = 2;
+            //class className { fn() { const i = 0 } }
+            //function functionName () { function i() {} }
 
             return _scope;
 };"
@@ -27,11 +29,15 @@ exports[`plugin globals 1`] = `
 "module.exports = function (_scope, {
             global2,
             global1,
-            global3
+            global3,
+            nestedGlobal
 }) {
             let x = _scope.x = global1;
             global2 = 1;
             global3();
+            !function () {
+                        return nestedGlobal;
+            }();
             return _scope;
 };"
 `;

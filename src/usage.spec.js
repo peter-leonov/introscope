@@ -64,4 +64,13 @@ describe('plugin', () => {
             !function(){ var x = false; }
         `)
     })
+
+    it('globals', () => {
+        shoot(`
+            let x = global1;
+            global2 = 1;
+            global3();
+            !function(){ return nestedGlobal }()
+        `)
+    })
 })
