@@ -87,7 +87,16 @@ export default function({ types: t }) {
             )
         )
 
-    const declarationToScope = (path, scopeId) => scopeId
+    const variableDeclaratorToScope = path => path.node
+
+    const declarationToScope = (path, scopeId) => {
+        switch (path.node.type) {
+            case "VariableDeclarator":
+                path.replaceWith(variableDeclaratorToScope(path, scopeId))
+                break
+        }
+        return scopeId
+    }
 
     const referenceToScope = (path, scopeId) => {
         const scoped = t.memberExpression(scopeId, path.node)
@@ -98,8 +107,7 @@ export default function({ types: t }) {
     }
 
     const bindingToScope = (binding, scopeId) => {
-        console.log(binding.path.node.type)
-        binding.path.replaceWith(declarationToScope(binding.path, scopeId))
+        declarationToScope(binding.path, scopeId)
         binding.referencePaths.forEach(path =>
             path.replaceWith(referenceToScope(path, scopeId))
         )

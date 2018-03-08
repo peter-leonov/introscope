@@ -1,12 +1,10 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`plugin simple 1`] = `
-"module.exports = function ({}) {
+"module.exports = function (_scope, {}) {
             let x = 1;
-            let fn = () => x++;
-            return {
-                        x,
-                        fn
-            };
+            const fn1 = () => _scope.x++;
+            const fn2 = (0, _scope.fn1)();
+            return _scope;
 };"
 `;

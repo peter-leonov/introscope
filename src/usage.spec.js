@@ -12,8 +12,8 @@ describe("plugin", () => {
     it("simple", () => {
         shoot(`
             let x = 1
-            let fn1 = () => x++
-            let fn2 = fn1()
+            const fn1 = () => x++
+            const fn2 = fn1()
         `)
     })
 })
