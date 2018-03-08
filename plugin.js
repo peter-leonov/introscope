@@ -12,6 +12,8 @@ const toPairs = obj => {
 }
 
 export default function({ types: t }) {
+    const byType = type => node => node.type == type
+
     const getLocalSpecifierIdentifiers = path => {
         const identifiers = []
         const getLocalIdentifiers = path => {
@@ -63,58 +65,15 @@ export default function({ types: t }) {
             t.objectProperty(identifier, identifier, undefined, true)
         )
 
-    const byType = type => node => node.type == type
-    const getDeclarators = node => node.declarations
-    const findDeclarationIdentifiers = ary =>
-        ary
-            .filter(byType("VariableDeclaration"))
-            .map(getDeclarators)
-            .reduce(flatten, [])
-            .map(get("id"))
-
-    const findFunctionAndClassIdentifiers = ary =>
-        ary
-            .filter(
-                or(byType("FunctionDeclaration"), byType("ClassDeclaration"))
-            )
-            .map(get("id"))
-
-    const collectLocalScope = body =>
-        findDeclarationIdentifiers(body).concat(
-            findFunctionAndClassIdentifiers(body)
-        )
-
-    const wrapInFunction = (idsIn, idsOut, body) =>
+    const wrapInFunction = (scopeId, idsIn, body) =>
         t.functionExpression(
             null,
-            [t.objectPattern(identifiersToObjectProperties(idsIn))],
-            t.blockStatement(
-                body.concat([
-                    t.returnStatement(
-                        t.objectExpression(
-                            identifiersToObjectProperties(idsOut)
-                        )
-                    )
-                ])
-            )
+            [scopeId, t.objectPattern(identifiersToObjectProperties(idsIn))],
+            t.blockStatement(body.concat([t.returnStatement(scopeId)]))
         )
 
     const getGlobalIdentifiers = scope =>
         toPairs(scope.globals).map(([_, identifier]) => identifier)
-
-    const getScopeIdentifiers = scope =>
-        []
-            .concat(
-                toPairs(scope.bindings).map(
-                    ([_, binding]) => binding.identifier
-                )
-            )
-            .concat(getGlobalIdentifiers(scope))
-
-    // const transformDeclarationsToVar = ary =>
-    //     ary
-    //         .filter(byType("VariableDeclaration"))
-    //         .forEach(node => (node.kind = "var"))
 
     const moduleExports = idendifier =>
         t.expressionStatement(
@@ -128,35 +87,38 @@ export default function({ types: t }) {
             )
         )
 
-    const toScope = path => {
-        const scoped = t.memberExpression(t.identifier("__scope"), path.node)
-        // console.log(path.parent)
+    const declarationToScope = (path, scopeId) => scopeId
+
+    const referenceToScope = (path, scopeId) => {
+        const scoped = t.memberExpression(scopeId, path.node)
         if (path.parent && path.parent.type == "CallExpression") {
             return t.sequenceExpression([t.numericLiteral(0), scoped])
         }
         return scoped
     }
 
+    const bindingToScope = (binding, scopeId) => {
+        console.log(binding.path.node.type)
+        binding.path.replaceWith(declarationToScope(binding.path, scopeId))
+        binding.referencePaths.forEach(path =>
+            path.replaceWith(referenceToScope(path, scopeId))
+        )
+    }
+
     return {
         visitor: {
             Program: function(path, state) {
-                // console.log(getScopeIdentifiers(path.scope))
-                // transformDeclarationsToVar(path.node.body)
-                const importIds = []
-                    .concat(getAndRemoveImportedIdentifiers(path))
-                    .concat(getGlobalIdentifiers(path.scope))
                 unwrapOrRemoveExports(path)
-                const localIds = collectLocalScope(path.node.body)
 
-                toPairs(path.scope.bindings).map(([_, binding]) =>
-                    binding.referencePaths.forEach(path =>
-                        path.replaceWith(toScope(path))
-                    )
+                const scopeId = path.scope.generateUidIdentifier("scope")
+                toPairs(path.scope.bindings).forEach(([_, binding]) =>
+                    bindingToScope(binding, scopeId)
                 )
 
+                const globalIds = getGlobalIdentifiers(path.scope)
                 path.node.body = [
                     moduleExports(
-                        wrapInFunction(importIds, localIds, path.node.body)
+                        wrapInFunction(scopeId, globalIds, path.node.body)
                     )
                 ]
             }
