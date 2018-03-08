@@ -14,29 +14,12 @@ const toPairs = obj => {
 export default function({ types: t }) {
     const byType = type => node => node.type == type
 
-    const getLocalSpecifierIdentifiers = path => {
-        const identifiers = []
-        const getLocalIdentifiers = path => {
-            const local = path.node.local
-            if (t.isIdentifier(local)) identifiers.push(local)
-        }
-        path.traverse({
-            ImportDefaultSpecifier: getLocalIdentifiers,
-            ImportSpecifier: getLocalIdentifiers,
-            ImportNamespaceSpecifier: getLocalIdentifiers
-        })
-        return identifiers
-    }
-
-    const getAndRemoveImportedIdentifiers = path => {
-        const identifiers = []
+    const removeImports = path => {
         path.traverse({
             ImportDeclaration(path) {
-                push(identifiers, getLocalSpecifierIdentifiers(path))
                 path.remove()
             }
         })
-        return identifiers
     }
 
     const unwrapOrRemoveExports = path => {
@@ -107,7 +90,8 @@ export default function({ types: t }) {
                 variableDeclaratorToScope(scopeId)(path)
                 break
             default:
-            // TODO: error out here using babel logger
+            //throw new TypeError('Unknown node.type = ' + path.node.type)
+            // TODO: log warning here using babel logger
         }
         return scopeId
     }
@@ -152,6 +136,8 @@ export default function({ types: t }) {
                         wrapInFunction(scopeId, globalIds, path.node.body)
                     )
                 ]
+
+                removeImports(path)
             }
         }
     }

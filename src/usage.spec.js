@@ -9,6 +9,26 @@ const shoot = code =>
     ).toMatchSnapshot()
 
 describe('plugin', () => {
+    it('import', () => {
+        shoot(`
+            import 'some-module1'
+            import defaultImport from 'some-module2'
+            import { singleNamedImport } from 'some-module3'
+            import { namedImport1, namedImport2 } from 'some-module4'
+            import { originalImportName as localImportName } from 'some-module5'
+            import * as namespaceImport from 'some-module6'
+
+            [
+                defaultImport,
+                singleNamedImport,
+                namedImport1,
+                namedImport2,
+                localImportName,
+                namespaceImport
+             ]
+        `)
+    })
+
     it('assignments', () => {
         shoot(`
             let x;
