@@ -9,11 +9,20 @@ const shoot = code =>
     ).toMatchSnapshot()
 
 describe('plugin', () => {
-    it('simple', () => {
+    it('assignments', () => {
         shoot(`
             let x;
             x = 1;
-            x = x;
+        `)
+    })
+
+    it('references', () => {
+        shoot(`
+            let x;
+            x++;
+            x();
+            !function(){ x++ };
+            () => { return { x } };
         `)
     })
 })

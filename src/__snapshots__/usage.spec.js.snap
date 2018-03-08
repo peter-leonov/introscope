@@ -1,10 +1,24 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`plugin simple 1`] = `
+exports[`plugin assignments 1`] = `
 "module.exports = function (_scope, {}) {
             let x;
             _scope.x = 1;
-            _scope.x = x;
+            return _scope;
+};"
+`;
+
+exports[`plugin references 1`] = `
+"module.exports = function (_scope, {}) {
+            let x;
+            _scope.x++;
+            (0, _scope.x)();
+            !function () {
+                        _scope.x++;
+            };
+            () => {
+                        return { x: _scope.x };
+            };
             return _scope;
 };"
 `;
