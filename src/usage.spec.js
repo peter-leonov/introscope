@@ -12,8 +12,8 @@ describe('plugin', () => {
     it('simple', () => {
         shoot(`
             let x;
-            x = 1
-            x = x
+            x = 1;
+            x = x;
         `)
     })
 })

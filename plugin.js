@@ -98,19 +98,29 @@ export default function({ types: t }) {
         return scopeId
     }
 
-    const referenceToScope = (path, scopeId) => {
+    const replaceReferenceWithScope = scopeId => path => {
         const scoped = t.memberExpression(scopeId, path.node)
+        let result
         if (path.parent && path.parent.type == 'CallExpression') {
-            return t.sequenceExpression([t.numericLiteral(0), scoped])
+            path.replaceWith(
+                t.sequenceExpression([t.numericLiteral(0), scoped])
+            )
+        } else {
+            path.replaceWith(scoped)
         }
-        return scoped
+    }
+
+    const replaceAssignmentWithScope = scopeId => path => {
+        const left = path.get('left')
+        left.replaceWith(t.memberExpression(scopeId, left.node))
     }
 
     const bindingToScope = (binding, scopeId) => {
         declarationToScope(binding.path, scopeId)
         binding.referencePaths.forEach(path =>
-            path.replaceWith(referenceToScope(path, scopeId))
+            replaceReferenceWithScope(scopeId)
         )
+        binding.constantViolations.forEach(replaceAssignmentWithScope(scopeId))
     }
 
     return {

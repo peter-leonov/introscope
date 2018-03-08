@@ -2,9 +2,9 @@
 
 exports[`plugin simple 1`] = `
 "module.exports = function (_scope, {}) {
-            let x = 1;
-            const fn1 = () => _scope.x++;
-            const fn2 = (0, _scope.fn1)();
+            let x;
+            _scope.x = 1;
+            _scope.x = x;
             return _scope;
 };"
 `;
