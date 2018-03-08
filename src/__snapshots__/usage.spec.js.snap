@@ -25,6 +25,15 @@ exports[`plugin declarations 1`] = `
 };"
 `;
 
+exports[`plugin export 1`] = `
+"module.exports = function (_scope, {}) {
+            let defaultExport, toBeNameExport1, toBeNameExport2;
+            _scope.default = _scope.defaultExport;
+            const namedSingleExport = _scope.namedSingleExport = 'namedSingleExportValue';
+            return _scope;
+};"
+`;
+
 exports[`plugin globals 1`] = `
 "module.exports = function (_scope, {
             global2,

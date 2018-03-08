@@ -22,21 +22,20 @@ export default function({ types: t }) {
         })
     }
 
-    const unwrapOrRemoveExports = path => {
+    const unwrapOrRemoveExports = scopeId => path => {
         const identifiers = []
         path.traverse({
             ExportDefaultDeclaration: path =>
                 path.replaceWith(
-                    t.variableDeclaration('const', [
-                        t.variableDeclarator(
-                            t.identifier('defaultExport'),
-                            path.node.declaration
-                        )
-                    ])
+                    t.assignmentExpression(
+                        '=',
+                        t.memberExpression(scopeId, t.identifier('default')),
+                        path.get('declaration').node
+                    )
                 ),
             ExportNamedDeclaration: path =>
                 path.node.declaration
-                    ? path.replaceWith(path.node.declaration)
+                    ? path.replaceWith(path.get('declaration').node)
                     : path.remove(),
             ExportAllDeclaration: path => path.remove()
         })
@@ -97,6 +96,11 @@ export default function({ types: t }) {
     }
 
     const replaceReferenceWithScope = scopeId => path => {
+        // ExportNamedDeclaration gets properly processed by replaceMutationWithScope()
+        if (path.node.type == 'ExportNamedDeclaration') return
+        // ExportSpecifier gets revoved by unwrapOrRemoveExports()
+        if (path.parent.type == 'ExportSpecifier') return
+
         const scoped = t.memberExpression(scopeId, path.node)
         if (path.parent && path.parent.type == 'CallExpression') {
             path.replaceWith(
@@ -123,9 +127,8 @@ export default function({ types: t }) {
     return {
         visitor: {
             Program: function(path, state) {
-                unwrapOrRemoveExports(path)
-
                 const scopeId = path.scope.generateUidIdentifier('scope')
+
                 toPairs(path.scope.bindings)
                     .map(([_, binding]) => binding)
                     .forEach(bindingToScope(scopeId))
@@ -138,6 +141,7 @@ export default function({ types: t }) {
                 ]
 
                 removeImports(path)
+                unwrapOrRemoveExports(scopeId)(path)
             }
         }
     }

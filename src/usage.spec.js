@@ -73,4 +73,14 @@ describe('plugin', () => {
             !function(){ return nestedGlobal }()
         `)
     })
+
+    it('export', () => {
+        shoot(`
+            let defaultExport, toBeNameExport1, toBeNameExport2;
+            export default defaultExport;
+            export const namedSingleExport = 'namedSingleExportValue'
+            export { toBeNameExport1, toBeNameExport2 }
+            export * from 'some-module'
+        `)
+    })
 })
