@@ -54,7 +54,7 @@ describe('plugin', () => {
             let doubleInit1 = 1, doubleInit2 = 2;
             var sameDoubleInit = 1, sameDoubleInit = 2;
             class ClassName {}; new ClassName();
-            //function functionName () { function i() {} }
+            functionName(); function functionName () {}
         `)
     })
 

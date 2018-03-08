@@ -11,6 +11,8 @@ exports[`plugin assignments 1`] = `
 
 exports[`plugin declarations 1`] = `
 "module.exports = function (_scope, {}) {
+            _scope.functionName = functionName;
+
             let noInitValue;
             for (var forVar = _scope.forVar = 0; _scope.forVar != 0; _scope.forVar++);
             let singleInit = _scope.singleInit = 1;
@@ -20,8 +22,7 @@ exports[`plugin declarations 1`] = `
                 sameDoubleInit = _scope.sameDoubleInit = 2;
             _scope.ClassName = class ClassName {};
             ;new _scope.ClassName();
-            //function functionName () { function i() {} }
-
+            (0, _scope.functionName)();function functionName() {}
             return _scope;
 };"
 `;

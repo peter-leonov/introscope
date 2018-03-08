@@ -95,6 +95,20 @@ export default function({ types: t }) {
         )
     }
 
+    const functionDeclarationToScope = scopeId => path => {
+        const program = path.findParent(path => path.isProgram())
+        program.unshiftContainer(
+            'body',
+            t.expressionStatement(
+                t.assignmentExpression(
+                    '=',
+                    t.memberExpression(scopeId, path.get('id').node),
+                    path.get('id').node
+                )
+            )
+        )
+    }
+
     const declarationToScope = scopeId => path => {
         switch (path.node.type) {
             case 'VariableDeclarator':
@@ -102,6 +116,9 @@ export default function({ types: t }) {
                 break
             case 'ClassDeclaration':
                 classDeclarationToScope(scopeId)(path)
+                break
+            case 'FunctionDeclaration':
+                functionDeclarationToScope(scopeId)(path)
                 break
             case 'ImportDefaultSpecifier':
             case 'ImportSpecifier':
