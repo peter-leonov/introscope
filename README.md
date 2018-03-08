@@ -20,6 +20,8 @@ A code reflection / introspection tool for testing side effects of functions.
         const filter = foo({})
     });
 
+In case this plugin find it's way to production build configuration it will not touch any code if `NODE_ENV`/`BABEL_ENV` equals `'production'`.
+
 ## Limitations by design
 
 ### Module purity
