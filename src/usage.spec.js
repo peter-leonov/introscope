@@ -52,7 +52,9 @@ describe('plugin', () => {
             for (var forVar = 0; forVar != 0; forVar++);
             let singleInit = 1;
             let doubleInit1 = 1, doubleInit2 = 2;
-            var sameDoubleInit = 1, sameDoubleInit = 2
+            var sameDoubleInit = 1, sameDoubleInit = 2;
+            class ClassName {}; new ClassName();
+            //function functionName () { function i() {} }
         `)
     })
 
@@ -70,7 +72,7 @@ describe('plugin', () => {
             let x = global1;
             global2 = 1;
             global3();
-            !function(){ return nestedGlobal }()
+            !function(){ return nestedGlobal }();
         `)
     })
 

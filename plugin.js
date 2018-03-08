@@ -83,10 +83,25 @@ export default function({ types: t }) {
         )
     }
 
+    const classDeclarationToScope = scopeId => path => {
+        const classExpression = t.clone(path.node)
+        classExpression.type = 'ClassExpression'
+        path.replaceWith(
+            t.assignmentExpression(
+                '=',
+                t.memberExpression(scopeId, path.get('id').node),
+                classExpression
+            )
+        )
+    }
+
     const declarationToScope = scopeId => path => {
         switch (path.node.type) {
             case 'VariableDeclarator':
                 variableDeclaratorToScope(scopeId)(path)
+                break
+            case 'ClassDeclaration':
+                classDeclarationToScope(scopeId)(path)
                 break
             case 'ImportDefaultSpecifier':
             case 'ImportSpecifier':
