@@ -44,9 +44,9 @@ export default function({ types: t }) {
         path.traverse({
             ExportDefaultDeclaration: path =>
                 path.replaceWith(
-                    t.variableDeclaration("const", [
+                    t.variableDeclaration('const', [
                         t.variableDeclarator(
-                            t.identifier("defaultExport"),
+                            t.identifier('defaultExport'),
                             path.node.declaration
                         )
                     ])
@@ -78,10 +78,10 @@ export default function({ types: t }) {
     const moduleExports = idendifier =>
         t.expressionStatement(
             t.assignmentExpression(
-                "=",
+                '=',
                 t.memberExpression(
-                    t.identifier("module"),
-                    t.identifier("exports")
+                    t.identifier('module'),
+                    t.identifier('exports')
                 ),
                 idendifier
             )
@@ -91,7 +91,7 @@ export default function({ types: t }) {
 
     const declarationToScope = (path, scopeId) => {
         switch (path.node.type) {
-            case "VariableDeclarator":
+            case 'VariableDeclarator':
                 path.replaceWith(variableDeclaratorToScope(path, scopeId))
                 break
         }
@@ -100,7 +100,7 @@ export default function({ types: t }) {
 
     const referenceToScope = (path, scopeId) => {
         const scoped = t.memberExpression(scopeId, path.node)
-        if (path.parent && path.parent.type == "CallExpression") {
+        if (path.parent && path.parent.type == 'CallExpression') {
             return t.sequenceExpression([t.numericLiteral(0), scoped])
         }
         return scoped
@@ -118,7 +118,7 @@ export default function({ types: t }) {
             Program: function(path, state) {
                 unwrapOrRemoveExports(path)
 
-                const scopeId = path.scope.generateUidIdentifier("scope")
+                const scopeId = path.scope.generateUidIdentifier('scope')
                 toPairs(path.scope.bindings).forEach(([_, binding]) =>
                     bindingToScope(binding, scopeId)
                 )

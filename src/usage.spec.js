@@ -1,5 +1,5 @@
-import { transform } from "babel-core"
-import plugin from "../plugin"
+import { transform } from 'babel-core'
+import plugin from '../plugin'
 
 const shoot = code =>
     expect(
@@ -8,12 +8,12 @@ const shoot = code =>
         }).code
     ).toMatchSnapshot()
 
-describe("plugin", () => {
-    it("simple", () => {
+describe('plugin', () => {
+    it('simple', () => {
         shoot(`
-            let x = 1
-            const fn1 = () => x++
-            const fn2 = fn1()
+            let x;
+            x = 1
+            x = x
         `)
     })
 })
