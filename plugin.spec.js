@@ -43,6 +43,7 @@ describe('plugin', () => {
             x();
             !function(){ x++ };
             () => { return { x } };
+            !{ x }
         `)
     })
 

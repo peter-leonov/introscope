@@ -114,6 +114,7 @@ exports[`plugin references 1`] = `
             () => {
                         return { x: _scope.x };
             };
+            !{ x: _scope.x };
             return _scope;
 };"
 `;
