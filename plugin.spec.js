@@ -54,6 +54,14 @@ describe('plugin', () => {
             let singleInit = 1;
             let doubleInit1 = 1, doubleInit2 = 2;
             var sameDoubleInit = 1, sameDoubleInit = 2;
+
+            let { singleDestructing } = 1
+            let { objectDestruction1, objectDestruction2, nestedProperty: { objectNestedDestruction1 } } = { objectDestruction1, objectDestruction2, nestedProperty: { objectNestedDestruction1 } }, let2 = objectDestruction1;
+            // let { ...objectRest } = 1;
+            let [ arrayDestruction1, arrayDestruction2, [ arrayNestedDestruction ] ] = 1;
+            //let [ ...arrayRest ] ] = 1;
+
+
             class ClassName {}; new ClassName();
             functionName(); function functionName () {}
         `)
