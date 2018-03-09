@@ -115,7 +115,7 @@ export default function({ types: t }) {
     const replaceReferenceWithScope = scopeId => path => {
         // ExportNamedDeclaration gets properly processed by replaceMutationWithScope()
         if (path.node.type == 'ExportNamedDeclaration') return
-        // ExportSpecifier gets revoved by unwrapOrRemoveExports()
+        // ExportSpecifier gets removed by unwrapOrRemoveExports()
         if (path.parent.type == 'ExportSpecifier') return
 
         const scoped = t.memberExpression(scopeId, path.node)
@@ -141,19 +141,25 @@ export default function({ types: t }) {
         return declarationToScope(scopeId)(binding.path)
     }
 
+    const bindingsToScope = scopeId => bindings =>
+        toPairs(bindings)
+            .map(([_, binding]) => binding)
+            .map(bindingToScope(scopeId))
+            .filter(Boolean)
+
     return {
         visitor: {
             Program: function(path, state) {
                 const scopeId = path.scope.generateUidIdentifier('scope')
 
-                unwrapOrRemoveExports(scopeId)(path)
-
                 const globalIds = getGlobalIdentifiers(path.scope)
 
-                const localImportIds = toPairs(path.scope.bindings)
-                    .map(([_, binding]) => binding)
-                    .map(bindingToScope(scopeId))
-                    .filter(Boolean)
+                const localImportIds = bindingsToScope(scopeId)(
+                    path.scope.bindings
+                )
+
+                // unwrapOrRemoveExports() should go after bindingsToScope() as the latter treats `export var/let/const` as a reference and uses node.parent to distinguish
+                unwrapOrRemoveExports(scopeId)(path)
 
                 // reverse()-ing to preserve order after unshift()-ing
                 localImportIds
