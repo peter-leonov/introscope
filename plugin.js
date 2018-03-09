@@ -105,23 +105,20 @@ export default function({ types: t }) {
     }
 
     const declarationToScope = scopeId => path => {
-        switch (path.node.type) {
-            case 'VariableDeclarator':
-                variableDeclaratorToScope(scopeId)(path)
-                break
-            case 'ClassDeclaration':
-                classDeclarationToScope(scopeId)(path)
-                break
-            case 'FunctionDeclaration':
-                functionDeclarationToScope(scopeId)(path)
-                break
-            case 'ImportDefaultSpecifier':
-            case 'ImportSpecifier':
-            case 'ImportNamespaceSpecifier':
-                // ignore
-                break
-            default:
-                throw new TypeError('Unknown node.type = ' + path.node.type)
+        if (path.isNodeType('VariableDeclarator')) {
+            variableDeclaratorToScope(scopeId)(path)
+        } else if (path.isNodeType('ClassDeclaration')) {
+            classDeclarationToScope(scopeId)(path)
+        } else if (path.isNodeType('FunctionDeclaration')) {
+            functionDeclarationToScope(scopeId)(path)
+        } else if (
+            path.isNodeType('ImportDefaultSpecifier') ||
+            path.isNodeType('ImportSpecifier') ||
+            path.isNodeType('ImportNamespaceSpecifier')
+        ) {
+            // ignore
+        } else {
+            throw new TypeError('Unknown node.type = ' + path.node.type)
             // TODO: log warning here using babel logger
         }
         return scopeId
@@ -166,11 +163,12 @@ export default function({ types: t }) {
                     .forEach(bindingToScope(scopeId))
 
                 const globalIds = getGlobalIdentifiers(path.scope)
-                path.node.body = [
-                    moduleExports(
-                        wrapInFunction(scopeId, globalIds, path.node.body)
-                    )
-                ]
+                const oldBody = path.node.body
+                path.node.body = []
+                path.pushContainer(
+                    'body',
+                    moduleExports(wrapInFunction(scopeId, globalIds, oldBody))
+                )
 
                 removeImports(path)
                 unwrapOrRemoveExports(scopeId)(path)
