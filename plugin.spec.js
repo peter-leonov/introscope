@@ -1,5 +1,5 @@
 import { transform } from 'babel-core'
-import plugin from '../plugin'
+import plugin from './plugin'
 
 const shoot = code =>
     expect(
