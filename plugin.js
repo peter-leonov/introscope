@@ -41,7 +41,10 @@ export default function({ types: t }) {
     const wrapInFunction = (scopeId, idsIn, body) =>
         t.functionExpression(
             null,
-            [scopeId, t.objectPattern(identifiersToObjectProperties(idsIn))],
+            [
+                t.assignmentPattern(scopeId, t.objectExpression([])),
+                t.objectPattern(identifiersToObjectProperties(idsIn))
+            ],
             t.blockStatement(body.concat([t.returnStatement(scopeId)]))
         )
 

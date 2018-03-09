@@ -14,7 +14,7 @@ import { originalImportName2 as localImportName2 } from 'some-module7';
 import * as namespaceImport1 from 'some-module8';
 import * as namespaceImport2 from 'some-module9';
 
-module.exports = function (_scope, {}) {
+module.exports = function (_scope = {}, {}) {
     _scope.defaultImport1 = defaultImport1;
     _scope.defaultImport2 = defaultImport2;
     _scope.singleNamedImport1 = singleNamedImport1;
@@ -33,7 +33,7 @@ module.exports = function (_scope, {}) {
 `;
 
 exports[`plugin assignments 1`] = `
-"module.exports = function (_scope, {}) {
+"module.exports = function (_scope = {}, {}) {
             let x;
             _scope.x++;
             _scope.x = 1;
@@ -42,7 +42,7 @@ exports[`plugin assignments 1`] = `
 `;
 
 exports[`plugin declarations 1`] = `
-"module.exports = function (_scope, {}) {
+"module.exports = function (_scope = {}, {}) {
             _scope.functionName = functionName;
 
             let noInitValue;
@@ -60,7 +60,7 @@ exports[`plugin declarations 1`] = `
 `;
 
 exports[`plugin export 1`] = `
-"module.exports = function (_scope, {}) {
+"module.exports = function (_scope = {}, {}) {
             let defaultExport, toBeNameExport1, toBeNameExport2;
             _scope.default = _scope.defaultExport;
             const namedSingleExport = _scope.namedSingleExport = 'namedSingleExportValue';
@@ -69,7 +69,7 @@ exports[`plugin export 1`] = `
 `;
 
 exports[`plugin globals 1`] = `
-"module.exports = function (_scope, {
+"module.exports = function (_scope = {}, {
             global2,
             global1,
             global3,
@@ -94,7 +94,7 @@ import { namedImport1, namedImport2 } from 'some-module4';
 import { originalImportName as localImportName } from 'some-module5';
 import * as namespaceImport from 'some-module6';
 
-module.exports = function (_scope, {}) {
+module.exports = function (_scope = {}, {}) {
             _scope.defaultImport = defaultImport;
             _scope.singleNamedImport = singleNamedImport;
             _scope.namedImport1 = namedImport1;
@@ -107,7 +107,7 @@ module.exports = function (_scope, {}) {
 `;
 
 exports[`plugin references 1`] = `
-"module.exports = function (_scope, {}) {
+"module.exports = function (_scope = {}, {}) {
             let x;
             (0, _scope.x)();
             !function () {
@@ -121,7 +121,7 @@ exports[`plugin references 1`] = `
 `;
 
 exports[`plugin scopes 1`] = `
-"module.exports = function (_scope, {}) {
+"module.exports = function (_scope = {}, {}) {
             let x = _scope.x = true;
             for (let x = 0; x != 0; x++);
             {
