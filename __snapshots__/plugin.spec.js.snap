@@ -1,5 +1,37 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`options removeImport 1`] = `
+"
+// @introscope removeImports: ['defaultImport1', 'singleNamedImport1', 'namedImport1', 'namedImport2', 'localImportName1', 'namespaceImport1']
+import defaultImport1 from 'some-module1';
+import defaultImport2 from 'some-module2';
+import { singleNamedImport1 } from 'some-module2';
+import { singleNamedImport2 } from 'some-module3';
+import { namedImport1, namedImport2 } from 'some-module4';
+import { namedImport3, namedImport4 } from 'some-module5';
+import { originalImportName1 as localImportName1 } from 'some-module6';
+import { originalImportName2 as localImportName2 } from 'some-module7';
+import * as namespaceImport1 from 'some-module8';
+import * as namespaceImport2 from 'some-module9';
+
+module.exports = function (_scope, {}) {
+    _scope.defaultImport1 = defaultImport1;
+    _scope.defaultImport2 = defaultImport2;
+    _scope.singleNamedImport1 = singleNamedImport1;
+    _scope.singleNamedImport2 = singleNamedImport2;
+    _scope.namedImport1 = namedImport1;
+    _scope.namedImport2 = namedImport2;
+    _scope.namedImport3 = namedImport3;
+    _scope.namedImport4 = namedImport4;
+    _scope.localImportName1 = localImportName1;
+    _scope.localImportName2 = localImportName2;
+    _scope.namespaceImport1 = namespaceImport1;
+    _scope.namespaceImport2 = namespaceImport2;
+    [_scope.defaultImport1, _scope.defaultImport2, _scope.singleNamedImport1, _scope.singleNamedImport2, _scope.namedImport1, _scope.namedImport2, _scope.namedImport3, _scope.namedImport4, _scope.localImportName1, _scope.localImportName2, _scope.namespaceImport1, _scope.namespaceImport2];
+    return _scope;
+};"
+`;
+
 exports[`plugin assignments 1`] = `
 "module.exports = function (_scope, {}) {
             let x;
@@ -54,8 +86,21 @@ exports[`plugin globals 1`] = `
 `;
 
 exports[`plugin import 1`] = `
-"module.exports = function (_scope, {}) {
+"
+import 'some-module1';
+import defaultImport from 'some-module2';
+import { singleNamedImport } from 'some-module3';
+import { namedImport1, namedImport2 } from 'some-module4';
+import { originalImportName as localImportName } from 'some-module5';
+import * as namespaceImport from 'some-module6';
 
+module.exports = function (_scope, {}) {
+            _scope.defaultImport = defaultImport;
+            _scope.singleNamedImport = singleNamedImport;
+            _scope.namedImport1 = namedImport1;
+            _scope.namedImport2 = namedImport2;
+            _scope.localImportName = localImportName;
+            _scope.namespaceImport = namespaceImport;
             [_scope.defaultImport, _scope.singleNamedImport, _scope.namedImport1, _scope.namedImport2, _scope.localImportName, _scope.namespaceImport];
             return _scope;
 };"

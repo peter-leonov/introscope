@@ -24,6 +24,10 @@ In case this plugin find it's way to production build configuration it will not 
 
 ## Limitations by design
 
+### Importing dynamic module binding
+
+Is not supported right now, but can be implemented using a getter on the scope object. To be implemented once the overall design of unit testing with Introscope becomes clear.
+
 ### Module purity
 
 The main limitation is that the module tested using introscope should be a pure module. This means requiring it makes no side effects. The example module is pure:

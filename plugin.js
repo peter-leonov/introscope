@@ -6,25 +6,23 @@ const toPairs = obj => {
     return pairs
 }
 
-export default function({ types: t }) {
-    const byType = type => node => node.type == type
+const byType = type => node => node.type == type
+const not = fn => (...args) => !fn(...args)
 
-    const removeImports = path => {
-        path.traverse({
-            ImportDeclaration(path) {
-                path.remove()
-            }
-        })
-    }
+export default function({ types: t }) {
+    let options = { removeImports: false }
+
+    const scopeSet = (scopeId, left, right) =>
+        t.assignmentExpression('=', t.memberExpression(scopeId, left), right)
 
     const unwrapOrRemoveExports = scopeId => path => {
         const identifiers = []
         path.traverse({
             ExportDefaultDeclaration: path =>
                 path.replaceWith(
-                    t.assignmentExpression(
-                        '=',
-                        t.memberExpression(scopeId, t.identifier('default')),
+                    scopeSet(
+                        scopeId,
+                        t.identifier('default'),
                         path.get('declaration').node
                     )
                 ),
@@ -69,24 +67,14 @@ export default function({ types: t }) {
         if (!init.node) return
         // Q: Why not replace the parent VariableDeclaration node?
         // A: To not die debugging variable declaration order in a `for` loop if one of the binding should be ignored dew to introscope configuration (expected future feature). And it's simplier to implement :)
-        init.replaceWith(
-            t.assignmentExpression(
-                '=',
-                t.memberExpression(scopeId, path.get('id').node),
-                init.node
-            )
-        )
+        init.replaceWith(scopeSet(scopeId, path.get('id').node, init.node))
     }
 
     const classDeclarationToScope = scopeId => path => {
         const classExpression = t.clone(path.node)
         classExpression.type = 'ClassExpression'
         path.replaceWith(
-            t.assignmentExpression(
-                '=',
-                t.memberExpression(scopeId, path.get('id').node),
-                classExpression
-            )
+            scopeSet(scopeId, path.get('id').node, classExpression)
         )
     }
 
@@ -95,11 +83,7 @@ export default function({ types: t }) {
         program.unshiftContainer(
             'body',
             t.expressionStatement(
-                t.assignmentExpression(
-                    '=',
-                    t.memberExpression(scopeId, path.get('id').node),
-                    path.get('id').node
-                )
+                scopeSet(scopeId, path.get('id').node, path.get('id').node)
             )
         )
     }
@@ -116,12 +100,15 @@ export default function({ types: t }) {
             path.isNodeType('ImportSpecifier') ||
             path.isNodeType('ImportNamespaceSpecifier')
         ) {
-            // ignore
+            if (options.removeImports === true) {
+                // ignore
+            } else if (path.parentPath.isImportDeclaration()) {
+                return path.get('local').node
+            }
         } else {
             throw new TypeError('Unknown node.type = ' + path.node.type)
             // TODO: log warning here using babel logger
         }
-        return scopeId
     }
 
     const replaceReferenceWithScope = scopeId => path => {
@@ -148,9 +135,9 @@ export default function({ types: t }) {
     }
 
     const bindingToScope = scopeId => binding => {
-        declarationToScope(scopeId)(binding.path)
         binding.referencePaths.forEach(replaceReferenceWithScope(scopeId))
         binding.constantViolations.forEach(replaceMutationWithScope(scopeId))
+        return declarationToScope(scopeId)(binding.path)
     }
 
     return {
@@ -158,20 +145,44 @@ export default function({ types: t }) {
             Program: function(path, state) {
                 const scopeId = path.scope.generateUidIdentifier('scope')
 
-                toPairs(path.scope.bindings)
-                    .map(([_, binding]) => binding)
-                    .forEach(bindingToScope(scopeId))
+                unwrapOrRemoveExports(scopeId)(path)
 
                 const globalIds = getGlobalIdentifiers(path.scope)
-                const oldBody = path.node.body
-                path.node.body = []
+
+                const localImportIds = toPairs(path.scope.bindings)
+                    .map(([_, binding]) => binding)
+                    .map(bindingToScope(scopeId))
+                    .filter(Boolean)
+
+                // reverse()-ing to preserve order after unshift()-ing
+                localImportIds
+                    .reverse()
+                    .forEach(localId =>
+                        path.node.body.unshift(
+                            t.expressionStatement(
+                                scopeSet(scopeId, localId, localId)
+                            )
+                        )
+                    )
+
+                const programBody = path.node.body
+                if (options.removeImports === true) {
+                    path.node.body = []
+                } else {
+                    const importsOnly = programBody.filter(
+                        byType('ImportDeclaration')
+                    )
+                    path.node.body = importsOnly
+                }
+                const bodyWithoutImports = programBody.filter(
+                    not(byType('ImportDeclaration'))
+                )
                 path.pushContainer(
                     'body',
-                    moduleExports(wrapInFunction(scopeId, globalIds, oldBody))
+                    moduleExports(
+                        wrapInFunction(scopeId, globalIds, bodyWithoutImports)
+                    )
                 )
-
-                removeImports(path)
-                unwrapOrRemoveExports(scopeId)(path)
             }
         }
     }

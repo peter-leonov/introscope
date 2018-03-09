@@ -86,3 +86,36 @@ describe('plugin', () => {
         `)
     })
 })
+
+describe('options', () => {
+    it('removeImport', () => {
+        shoot(`
+            // @introscope removeImports: ['defaultImport1', 'singleNamedImport1', 'namedImport1', 'namedImport2', 'localImportName1', 'namespaceImport1']
+            import defaultImport1 from 'some-module1'
+            import defaultImport2 from 'some-module2'
+            import { singleNamedImport1 } from 'some-module2'
+            import { singleNamedImport2 } from 'some-module3'
+            import { namedImport1, namedImport2 } from 'some-module4'
+            import { namedImport3, namedImport4 } from 'some-module5'
+            import { originalImportName1 as localImportName1 } from 'some-module6'
+            import { originalImportName2 as localImportName2 } from 'some-module7'
+            import * as namespaceImport1 from 'some-module8'
+            import * as namespaceImport2 from 'some-module9'
+
+            [
+                defaultImport1,
+                defaultImport2,
+                singleNamedImport1,
+                singleNamedImport2,
+                namedImport1,
+                namedImport2,
+                namedImport3,
+                namedImport4,
+                localImportName1,
+                localImportName2,
+                namespaceImport1,
+                namespaceImport2
+             ]
+        `)
+    })
+})
