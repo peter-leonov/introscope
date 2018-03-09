@@ -9,19 +9,20 @@ const toPairs = obj => {
 const byType = type => node => node.type == type
 const not = fn => (...args) => !fn(...args)
 
-function processProgram({ types: t }, rootPath, rootState) {
+function processProgram({ types: t }, programPath, programState) {
     let options = { removeImports: false }
 
-    const scopeSet = (scopeId, left, right) =>
+    const scopeId = programPath.scope.generateUidIdentifier('scope')
+
+    const scopeSet = (left, right) =>
         t.assignmentExpression('=', t.memberExpression(scopeId, left), right)
 
-    const unwrapOrRemoveExports = scopeId => path => {
+    const unwrapOrRemoveExports = path => {
         path.get('body').forEach(path => {
             if (path.isExportDefaultDeclaration()) {
                 path.replaceWith(
                     t.expressionStatement(
                         scopeSet(
-                            scopeId,
                             t.identifier('default'),
                             path.get('declaration').node
                         )
@@ -42,7 +43,7 @@ function processProgram({ types: t }, rootPath, rootState) {
             t.objectProperty(identifier, identifier, undefined, true)
         )
 
-    const wrapInFunction = (scopeId, idsIn, body) =>
+    const wrapInFunction = (idsIn, body) =>
         t.functionExpression(
             null,
             [
@@ -67,41 +68,41 @@ function processProgram({ types: t }, rootPath, rootState) {
             )
         )
 
-    const variableDeclaratorToScope = scopeId => path => {
+    const variableDeclaratorToScope = path => {
         const init = path.get('init')
         if (!init.node) return
         // Q: Why not replace the parent VariableDeclaration node?
         // A: To not die debugging variable declaration order in a `for` loop if one of the binding should be ignored dew to introscope configuration (expected future feature). And it's simplier to implement :)
-        init.replaceWith(scopeSet(scopeId, path.get('id').node, init.node))
+        init.replaceWith(scopeSet(path.get('id').node, init.node))
     }
 
-    const classDeclarationToScope = scopeId => path => {
+    const classDeclarationToScope = path => {
         const classExpression = t.clone(path.node)
         classExpression.type = 'ClassExpression'
         path.replaceWith(
             t.expressionStatement(
-                scopeSet(scopeId, path.get('id').node, classExpression)
+                scopeSet(path.get('id').node, classExpression)
             )
         )
     }
 
-    const functionDeclarationToScope = scopeId => path => {
+    const functionDeclarationToScope = path => {
         const program = path.findParent(path => path.isProgram())
         program.unshiftContainer(
             'body',
             t.expressionStatement(
-                scopeSet(scopeId, path.get('id').node, path.get('id').node)
+                scopeSet(path.get('id').node, path.get('id').node)
             )
         )
     }
 
-    const declarationToScope = scopeId => path => {
+    const declarationToScope = path => {
         if (path.isNodeType('VariableDeclarator')) {
-            variableDeclaratorToScope(scopeId)(path)
+            variableDeclaratorToScope(path)
         } else if (path.isNodeType('ClassDeclaration')) {
-            classDeclarationToScope(scopeId)(path)
+            classDeclarationToScope(path)
         } else if (path.isNodeType('FunctionDeclaration')) {
-            functionDeclarationToScope(scopeId)(path)
+            functionDeclarationToScope(path)
         } else if (
             path.isNodeType('ImportDefaultSpecifier') ||
             path.isNodeType('ImportSpecifier') ||
@@ -118,7 +119,7 @@ function processProgram({ types: t }, rootPath, rootState) {
         }
     }
 
-    const replaceReferenceWithScope = scopeId => path => {
+    const replaceReferenceWithScope = path => {
         // ExportNamedDeclaration gets properly processed by replaceMutationWithScope()
         if (path.node.type == 'ExportNamedDeclaration') return
         // ExportSpecifier gets removed by unwrapOrRemoveExports()
@@ -134,41 +135,39 @@ function processProgram({ types: t }, rootPath, rootState) {
         }
     }
 
-    const replaceMutationWithScope = scopeId => path => {
+    const replaceMutationWithScope = path => {
         if (path.node.type == 'AssignmentExpression') {
             const left = path.get('left')
             left.replaceWith(t.memberExpression(scopeId, left.node))
         }
     }
 
-    const bindingToScope = scopeId => binding => {
-        binding.referencePaths.forEach(replaceReferenceWithScope(scopeId))
-        binding.constantViolations.forEach(replaceMutationWithScope(scopeId))
-        return declarationToScope(scopeId)(binding.path)
+    const bindingToScope = binding => {
+        binding.referencePaths.forEach(replaceReferenceWithScope)
+        binding.constantViolations.forEach(replaceMutationWithScope)
+        return declarationToScope(binding.path)
     }
 
-    const bindingsToScope = scopeId => bindings =>
+    const bindingsToScope = bindings =>
         toPairs(bindings)
             .map(([_, binding]) => binding)
-            .map(bindingToScope(scopeId))
+            .map(bindingToScope)
             .filter(Boolean)
 
     const program = (path, state) => {
-        const scopeId = path.scope.generateUidIdentifier('scope')
-
         const globalIds = getGlobalIdentifiers(path.scope)
 
-        const localImportIds = bindingsToScope(scopeId)(path.scope.bindings)
+        const localImportIds = bindingsToScope(path.scope.bindings)
 
         // unwrapOrRemoveExports() should go after bindingsToScope() as the latter treats `export var/let/const` as a reference and uses node.parent to distinguish
-        unwrapOrRemoveExports(scopeId)(path)
+        unwrapOrRemoveExports(path)
 
         // reverse()-ing to preserve order after unshift()-ing
         localImportIds
             .reverse()
             .forEach(localId =>
                 path.node.body.unshift(
-                    t.expressionStatement(scopeSet(scopeId, localId, localId))
+                    t.expressionStatement(scopeSet(localId, localId))
                 )
             )
 
@@ -184,13 +183,11 @@ function processProgram({ types: t }, rootPath, rootState) {
         )
         path.pushContainer(
             'body',
-            moduleExports(
-                wrapInFunction(scopeId, globalIds, bodyWithoutImports)
-            )
+            moduleExports(wrapInFunction(globalIds, bodyWithoutImports))
         )
     }
 
-    program(rootPath, rootState)
+    program(programPath, programState)
 }
 
 export default function(babel) {
