@@ -71,8 +71,9 @@ describe('plugin', () => {
         shoot(`
             let x = global1;
             global2 = 1;
-            global3();
-            !function(){ return nestedGlobal }();
+            global2 = 1;
+            globalFunction();
+            !function(){ return [nestedGlobal1, global2] }();
         `)
     })
 

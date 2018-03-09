@@ -43,14 +43,23 @@ function processProgram({ types: t }, programPath, programState) {
             t.objectProperty(identifier, identifier, undefined, true)
         )
 
-    const wrapInFunction = (idsIn, body) =>
+    const wrapInFunction = (globalIds, body) =>
         t.functionExpression(
             null,
-            [
-                t.assignmentPattern(scopeId, t.objectExpression([])),
-                t.objectPattern(identifiersToObjectProperties(idsIn))
-            ],
-            t.blockStatement(body.concat([t.returnStatement(scopeId)]))
+            [t.assignmentPattern(scopeId, t.objectExpression([]))],
+            t.blockStatement(
+                []
+                    .concat(
+                        globalIds.length
+                            ? t.variableDeclaration(
+                                  'var',
+                                  globalIds.map(id => t.variableDeclarator(id))
+                              )
+                            : []
+                    )
+                    .concat(body)
+                    .concat([t.returnStatement(scopeId)])
+            )
         )
 
     const getGlobalIdentifiers = scope =>
@@ -156,6 +165,7 @@ function processProgram({ types: t }, programPath, programState) {
 
     const program = (path, state) => {
         const globalIds = getGlobalIdentifiers(path.scope)
+        const programGlobalNames = Object.keys(path.scope.globals)
 
         const localImportIds = bindingsToScope(path.scope.bindings)
 
@@ -181,10 +191,22 @@ function processProgram({ types: t }, programPath, programState) {
         const bodyWithoutImports = programBody.filter(
             not(byType('ImportDeclaration'))
         )
+
         path.pushContainer(
             'body',
             moduleExports(wrapInFunction(globalIds, bodyWithoutImports))
         )
+
+        const uniqueGlobalIds = new Set()
+        path.traverse({
+            Scope(path, state) {
+                programGlobalNames.forEach(globalName => {
+                    const binding = path.scope.getBinding(globalName)
+                    uniqueGlobalIds.add(binding)
+                })
+            }
+        })
+        bindingsToScope(Array.from(uniqueGlobalIds.values()))
     }
 
     program(programPath, programState)
@@ -193,7 +215,7 @@ function processProgram({ types: t }, programPath, programState) {
 export default function(babel) {
     return {
         visitor: {
-            Program: function(path, state) {
+            Program(path, state) {
                 processProgram(babel, path, state)
             }
         }
