@@ -16,7 +16,6 @@ export default function({ types: t }) {
         t.assignmentExpression('=', t.memberExpression(scopeId, left), right)
 
     const unwrapOrRemoveExports = scopeId => path => {
-        const identifiers = []
         path.traverse({
             ExportDefaultDeclaration: path =>
                 path.replaceWith(
@@ -32,7 +31,6 @@ export default function({ types: t }) {
                     : path.remove(),
             ExportAllDeclaration: path => path.remove()
         })
-        return identifiers
     }
 
     const identifiersToObjectProperties = identifiers =>
