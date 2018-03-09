@@ -16,8 +16,8 @@ export default function({ types: t }) {
         t.assignmentExpression('=', t.memberExpression(scopeId, left), right)
 
     const unwrapOrRemoveExports = scopeId => path => {
-        path.traverse({
-            ExportDefaultDeclaration: path =>
+        path.get('body').forEach(path => {
+            if (path.isExportDefaultDeclaration()) {
                 path.replaceWith(
                     t.expressionStatement(
                         scopeSet(
@@ -26,12 +26,14 @@ export default function({ types: t }) {
                             path.get('declaration').node
                         )
                     )
-                ),
-            ExportNamedDeclaration: path =>
+                )
+            } else if (path.isExportNamedDeclaration()) {
                 path.node.declaration
                     ? path.replaceWith(path.get('declaration').node)
-                    : path.remove(),
-            ExportAllDeclaration: path => path.remove()
+                    : path.remove()
+            } else if (path.isExportAllDeclaration()) {
+                path.remove()
+            }
         })
     }
 
