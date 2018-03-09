@@ -1,8 +1,3 @@
-const push = (a, b) => a.push.apply(a, b)
-const flatten = (acc, ary) => acc.concat(ary)
-const get = prop => obj => obj[prop]
-const or = (a, b) => v => a(v) || b(v)
-
 const toPairs = obj => {
     const pairs = []
     for (const key in obj) {
