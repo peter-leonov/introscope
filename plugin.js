@@ -19,10 +19,12 @@ export default function({ types: t }) {
         path.traverse({
             ExportDefaultDeclaration: path =>
                 path.replaceWith(
-                    scopeSet(
-                        scopeId,
-                        t.identifier('default'),
-                        path.get('declaration').node
+                    t.expressionStatement(
+                        scopeSet(
+                            scopeId,
+                            t.identifier('default'),
+                            path.get('declaration').node
+                        )
                     )
                 ),
             ExportNamedDeclaration: path =>
@@ -75,7 +77,9 @@ export default function({ types: t }) {
         const classExpression = t.clone(path.node)
         classExpression.type = 'ClassExpression'
         path.replaceWith(
-            scopeSet(scopeId, path.get('id').node, classExpression)
+            t.expressionStatement(
+                scopeSet(scopeId, path.get('id').node, classExpression)
+            )
         )
     }
 
