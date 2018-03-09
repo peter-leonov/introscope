@@ -94,3 +94,4 @@ Based on
 * https://astexplorer.net (http://astexplorer.net/#/o5NsNwV46z/1)
 * https://github.com/jamiebuilds/babel-handbook/blob/master/translations/en/plugin-handbook.md#toc-paths
 * https://babeljs.io/docs/core-packages/babel-types/
+* globals: https://github.com/babel/babel/blob/252ea5a966c1968d8aac21a1a81c6d45173e57dd/packages/babel-helpers/src/index.js#L92
