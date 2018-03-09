@@ -9,7 +9,7 @@ const toPairs = obj => {
 const byType = type => node => node.type == type
 const not = fn => (...args) => !fn(...args)
 
-export default function({ types: t }) {
+function processProgram({ types: t }, rootPath, rootState) {
     let options = { removeImports: false }
 
     const scopeSet = (scopeId, left, right) =>
@@ -153,49 +153,51 @@ export default function({ types: t }) {
             .map(bindingToScope(scopeId))
             .filter(Boolean)
 
+    const program = (path, state) => {
+        const scopeId = path.scope.generateUidIdentifier('scope')
+
+        const globalIds = getGlobalIdentifiers(path.scope)
+
+        const localImportIds = bindingsToScope(scopeId)(path.scope.bindings)
+
+        // unwrapOrRemoveExports() should go after bindingsToScope() as the latter treats `export var/let/const` as a reference and uses node.parent to distinguish
+        unwrapOrRemoveExports(scopeId)(path)
+
+        // reverse()-ing to preserve order after unshift()-ing
+        localImportIds
+            .reverse()
+            .forEach(localId =>
+                path.node.body.unshift(
+                    t.expressionStatement(scopeSet(scopeId, localId, localId))
+                )
+            )
+
+        const programBody = path.node.body
+        if (options.removeImports === true) {
+            path.node.body = []
+        } else {
+            const importsOnly = programBody.filter(byType('ImportDeclaration'))
+            path.node.body = importsOnly
+        }
+        const bodyWithoutImports = programBody.filter(
+            not(byType('ImportDeclaration'))
+        )
+        path.pushContainer(
+            'body',
+            moduleExports(
+                wrapInFunction(scopeId, globalIds, bodyWithoutImports)
+            )
+        )
+    }
+
+    program(rootPath, rootState)
+}
+
+export default function(babel) {
     return {
         visitor: {
             Program: function(path, state) {
-                const scopeId = path.scope.generateUidIdentifier('scope')
-
-                const globalIds = getGlobalIdentifiers(path.scope)
-
-                const localImportIds = bindingsToScope(scopeId)(
-                    path.scope.bindings
-                )
-
-                // unwrapOrRemoveExports() should go after bindingsToScope() as the latter treats `export var/let/const` as a reference and uses node.parent to distinguish
-                unwrapOrRemoveExports(scopeId)(path)
-
-                // reverse()-ing to preserve order after unshift()-ing
-                localImportIds
-                    .reverse()
-                    .forEach(localId =>
-                        path.node.body.unshift(
-                            t.expressionStatement(
-                                scopeSet(scopeId, localId, localId)
-                            )
-                        )
-                    )
-
-                const programBody = path.node.body
-                if (options.removeImports === true) {
-                    path.node.body = []
-                } else {
-                    const importsOnly = programBody.filter(
-                        byType('ImportDeclaration')
-                    )
-                    path.node.body = importsOnly
-                }
-                const bodyWithoutImports = programBody.filter(
-                    not(byType('ImportDeclaration'))
-                )
-                path.pushContainer(
-                    'body',
-                    moduleExports(
-                        wrapInFunction(scopeId, globalIds, bodyWithoutImports)
-                    )
-                )
+                processProgram(babel, path, state)
             }
         }
     }
