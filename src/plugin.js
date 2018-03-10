@@ -177,7 +177,34 @@ function processProgram({ types: t }, programPath, programState) {
             .map(bindingToScope)
             .filter(Boolean);
 
+    const parseConfig = path => {
+        const firstStatement = path.get('body').forEach(statement => {
+            const leading = statement.node.leadingComments || [];
+            const trailing = statement.node.trailingComments || [];
+            const comments = [].concat(leading).concat(trailing);
+            comments.map(node => node.value).forEach(comment => {
+                const [_, configJSON] = comment.split(/^\s*@introscope-config/);
+                if (configJSON) {
+                    try {
+                        const config = JSON.parse(`{${configJSON}}`);
+                        options = {
+                            ...options,
+                            ...config
+                        };
+                    } catch (ex) {
+                        console.error(
+                            'Error parsing Introscope config:',
+                            comment
+                        );
+                    }
+                }
+            });
+        });
+    };
+
     const program = (path, state) => {
+        parseConfig(path);
+
         const globalIds = getGlobalIdentifiers(path.scope);
         const programGlobalNames = Object.keys(path.scope.globals);
 

@@ -4,6 +4,7 @@ import plugin from './plugin';
 const shoot = (code, opts = {}) =>
     expect(
         transform(code, {
+            sourceType: 'module',
             plugins: ['syntax-object-rest-spread', [plugin, opts]]
         }).code
     ).toMatchSnapshot();
@@ -119,32 +120,35 @@ describe('options', () => {
 
     it('removeImport', () => {
         shoot(`
-            // @introscope removeImports: ['defaultImport1', 'singleNamedImport1', 'namedImport1', 'namedImport2', 'localImportName1', 'namespaceImport1']
-            import defaultImport1 from 'some-module1'
-            import defaultImport2 from 'some-module2'
-            import { singleNamedImport1 } from 'some-module2'
-            import { singleNamedImport2 } from 'some-module3'
-            import { namedImport1, namedImport2 } from 'some-module4'
-            import { namedImport3, namedImport4 } from 'some-module5'
-            import { originalImportName1 as localImportName1 } from 'some-module6'
-            import { originalImportName2 as localImportName2 } from 'some-module7'
-            import * as namespaceImport1 from 'some-module8'
-            import * as namespaceImport2 from 'some-module9'
-
-            [
-                defaultImport1,
-                defaultImport2,
-                singleNamedImport1,
-                singleNamedImport2,
-                namedImport1,
-                namedImport2,
-                namedImport3,
-                namedImport4,
-                localImportName1,
-                localImportName2,
-                namespaceImport1,
-                namespaceImport2
-             ]
+            // @introscope-config "removeImports": true
+            // other comment
+            import sholdBeRemoved from 'some-module1'
+            sholdBeRemoved++
+        `);
+        shoot(`
+            // @other-at-comment bla bla bla
+            import sholdBeRemoved from 'some-module1'
+            sholdBeRemoved++
+            // @introscope-config "removeImports": true
+        `);
+        shoot(
+            `
+            // @introscope-config "removeImports": false
+            import sholdNotBeRemoved from 'some-module1'
+            sholdNotBeRemoved++
+        `,
+            { removeImports: true }
+        );
+        shoot(`
+            // @introscope-config "removeImports": true
+            import sholdNotBeRemoved from 'some-module1'
+            sholdNotBeRemoved++
+            // last takes precedence
+            // @introscope-config "removeImports": false
+        `);
+        shoot(`
+            import sholdNotBeRemoved from 'some-module1'
+            defaultImport1++
         `);
     });
 });

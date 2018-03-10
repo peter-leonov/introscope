@@ -20,34 +20,57 @@ exports[`options does nothing if NODE_ENV == "production" 3`] = `
 `;
 
 exports[`options removeImport 1`] = `
+"module.exports = function (_scope = {}) {
+            _scope.sholdBeRemoved++;
+            return _scope;
+};"
+`;
+
+exports[`options removeImport 2`] = `
+"module.exports = function (_scope = {}) {
+            _scope.sholdBeRemoved++;
+            // @introscope-config \\"removeImports\\": true
+
+            return _scope;
+};"
+`;
+
+exports[`options removeImport 3`] = `
 "
-// @introscope removeImports: ['defaultImport1', 'singleNamedImport1', 'namedImport1', 'namedImport2', 'localImportName1', 'namespaceImport1']
-import defaultImport1 from 'some-module1';
-import defaultImport2 from 'some-module2';
-import { singleNamedImport1 } from 'some-module2';
-import { singleNamedImport2 } from 'some-module3';
-import { namedImport1, namedImport2 } from 'some-module4';
-import { namedImport3, namedImport4 } from 'some-module5';
-import { originalImportName1 as localImportName1 } from 'some-module6';
-import { originalImportName2 as localImportName2 } from 'some-module7';
-import * as namespaceImport1 from 'some-module8';
-import * as namespaceImport2 from 'some-module9';
+// @introscope-config \\"removeImports\\": false
+import sholdNotBeRemoved from 'some-module1';
 
 module.exports = function (_scope = {}) {
-    _scope.defaultImport1 = defaultImport1;
-    _scope.defaultImport2 = defaultImport2;
-    _scope.singleNamedImport1 = singleNamedImport1;
-    _scope.singleNamedImport2 = singleNamedImport2;
-    _scope.namedImport1 = namedImport1;
-    _scope.namedImport2 = namedImport2;
-    _scope.namedImport3 = namedImport3;
-    _scope.namedImport4 = namedImport4;
-    _scope.localImportName1 = localImportName1;
-    _scope.localImportName2 = localImportName2;
-    _scope.namespaceImport1 = namespaceImport1;
-    _scope.namespaceImport2 = namespaceImport2;
-    [_scope.defaultImport1, _scope.defaultImport2, _scope.singleNamedImport1, _scope.singleNamedImport2, _scope.namedImport1, _scope.namedImport2, _scope.namedImport3, _scope.namedImport4, _scope.localImportName1, _scope.localImportName2, _scope.namespaceImport1, _scope.namespaceImport2];
-    return _scope;
+            _scope.sholdNotBeRemoved = sholdNotBeRemoved;
+            _scope.sholdNotBeRemoved++;
+            return _scope;
+};"
+`;
+
+exports[`options removeImport 4`] = `
+"
+// @introscope-config \\"removeImports\\": true
+import sholdNotBeRemoved from 'some-module1';
+
+module.exports = function (_scope = {}) {
+            _scope.sholdNotBeRemoved = sholdNotBeRemoved;
+            _scope.sholdNotBeRemoved++;
+            // last takes precedence
+            // @introscope-config \\"removeImports\\": false
+
+            return _scope;
+};"
+`;
+
+exports[`options removeImport 5`] = `
+"
+import sholdNotBeRemoved from 'some-module1';
+
+module.exports = function (_scope = {}) {
+            var defaultImport1;
+            _scope.sholdNotBeRemoved = sholdNotBeRemoved;
+            _scope.defaultImport1++;
+            return _scope;
 };"
 `;
 
