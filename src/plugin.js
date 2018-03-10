@@ -223,7 +223,7 @@ function processProgram({ types: t }, programPath, programState) {
     program(programPath, programState);
 }
 
-export default function(babel) {
+module.exports = function(babel) {
     return {
         visitor: {
             Program(path, state) {
@@ -237,4 +237,4 @@ export default function(babel) {
             }
         }
     };
-}
+};

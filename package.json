@@ -3,7 +3,7 @@
     "version": "1.0.1",
     "description": "Helps testing ES6 modules",
     "repository": "github:peter-leonov/babel-plugin-introscope",
-    "main": "index.js",
+    "main": "src/plugin.js",
     "author": "Peter Leonov",
     "license": "MIT",
     "scripts": {
