@@ -118,7 +118,7 @@ describe('options', () => {
         process.env.NODE_ENV = NODE_ENV;
     });
 
-    it('removeImport', () => {
+    it('removeImports', () => {
         shoot(`
             // @introscope-config "removeImports": true
             // other comment

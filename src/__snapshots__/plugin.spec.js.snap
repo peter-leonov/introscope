@@ -19,14 +19,14 @@ exports[`options does nothing if NODE_ENV == "production" 3`] = `
 };"
 `;
 
-exports[`options removeImport 1`] = `
+exports[`options removeImports 1`] = `
 "module.exports = function (_scope = {}) {
             _scope.sholdBeRemoved++;
             return _scope;
 };"
 `;
 
-exports[`options removeImport 2`] = `
+exports[`options removeImports 2`] = `
 "module.exports = function (_scope = {}) {
             _scope.sholdBeRemoved++;
             // @introscope-config \\"removeImports\\": true
@@ -35,7 +35,7 @@ exports[`options removeImport 2`] = `
 };"
 `;
 
-exports[`options removeImport 3`] = `
+exports[`options removeImports 3`] = `
 "
 // @introscope-config \\"removeImports\\": false
 import sholdNotBeRemoved from 'some-module1';
@@ -47,7 +47,7 @@ module.exports = function (_scope = {}) {
 };"
 `;
 
-exports[`options removeImport 4`] = `
+exports[`options removeImports 4`] = `
 "
 // @introscope-config \\"removeImports\\": true
 import sholdNotBeRemoved from 'some-module1';
@@ -62,7 +62,7 @@ module.exports = function (_scope = {}) {
 };"
 `;
 
-exports[`options removeImport 5`] = `
+exports[`options removeImports 5`] = `
 "
 import sholdNotBeRemoved from 'some-module1';
 
