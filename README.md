@@ -10,7 +10,7 @@ Handy tooling like `Proxy` based wrappers/spies, dependency injection, etc to co
 
 What Introscope does is it wraps a whole module code in a function that accepts one argument `scope` object and returns all variables, functions and classes defined in the module as properties of the `scope` object. Here is a little example. Code like this:
 
-```javascript
+```js
 // api.js
 import httpGet from 'some-http-library';
 
@@ -26,7 +26,7 @@ export const getTodos = httpGet('/todos').then(ensureOkStatus);
 
 gets transpiled to code like this:
 
-```javascript
+```js
 // api.js
 import httpGet from 'some-http-library';
 
@@ -49,12 +49,12 @@ You can play with the transpilation in this [AST explorer example](https://astex
 
 The resulting code you can then import in your Babel powered test environment and examine like this:
 
-```javascript
+```js
 // api.spec.js
 
-// @introscope-next-line
-import introscope from './api.js';
-// introscope() is a factory function for module scope,
+// @introscope
+import apiScopeFactory from './api.js';
+// Introscope exports a factory function for module scope,
 // it creates a new module scope on each call,
 // so that it's easier to test the code of a module
 // with different mocks and spies.
@@ -62,7 +62,7 @@ import introscope from './api.js';
 describe('ensureOkStatus', () => {
     it('throws on non 200 status', () => {
         // creates a new unaltered scope
-        const scope = introscope();
+        const scope = apiScopeFactory();
 
         const errorResponse = { status: 500 };
         expect(() => {
@@ -71,7 +71,7 @@ describe('ensureOkStatus', () => {
     });
     it('passes response 200 status', () => {
         // creates a new unaltered scope
-        const scope = introscope();
+        const scope = apiScopeFactory();
 
         const okResponse = { status: 200 };
         expect(scope.ensureOkStatus(okResponse)).toBe(okResponse);
@@ -81,7 +81,7 @@ describe('ensureOkStatus', () => {
 describe('getTodos', () => {
     it('calls httpGet() and ensureOkStatus()', async () => {
         // creates a new unaltered scope
-        const scope = introscope();
+        const scope = apiScopeFactory();
         // mock the local module functions
         scope.httpGet = jest.fn(() => Promise.resolve());
         scope.ensureOkStatus = jest.fn();
@@ -96,93 +96,112 @@ describe('getTodos', () => {
 
 ## Usage
 
-    import scope from './filter';
+Intall the babel plugin first:
 
-    test('filter against', () => {
-        // provide imported functions/values mocks
-        const foo = scope({map: mapMock, get: getMock});
-        //
-        const filter = foo({})
-    });
+```sh
+yarn add --dev babel-plugin-introscope
+# or
+npm install --save-dev
+```
 
-In case this plugin find it's way to production build configuration it will not touch any code if `NODE_ENV`/`BABEL_ENV` equals `'production'`.
+Add it to the project babel configuration (most likely `.babelrc`):
 
-## Limitations by design
+```json
+{
+    "plugins": ["introscope"]
+}
+```
 
-### Curried functions
+and use in tests:
 
-Currently, any curried functions created during the initial call to the module scope factory will remember values from the imports. It's still possible to overcome this by providing an initial value to the `scope` argument with a getter for the desired module import. To be fixed by tooling in `introscope` package, not in the babel plugin.
+```js
+// @introscope
+import scope from './tested-module';
 
-### Importing dynamic module binding
+// or
 
-Is not supported right now, but can be implemented using a getter on the scope object. To be implemented once the overall design of unit testing with Introscope becomes clear.
+// @introscope
+const scope = require('./tested-module');
+```
+
+Introscope supports all the new ES features (if not, create an issue 🙏), so if your babel configuratiob supports some new fancy syntax, Introscope should too.
+
+## TODOs
+
+### Imported values in curried functions
+
+Currently, any call to a curried function during the initial call to the module scope factory will remember values from the imports. It's still possible to overcome this by providing an initial value to the `scope` argument with a getter for the desired module import. To be fixed by tooling in `introscope` package, not in the babel plugin.
+
+Example:
+
+```js
+import toString from 'lib';
+
+const fmap = fn => x => x.map(fn);
+// listToStrings remembers `toString` in `fmap` closure
+const listToStrings = fmap(toString);
+```
+
+### Importing live binding
+
+Can be in principal supported using a getter on the scope object combined with a clojure returning the current value of a live binding. To be implemented once the overall design of unit testing with Introscope becomes clear.
+
+Example:
+
+```js
+import { ticksCounter, tick } from 'date';
+console.log(ticksCounter); // 0
+tick();
+console.log(ticksCounter); // 1
+```
 
 ### Module purity
 
-The main limitation is that the module tested using introscope should be a pure module. This means requiring it makes no side effects. The example module is pure:
+Implement per module import removal to allow preventing any possible unneeded side effects.
 
-    import dropDatabase from 'api'
-    // this module never calls dropDatabase() itself
-    export function safeDropDatabase(password) {
-        if (password == '123456')
-            dropDatabase();
-    }
+Example:
 
-and the following is not:
+```js
+import 'crazyDropDatabaseModule';
+```
 
-    import dropDatabase from 'api'
-    // this module calls dropDatabase() each time it gets imported
-    if (process.env.node_env == 'test') {
-        dropDatabase();
-    }
+Or even worse:
 
-This limitation is easy to avoid putting all the side effects code in an exported function and call it outside of the module in the application code. Anyway, ES6 modules expected to be pure, so making a module testable using Introscope is just another good reason to make all your modules pure.
+```js
+import map from 'lodash';
+// map() just maps here
+import 'weird-monkey-patch';
+// map launches missles here
+```
 
-### Pure imports
+### Support any test runner environment
 
-Ignored imports are pure. This is an example of an impure import:
+Example:
 
-    import map from 'lodash'
-    // map just maps here
-    import 'magic-hack'
-    // map launches missles here
+To support simple require-from-a-file semantics the `transformToFile` function will transpile `./module` to `./module-introscoped-3123123` and return the latter.
 
-In this case both imports should be ignored as `lodash` and `magic-hack` are dependent modules and form a unit together.
+```js
+import { transformToFile } from 'introscope';
+const moduleScopeFactory = require(transformToFile('./module'));
+```
 
-In case only some of the imported values has to be ignored ignore them like this:
+Or even simplier (but not easier):
 
-    // @introscope ignore: ['loadItems']
-    import { loadItems, saveItems } from 'api'
-    // here `loadItems` comes from 'api' module
-    // and `saveItems` comes from a test
-
-### Constant testees
-
-Introscope will warn you if the testee variable is not constant
+```js
+import { readFileSync } from 'fs';
+import { transform } from 'introscope';
+const _module = {};
+new Function('module', transform(readFileSync('./module')))(_module);
+const moduleScopeFactory = _module.exports;
+```
 
 ## Nice tricks
 
 Wrap all possible IDs in a test-plan like proxy, mock imported side effects and then just run each funtion with different input and record how proxies been called and what returned.
 
-In case of a dynamic import value ([bindings](http://2ality.com/2015/07/es6-module-exports.html)) like `ticksCounter` here:
-
-    import { ticksCounter, tick } from 'date'
-    console.log(ticksCounter) // 0
-    tick()
-    console.log(ticksCounter) // 1
-
-this import needs to be wrapped in a clojure + `Proxy` to preserve the semantics of ES6 modules.
-
-To use with any node-based test environment:
-
-    import { transformToFile } from 'introscope'
-    const scope = require(transformToFile('./module'))
-
-To copy require-from-a-file semantics the `transformToFile` function will transpile `./module` to `./module-introscoped-3123123` and return the latter.
-
 ## Notes
 
-Based on
+Based on this documentation and source code:
 
 *   https://astexplorer.net (http://astexplorer.net/#/o5NsNwV46z/1)
 *   https://github.com/jamiebuilds/babel-handbook/blob/master/translations/en/plugin-handbook.md#toc-paths
