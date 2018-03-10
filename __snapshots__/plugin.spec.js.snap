@@ -52,6 +52,19 @@ exports[`plugin declarations 1`] = `
                 doubleInit2 = _scope.doubleInit2 = 2;
             var sameDoubleInit = 1,
                 sameDoubleInit = _scope.sameDoubleInit = 2;
+
+            let { singleDestructing } = 1,
+                _temp = _scope.singleDestructing = singleDestructing;
+            var { objectDestruction1, objectDestruction2, nestedProperty: { objectNestedDestruction1 } } = { objectDestruction1: _scope.objectDestruction1, objectDestruction2: _scope.objectDestruction2, nestedProperty: { objectNestedDestruction1: _scope.objectNestedDestruction1 } },
+                _temp4 = _scope.objectNestedDestruction1 = objectNestedDestruction1,
+                _temp3 = _scope.objectDestruction2 = objectDestruction2,
+                _temp2 = _scope.objectDestruction1 = objectDestruction1,
+                let2 = _scope.let2 = _scope.objectDestruction1;
+            // let { ...objectRest } = 1;
+            //let [ arrayDestruction1, arrayDestruction2, [ //arrayNestedDestruction ] ] = 1;
+            //let [ ...arrayRest ] ] = 1;
+
+
             _scope.ClassName = class ClassName {};
             ;new _scope.ClassName();
             (0, _scope.functionName)();function functionName() {}

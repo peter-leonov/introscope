@@ -65,7 +65,7 @@ function processProgram({ types: t }, programPath, programState) {
     const getGlobalIdentifiers = scope =>
         toPairs(scope.globals).map(([_, identifier]) => identifier)
 
-    const moduleExports = idendifier =>
+    const moduleExports = right =>
         t.expressionStatement(
             t.assignmentExpression(
                 '=',
@@ -73,16 +73,27 @@ function processProgram({ types: t }, programPath, programState) {
                     t.identifier('module'),
                     t.identifier('exports')
                 ),
-                idendifier
+                right
             )
         )
 
-    const variableDeclaratorToScope = path => {
-        const init = path.get('init')
-        if (!init.node) return
-        // Q: Why not replace the parent VariableDeclaration node?
-        // A: To not die debugging variable declaration order in a `for` loop if one of the binding should be ignored dew to introscope configuration (expected future feature). And it's simplier to implement :)
-        init.replaceWith(scopeSet(path.get('id').node, init.node))
+    const variableDeclaratorToScope = (path, identifier) => {
+        const idPath = path.get('id')
+        if (idPath.isObjectPattern()) {
+            path.insertAfter(
+                t.variableDeclarator(
+                    path.scope.generateUidIdentifier('temp'),
+                    scopeSet(t.clone(identifier), t.clone(identifier))
+                )
+            )
+        } else if (idPath.isArrayPattern()) {
+        } else {
+            const init = path.get('init')
+            if (!init.node) return
+            // Q: Why not replace the parent VariableDeclaration node?
+            // A: To not die debugging variable declaration order in a `for` loop if one of the binding should be ignored dew to introscope configuration (expected future feature). And it's simplier to implement :)
+            init.replaceWith(scopeSet(path.get('id').node, init.node))
+        }
     }
 
     const classDeclarationToScope = path => {
@@ -105,9 +116,9 @@ function processProgram({ types: t }, programPath, programState) {
         )
     }
 
-    const declarationToScope = path => {
+    const declarationToScope = (path, identifier) => {
         if (path.isNodeType('VariableDeclarator')) {
-            variableDeclaratorToScope(path)
+            variableDeclaratorToScope(path, identifier)
         } else if (path.isNodeType('ClassDeclaration')) {
             classDeclarationToScope(path)
         } else if (path.isNodeType('FunctionDeclaration')) {
@@ -133,6 +144,7 @@ function processProgram({ types: t }, programPath, programState) {
         if (path.node.type == 'ExportNamedDeclaration') return
         // ExportSpecifier gets removed by unwrapOrRemoveExports()
         if (path.parent.type == 'ExportSpecifier') return
+        if (path.findParent(path => path.isObjectPattern())) return
 
         const scoped = t.memberExpression(scopeId, path.node)
         if (path.parent && path.parent.type == 'CallExpression') {
@@ -154,7 +166,7 @@ function processProgram({ types: t }, programPath, programState) {
     const bindingToScope = binding => {
         binding.referencePaths.forEach(replaceReferenceWithScope)
         binding.constantViolations.forEach(replaceMutationWithScope)
-        return declarationToScope(binding.path)
+        return declarationToScope(binding.path, binding.identifier)
     }
 
     const bindingsToScope = bindings =>
