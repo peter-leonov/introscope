@@ -79,14 +79,13 @@ function processProgram({ types: t }, programPath, programState) {
 
     const variableDeclaratorToScope = (path, identifier) => {
         const idPath = path.get('id')
-        if (idPath.isObjectPattern()) {
+        if (idPath.isObjectPattern() || idPath.isArrayPattern()) {
             path.insertAfter(
                 t.variableDeclarator(
                     path.scope.generateUidIdentifier('temp'),
                     scopeSet(t.clone(identifier), t.clone(identifier))
                 )
             )
-        } else if (idPath.isArrayPattern()) {
         } else {
             const init = path.get('init')
             if (!init.node) return

@@ -58,7 +58,7 @@ describe('plugin', () => {
             let { singleDestructing } = 1
             var { objectDestruction1, objectDestruction2, nestedProperty: { objectNestedDestruction1 } } = { objectDestruction1, objectDestruction2, nestedProperty: { objectNestedDestruction1 } }, let2 = objectDestruction1;
             // let { ...objectRest } = 1;
-            //let [ arrayDestruction1, arrayDestruction2, [ //arrayNestedDestruction ] ] = 1;
+            var [ arrayDestruction1, arrayDestruction2, [ arrayNestedDestruction ] ] = [ arrayDestruction1, arrayDestruction2, [ arrayNestedDestruction ] ];
             //let [ ...arrayRest ] ] = 1;
 
 

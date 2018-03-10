@@ -61,7 +61,10 @@ exports[`plugin declarations 1`] = `
                 _temp2 = _scope.objectDestruction1 = objectDestruction1,
                 let2 = _scope.let2 = _scope.objectDestruction1;
             // let { ...objectRest } = 1;
-            //let [ arrayDestruction1, arrayDestruction2, [ //arrayNestedDestruction ] ] = 1;
+            var [arrayDestruction1, arrayDestruction2, [arrayNestedDestruction]] = [_scope.arrayDestruction1, _scope.arrayDestruction2, [_scope.arrayNestedDestruction]],
+                _temp7 = _scope.arrayNestedDestruction = arrayNestedDestruction,
+                _temp6 = _scope.arrayDestruction2 = arrayDestruction2,
+                _temp5 = _scope.arrayDestruction1 = arrayDestruction1;
             //let [ ...arrayRest ] ] = 1;
 
 
