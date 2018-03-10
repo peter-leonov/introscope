@@ -1,19 +1,23 @@
 {
     "name": "babel-plugin-introscope",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Helps testing ES6 modules",
+    "repository": "github:peter-leonov/babel-plugin-introscope",
     "main": "index.js",
     "author": "Peter Leonov",
     "license": "MIT",
     "scripts": {
+        "test": "jest",
         "build": "babel src -d dist"
     },
-    "dependencies": {
+    "peerDependencies": {
+        "babel-core": "^6.26.0"
+    },
+    "devDependencies": {
         "babel-cli": "^6.26.0",
         "babel-core": "^6.26.0",
         "babel-jest": "^22.4.1",
         "babel-plugin-syntax-object-rest-spread": "^6.13.0",
-        "babel-preset-env": "^1.6.1",
         "jest": "^22.4.2",
         "regenerator-runtime": "^0.11.1"
     }
