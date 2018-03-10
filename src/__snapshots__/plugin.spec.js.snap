@@ -1,5 +1,24 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`options does nothing if NODE_ENV == "production" 1`] = `
+"
+var shouldBeUntouched = true;"
+`;
+
+exports[`options does nothing if NODE_ENV == "production" 2`] = `
+"module.exports = function (_scope = {}) {
+            var shouldBeTransformed = _scope.shouldBeTransformed = true;
+            return _scope;
+};"
+`;
+
+exports[`options does nothing if NODE_ENV == "production" 3`] = `
+"module.exports = function (_scope = {}) {
+            var shouldBeTransformed = _scope.shouldBeTransformed = true;
+            return _scope;
+};"
+`;
+
 exports[`options removeImport 1`] = `
 "
 // @introscope removeImports: ['defaultImport1', 'singleNamedImport1', 'namedImport1', 'namedImport2', 'localImportName1', 'namespaceImport1']

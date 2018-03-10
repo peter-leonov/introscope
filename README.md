@@ -36,6 +36,8 @@ import scopeFactory from './tested-module';
 const scopeFactory = require('./tested-module');
 ```
 
+Just in case, this plugin does nothing if `NODE_ENV` equals to `'production'`.
+
 Introscope supports all the new ES features (if not, create an issue 🙏), so if your babel configuratiob supports some new fancy syntax, Introscope should too.
 
 ## Example

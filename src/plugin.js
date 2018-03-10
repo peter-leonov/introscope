@@ -227,6 +227,12 @@ export default function(babel) {
     return {
         visitor: {
             Program(path, state) {
+                if (
+                    typeof process == 'object' &&
+                    process.env.NODE_ENV == 'production'
+                ) {
+                    return;
+                }
                 processProgram(babel, path, state);
             }
         }

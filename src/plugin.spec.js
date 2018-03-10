@@ -98,6 +98,23 @@ describe('plugin', () => {
 })
 
 describe('options', () => {
+    it('does nothing if NODE_ENV == "production"', () => {
+        const NODE_ENV = process.env.NODE_ENV;
+        process.env.NODE_ENV = 'production';
+        shoot(`
+            var shouldBeUntouched = true;
+        `);
+        process.env.NODE_ENV = 'development';
+        shoot(`
+            var shouldBeTransformed = true;
+        `);
+        process.env.NODE_ENV = 'test';
+        shoot(`
+            var shouldBeTransformed = true;
+        `);
+        process.env.NODE_ENV = NODE_ENV;
+    });
+
     it('removeImport', () => {
         shoot(`
             // @introscope removeImports: ['defaultImport1', 'singleNamedImport1', 'namedImport1', 'namedImport2', 'localImportName1', 'namespaceImport1']
