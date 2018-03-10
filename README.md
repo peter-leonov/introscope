@@ -1,13 +1,98 @@
 # Introscope
 
-A code reflection / introspection tool for testing side effects of functions.
+A reflection / introspection tool for unit testing ES modules.
 
-## Goals
+Introscope's babel plugin helps breaking the perfect code encapsulation of modules when the modules need to be tested by transpiling the module source to a function which exports the full internal scope of a module.
 
-* mock/wrap values for imported IDs
-* allow some imports to be actually imported (using test runner)
-* export any top scope ID in a wrapper
-* allow module IDs refer to original versions of other IDs
+Handy tooling like `Proxy` based wrappers/spies, dependency injection, etc to come soon.
+
+## Example
+
+What Introscope does is it wraps a whole module code in a function that accepts one argument `scope` object and returns all variables, functions and classes defined in the module as properties of the `scope` object. Here is a little example. Code like this:
+
+```javascript
+// api.js
+import httpGet from 'some-http-library';
+
+const ensureOkStatus = response => {
+    if (response.status !== 200) {
+        throw 'Non OK status';
+    }
+    return response;
+};
+
+export const getTodos = httpGet('/todos').then(ensureOkStatus);
+```
+
+gets transpiled to code like this:
+
+```javascript
+// api.js
+import httpGet from 'some-http-library';
+
+module.exports = function(_scope = {}) {
+    _scope.httpGet = httpGet;
+    const ensureOkStatus = (_scope.ensureOkStatus = response => {
+        if (response.status !== 200) {
+            throw 'Non OK status';
+        }
+        return response;
+    });
+    const getTodos = (_scope.getTodos = (0, _scope.httpGet)('/todos').then(
+        (0, _scope.ensureOkStatus)
+    ));
+    return _scope;
+};
+```
+
+You can play with the transpilation in this [AST explorer example](https://astexplorer.net/#/gist/74becf4d81c563440fa9046a3c7fb1af/93068b37fa60fd1085726b2c53915f3f82b85830).
+
+The resulting code you can then import in your Babel powered test environment and examine like this:
+
+```javascript
+// api.spec.js
+
+// @introscope-next-line
+import introscope from './api.js';
+// introscope() is a factory function for module scope,
+// it creates a new module scope on each call,
+// so that it's easier to test the code of a module
+// with different mocks and spies.
+
+describe('ensureOkStatus', () => {
+    it('throws on non 200 status', () => {
+        // creates a new unaltered scope
+        const scope = introscope();
+
+        const errorResponse = { status: 500 };
+        expect(() => {
+            scope.ensureOkStatus(errorResponse);
+        }).toThrowError('Non OK status');
+    });
+    it('passes response 200 status', () => {
+        // creates a new unaltered scope
+        const scope = introscope();
+
+        const okResponse = { status: 200 };
+        expect(scope.ensureOkStatus(okResponse)).toBe(okResponse);
+    });
+});
+
+describe('getTodos', () => {
+    it('calls httpGet() and ensureOkStatus()', async () => {
+        // creates a new unaltered scope
+        const scope = introscope();
+        // mock the local module functions
+        scope.httpGet = jest.fn(() => Promise.resolve());
+        scope.ensureOkStatus = jest.fn();
+
+        // call with altered environment
+        await scope.getTodos();
+        expect(scope.httpGet).toBeCalled();
+        expect(scope.ensureOkStatus).toBeCalled();
+    });
+});
+```
 
 ## Usage
 
@@ -23,6 +108,10 @@ A code reflection / introspection tool for testing side effects of functions.
 In case this plugin find it's way to production build configuration it will not touch any code if `NODE_ENV`/`BABEL_ENV` equals `'production'`.
 
 ## Limitations by design
+
+### Curried functions
+
+Currently, any curried functions created during the initial call to the module scope factory will remember values from the imports. It's still possible to overcome this by providing an initial value to the `scope` argument with a getter for the desired module import. To be fixed by tooling in `introscope` package, not in the babel plugin.
 
 ### Importing dynamic module binding
 
@@ -95,7 +184,7 @@ To copy require-from-a-file semantics the `transformToFile` function will transp
 
 Based on
 
-* https://astexplorer.net (http://astexplorer.net/#/o5NsNwV46z/1)
-* https://github.com/jamiebuilds/babel-handbook/blob/master/translations/en/plugin-handbook.md#toc-paths
-* https://babeljs.io/docs/core-packages/babel-types/
-* globals: https://github.com/babel/babel/blob/252ea5a966c1968d8aac21a1a81c6d45173e57dd/packages/babel-helpers/src/index.js#L92
+*   https://astexplorer.net (http://astexplorer.net/#/o5NsNwV46z/1)
+*   https://github.com/jamiebuilds/babel-handbook/blob/master/translations/en/plugin-handbook.md#toc-paths
+*   https://babeljs.io/docs/core-packages/babel-types/
+*   globals: https://github.com/babel/babel/blob/252ea5a966c1968d8aac21a1a81c6d45173e57dd/packages/babel-helpers/src/index.js#L92
