@@ -19,6 +19,22 @@ exports[`options does nothing if NODE_ENV == "production" 3`] = `
 };"
 `;
 
+exports[`options ignore 1`] = `
+"module.exports = function (_scope = {}) {
+    var deepGlobal, deepGlobalIgnored, Error;
+    _scope.throwError = throwError;
+
+    // @introscope-config \\"ignore\\": [\\"localIgnored\\", \\"Error\\", \\"deepGlobalIgnored\\"]
+    const x = _scope.x = { deep: { global: { variable: _scope.deepGlobal, variableIgnored: deepGlobalIgnored } } };
+    const localIgnored = 1;
+    localIgnored++;
+    function throwError(message) {
+        throw new Error(message);
+    }
+    return _scope;
+};"
+`;
+
 exports[`options removeImports 1`] = `
 "module.exports = function (_scope = {}) {
             _scope.sholdBeRemoved++;

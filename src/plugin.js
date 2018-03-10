@@ -11,6 +11,7 @@ const not = fn => (...args) => !fn(...args);
 
 function processProgram({ types: t }, programPath, programState) {
     let options = {
+        ignore: [],
         removeImports: false,
         ...programState.opts
     };
@@ -173,6 +174,7 @@ function processProgram({ types: t }, programPath, programState) {
 
     const bindingsToScope = bindings =>
         toPairs(bindings)
+            .filter(([name, _]) => !options.ignore.includes(name))
             .map(([_, binding]) => binding)
             .map(bindingToScope)
             .filter(Boolean);
@@ -238,16 +240,16 @@ function processProgram({ types: t }, programPath, programState) {
             moduleExports(wrapInFunction(globalIds, bodyWithoutImports))
         );
 
-        const uniqueGlobalIds = new Set();
+        const globalBindings = {};
         path.traverse({
             Scope(path, state) {
                 programGlobalNames.forEach(globalName => {
                     const binding = path.scope.getBinding(globalName);
-                    uniqueGlobalIds.add(binding);
+                    globalBindings[globalName] = binding;
                 });
             }
         });
-        bindingsToScope(Array.from(uniqueGlobalIds.values()));
+        bindingsToScope(globalBindings);
     };
 
     program(programPath, programState);

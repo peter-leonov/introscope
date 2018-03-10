@@ -151,4 +151,16 @@ describe('options', () => {
             defaultImport1++
         `);
     });
+
+    it('ignore', () => {
+        shoot(`
+            // @introscope-config "ignore": ["localIgnored", "Error", "deepGlobalIgnored"]
+            const x = { deep: { global: { variable: deepGlobal, variableIgnored: deepGlobalIgnored }}}
+            const localIgnored = 1;
+            localIgnored++;
+            function throwError (message) {
+                throw new Error(message)
+            }
+        `);
+    });
 });
