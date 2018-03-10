@@ -1,12 +1,12 @@
-import { transform } from 'babel-core'
-import plugin from './plugin'
+import { transform } from 'babel-core';
+import plugin from './plugin';
 
 const shoot = code =>
     expect(
         transform(code, {
             plugins: ['syntax-object-rest-spread', plugin]
         }).code
-    ).toMatchSnapshot()
+    ).toMatchSnapshot();
 
 describe('plugin', () => {
     it('import', () => {
@@ -26,16 +26,16 @@ describe('plugin', () => {
                 localImportName,
                 namespaceImport
              ]
-        `)
-    })
+        `);
+    });
 
     it('assignments', () => {
         shoot(`
             let x;
             x++;
             x = 1;
-        `)
-    })
+        `);
+    });
 
     it('references', () => {
         shoot(`
@@ -44,8 +44,8 @@ describe('plugin', () => {
             !function(){ x++ };
             () => { return { x } };
             !{ x }
-        `)
-    })
+        `);
+    });
 
     it('declarations', () => {
         shoot(`
@@ -64,8 +64,8 @@ describe('plugin', () => {
 
             class ClassName {}; new ClassName();
             functionName(); function functionName () {}
-        `)
-    })
+        `);
+    });
 
     it('scopes', () => {
         shoot(`
@@ -73,8 +73,8 @@ describe('plugin', () => {
             for (let x = 0; x != 0; x++);
             { let x = false; }
             !function(){ var x = false; }
-        `)
-    })
+        `);
+    });
 
     it('globals', () => {
         shoot(`
@@ -83,8 +83,8 @@ describe('plugin', () => {
             global2 = 1;
             globalFunction();
             !function(){ return [nestedGlobal1, global2] }();
-        `)
-    })
+        `);
+    });
 
     it('export', () => {
         shoot(`
@@ -93,9 +93,9 @@ describe('plugin', () => {
             export const namedSingleExport = 'namedSingleExportValue'
             export { toBeNameExport1, toBeNameExport2 }
             export * from 'some-module'
-        `)
-    })
-})
+        `);
+    });
+});
 
 describe('options', () => {
     it('does nothing if NODE_ENV == "production"', () => {
@@ -143,6 +143,6 @@ describe('options', () => {
                 namespaceImport1,
                 namespaceImport2
              ]
-        `)
-    })
-})
+        `);
+    });
+});
