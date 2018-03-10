@@ -50,12 +50,13 @@ import httpGet from 'some-http-library';
 
 const ensureOkStatus = response => {
     if (response.status !== 200) {
-        throw 'Non OK status';
+        throw new Error('Non OK status');
     }
     return response;
 };
 
 export const getTodos = httpGet('/todos').then(ensureOkStatus);
+// @introscope-config "ignore": ["Error"]
 ```
 
 gets transpiled to code like this:
@@ -66,12 +67,14 @@ import httpGet from 'some-http-library';
 
 module.exports = function(_scope = {}) {
     _scope.httpGet = httpGet;
+
     const ensureOkStatus = (_scope.ensureOkStatus = response => {
         if (response.status !== 200) {
-            throw 'Non OK status';
+            throw new Error('Non OK status');
         }
         return response;
     });
+
     const getTodos = (_scope.getTodos = (0, _scope.httpGet)('/todos').then(
         (0, _scope.ensureOkStatus)
     ));
@@ -79,7 +82,7 @@ module.exports = function(_scope = {}) {
 };
 ```
 
-You can play with the transpilation in this [AST explorer example](https://astexplorer.net/#/gist/74becf4d81c563440fa9046a3c7fb1af/93068b37fa60fd1085726b2c53915f3f82b85830).
+You can play with the transpilation in this [AST explorer example](https://astexplorer.net/#/gist/43715a3277b223b363349129a8741f13/aa91fdf81ae4574491d87385426550c2633b8690).
 
 The resulting code you can then import in your Babel powered test environment and examine like this:
 

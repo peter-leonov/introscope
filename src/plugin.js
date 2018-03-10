@@ -66,9 +66,6 @@ function processProgram({ types: t }, programPath, programState) {
             )
         );
 
-    const getGlobalIdentifiers = scope =>
-        toPairs(scope.globals).map(([_, identifier]) => identifier);
-
     const moduleExports = right =>
         t.expressionStatement(
             t.assignmentExpression(
@@ -207,7 +204,9 @@ function processProgram({ types: t }, programPath, programState) {
     const program = (path, state) => {
         parseConfig(path);
 
-        const globalIds = getGlobalIdentifiers(path.scope);
+        const globalIds = toPairs(path.scope.globals)
+            .filter(([name, _]) => !options.ignore.includes(name))
+            .map(([_, identifier]) => identifier);
         const programGlobalNames = Object.keys(path.scope.globals);
 
         const localImportIds = bindingsToScope(path.scope.bindings);

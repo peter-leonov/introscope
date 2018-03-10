@@ -21,7 +21,7 @@ exports[`options does nothing if NODE_ENV == "production" 3`] = `
 
 exports[`options ignore 1`] = `
 "module.exports = function (_scope = {}) {
-    var deepGlobal, deepGlobalIgnored, Error;
+    var deepGlobal;
     _scope.throwError = throwError;
 
     // @introscope-config \\"ignore\\": [\\"localIgnored\\", \\"Error\\", \\"deepGlobalIgnored\\"]
