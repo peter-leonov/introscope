@@ -6,6 +6,38 @@ Introscope's babel plugin helps breaking the perfect code encapsulation of modul
 
 Handy tooling like `Proxy` based wrappers/spies, dependency injection, etc to come soon.
 
+## Usage
+
+Intall the babel plugin first:
+
+```sh
+yarn add --dev babel-plugin-introscope
+# or
+npm install --save-dev
+```
+
+Add it to the project babel configuration (most likely `.babelrc`):
+
+```json
+{
+    "plugins": ["introscope"]
+}
+```
+
+and use in tests:
+
+```js
+// @introscope
+import scope from './tested-module';
+
+// or
+
+// @introscope
+const scope = require('./tested-module');
+```
+
+Introscope supports all the new ES features (if not, create an issue 🙏), so if your babel configuratiob supports some new fancy syntax, Introscope should too.
+
 ## Example
 
 What Introscope does is it wraps a whole module code in a function that accepts one argument `scope` object and returns all variables, functions and classes defined in the module as properties of the `scope` object. Here is a little example. Code like this:
@@ -93,38 +125,6 @@ describe('getTodos', () => {
     });
 });
 ```
-
-## Usage
-
-Intall the babel plugin first:
-
-```sh
-yarn add --dev babel-plugin-introscope
-# or
-npm install --save-dev
-```
-
-Add it to the project babel configuration (most likely `.babelrc`):
-
-```json
-{
-    "plugins": ["introscope"]
-}
-```
-
-and use in tests:
-
-```js
-// @introscope
-import scope from './tested-module';
-
-// or
-
-// @introscope
-const scope = require('./tested-module');
-```
-
-Introscope supports all the new ES features (if not, create an issue 🙏), so if your babel configuratiob supports some new fancy syntax, Introscope should too.
 
 ## TODOs
 
