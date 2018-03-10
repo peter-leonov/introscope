@@ -2,9 +2,9 @@
 
 A reflection / introspection tool for unit testing ES modules.
 
-Introscope's babel plugin helps breaking the perfect code encapsulation of modules when the modules need to be tested by transpiling the module source to a function which exports the full internal scope of a module.
+Introscope is (mostly) a babel plugin which allows a unit test code look inside an ES module without rewriting the code of the module just for making it testable. Introscope does it by transpiling the module source to a function which exports the full internal scope of a module on the fly.
 
-Handy tooling like `Proxy` based wrappers/spies, dependency injection, etc to come soon.
+Handy intergrations with popular unit testing tools and nice tricks like `Proxy` based wrappers/spies to come soon.
 
 ## Usage
 
@@ -13,10 +13,10 @@ Intall the babel plugin first:
 ```sh
 yarn add --dev babel-plugin-introscope
 # or
-npm install --save-dev
+npm install --save-dev babel-plugin-introscope
 ```
 
-Add it to the project babel configuration (most likely `.babelrc`):
+Add it to the project's babel configuration (most likely `.babelrc`):
 
 ```json
 {
@@ -24,16 +24,16 @@ Add it to the project babel configuration (most likely `.babelrc`):
 }
 ```
 
-and use in tests:
+and use it in tests:
 
 ```js
 // @introscope
-import scope from './tested-module';
+import scopeFactory from './tested-module';
 
 // or
 
 // @introscope
-const scope = require('./tested-module');
+const scopeFactory = require('./tested-module');
 ```
 
 Introscope supports all the new ES features (if not, create an issue 🙏), so if your babel configuratiob supports some new fancy syntax, Introscope should too.
