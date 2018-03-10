@@ -4,7 +4,7 @@ import plugin from './plugin'
 const shoot = code =>
     expect(
         transform(code, {
-            plugins: [plugin]
+            plugins: ['syntax-object-rest-spread', plugin]
         }).code
     ).toMatchSnapshot()
 
@@ -57,9 +57,9 @@ describe('plugin', () => {
 
             let { singleDestructing } = 1
             var { objectDestruction1, objectDestruction2, nestedProperty: { objectNestedDestruction1 } } = { objectDestruction1, objectDestruction2, nestedProperty: { objectNestedDestruction1 } }, let2 = objectDestruction1;
-            // let { ...objectRest } = 1;
+            let { ...objectRest } = 1;
             var [ arrayDestruction1, arrayDestruction2, [ arrayNestedDestruction ] ] = [ arrayDestruction1, arrayDestruction2, [ arrayNestedDestruction ] ];
-            //let [ ...arrayRest ] ] = 1;
+            let [ ...arrayRest ] = 1;
 
 
             class ClassName {}; new ClassName();

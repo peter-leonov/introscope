@@ -60,13 +60,14 @@ exports[`plugin declarations 1`] = `
                 _temp3 = _scope.objectDestruction2 = objectDestruction2,
                 _temp2 = _scope.objectDestruction1 = objectDestruction1,
                 let2 = _scope.let2 = _scope.objectDestruction1;
-            // let { ...objectRest } = 1;
+            let { ...objectRest } = 1,
+                _temp5 = _scope.objectRest = objectRest;
             var [arrayDestruction1, arrayDestruction2, [arrayNestedDestruction]] = [_scope.arrayDestruction1, _scope.arrayDestruction2, [_scope.arrayNestedDestruction]],
-                _temp7 = _scope.arrayNestedDestruction = arrayNestedDestruction,
-                _temp6 = _scope.arrayDestruction2 = arrayDestruction2,
-                _temp5 = _scope.arrayDestruction1 = arrayDestruction1;
-            //let [ ...arrayRest ] ] = 1;
-
+                _temp8 = _scope.arrayNestedDestruction = arrayNestedDestruction,
+                _temp7 = _scope.arrayDestruction2 = arrayDestruction2,
+                _temp6 = _scope.arrayDestruction1 = arrayDestruction1;
+            let [...arrayRest] = 1,
+                _temp9 = _scope.arrayRest = arrayRest;
 
             _scope.ClassName = class ClassName {};
             ;new _scope.ClassName();
