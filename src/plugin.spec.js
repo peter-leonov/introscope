@@ -1,16 +1,16 @@
 import { transform } from 'babel-core';
 import plugin from './plugin';
 
-const shoot = code =>
+const shoot = (code, opts = {}) =>
     expect(
         transform(code, {
-            plugins: ['syntax-object-rest-spread', plugin]
+            plugins: ['syntax-object-rest-spread', [plugin, opts]]
         }).code
     ).toMatchSnapshot();
 
 describe('plugin', () => {
     it('import', () => {
-        shoot(`
+        const code = `
             import 'some-module1'
             import defaultImport from 'some-module2'
             import { singleNamedImport } from 'some-module3'
@@ -25,8 +25,10 @@ describe('plugin', () => {
                 namedImport2,
                 localImportName,
                 namespaceImport
-             ]
-        `);
+            ]
+        `;
+        shoot(code);
+        shoot(code, { removeImports: true });
     });
 
     it('assignments', () => {

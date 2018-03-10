@@ -129,14 +129,22 @@ import { originalImportName as localImportName } from 'some-module5';
 import * as namespaceImport from 'some-module6';
 
 module.exports = function (_scope = {}) {
-            _scope.defaultImport = defaultImport;
-            _scope.singleNamedImport = singleNamedImport;
-            _scope.namedImport1 = namedImport1;
-            _scope.namedImport2 = namedImport2;
-            _scope.localImportName = localImportName;
-            _scope.namespaceImport = namespaceImport;
-            [_scope.defaultImport, _scope.singleNamedImport, _scope.namedImport1, _scope.namedImport2, _scope.localImportName, _scope.namespaceImport];
-            return _scope;
+    _scope.defaultImport = defaultImport;
+    _scope.singleNamedImport = singleNamedImport;
+    _scope.namedImport1 = namedImport1;
+    _scope.namedImport2 = namedImport2;
+    _scope.localImportName = localImportName;
+    _scope.namespaceImport = namespaceImport;
+    [_scope.defaultImport, _scope.singleNamedImport, _scope.namedImport1, _scope.namedImport2, _scope.localImportName, _scope.namespaceImport];
+    return _scope;
+};"
+`;
+
+exports[`plugin import 2`] = `
+"module.exports = function (_scope = {}) {
+
+    [_scope.defaultImport, _scope.singleNamedImport, _scope.namedImport1, _scope.namedImport2, _scope.localImportName, _scope.namespaceImport];
+    return _scope;
 };"
 `;
 

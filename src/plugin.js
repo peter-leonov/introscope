@@ -10,7 +10,10 @@ const byType = type => node => node.type == type;
 const not = fn => (...args) => !fn(...args);
 
 function processProgram({ types: t }, programPath, programState) {
-    let options = { removeImports: false };
+    let options = {
+        removeImports: false,
+        ...programState.opts
+    };
 
     const scopeId = programPath.scope.generateUidIdentifier('scope');
 
