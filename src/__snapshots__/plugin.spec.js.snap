@@ -45,6 +45,25 @@ exports[`options does nothing if NODE_ENV == "production" 3`] = `
 };"
 `;
 
+exports[`options enable 1`] = `
+"
+let shouldBeUntouched = true;"
+`;
+
+exports[`options enable 2`] = `
+"
+// @introscope-config \\"enable\\": false
+let shouldBeUntouched = true;"
+`;
+
+exports[`options enable 3`] = `
+"module.exports = function (_scope = {}) {
+            // @introscope-config \\"enable\\": true
+            let shouldBeTransformed = _scope.shouldBeTransformed = true;
+            return _scope;
+};"
+`;
+
 exports[`options ignore 1`] = `
 "module.exports = function (_scope = {}) {
     var deepGlobal;

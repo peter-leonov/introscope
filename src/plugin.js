@@ -10,9 +10,14 @@ const byType = type => node => node.type == type;
 const not = fn => (...args) => !fn(...args);
 
 function processProgram({ types: t }, programPath, programState) {
-    let options = {
+    const defaultOptions = {
+        enable: false,
         ignore: [],
-        removeImports: false,
+        removeImports: false
+    };
+
+    let options = {
+        ...defaultOptions,
         ...programState.opts
     };
 
@@ -205,7 +210,7 @@ function processProgram({ types: t }, programPath, programState) {
 
     const program = (path, state) => {
         parseConfig(path);
-        if (options.disable) return;
+        if (!options.enable) return;
 
         const globalIds = toPairs(path.scope.globals)
             .filter(([name, _]) => !options.ignore.includes(name))

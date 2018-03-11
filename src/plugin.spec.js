@@ -5,7 +5,10 @@ const shoot = (code, opts = {}) =>
     expect(
         transform(code, {
             sourceType: 'module',
-            plugins: ['syntax-object-rest-spread', [plugin, opts]]
+            plugins: [
+                'syntax-object-rest-spread',
+                [plugin, { enable: true, ...opts }]
+            ]
         }).code
     ).toMatchSnapshot();
 
@@ -163,7 +166,33 @@ describe('options', () => {
         }
         `);
     });
-    it('disable', () => {
+
+    it('enable', () => {
+        shoot(
+            `
+            let shouldBeUntouched = true;
+        `,
+            { enable: false }
+        );
+
+        shoot(
+            `
+            // @introscope-config "enable": false
+            let shouldBeUntouched = true;
+        `,
+            { enable: true }
+        );
+
+        shoot(
+            `
+            // @introscope-config "enable": true
+            let shouldBeTransformed = true;
+        `,
+            { enable: false }
+        );
+    });
+
+    xit('disable', () => {
         shoot(
             `
             let shouldBeUntouched = true;
