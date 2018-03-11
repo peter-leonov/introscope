@@ -269,29 +269,14 @@ module.exports = function(babel) {
         visitor: {
             Program(path, state) {
                 if (state.opts.disable) return;
+
                 if (
                     typeof process == 'object' &&
                     process.env.NODE_ENV == 'production'
                 ) {
                     return;
                 }
-                if (
-                    typeof process == 'object' &&
-                    process.env.INTROSCOPE_CONFIG
-                ) {
-                    try {
-                        const envConfig = JSON.parse(
-                            process.env.INTROSCOPE_CONFIG
-                        );
-                        Object.assign(state.opts, envConfig);
-                    } catch (ex) {
-                        console.error(
-                            'Cannot parse INTROSCOPE_CONFIG:',
-                            process.env.INTROSCOPE_CONFIG,
-                            ex
-                        );
-                    }
-                }
+
                 processProgram(babel, path, state);
             }
         }

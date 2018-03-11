@@ -214,15 +214,4 @@ describe('options', () => {
         `
         );
     });
-
-    it('INTROSCOPE_CONFIG', () => {
-        process.env.INTROSCOPE_CONFIG = '{ "enable": true }';
-        shoot(
-            `
-            let shouldBeTransformed = true;
-        `,
-            { enable: false }
-        );
-        delete process.env.INTROSCOPE_CONFIG;
-    });
 });
