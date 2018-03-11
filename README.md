@@ -3,10 +3,6 @@
 A reflection / introspection tool for unit testing ES modules.
 
 ```js
-// any-module.js
-// @introscope-config "enable": true
-// ...the rest of the code...
-
 // any-module.test.js
 import anyModuleScope from './any-module';
 
@@ -16,6 +12,11 @@ test('privateFunction', () => {
     });
     expect(scope.privateFunction()).toBe(scope.ANOTHER_PRIVATE_CONSTANT);
 });
+
+// any-module.js
+// @introscope-config "enable": true
+
+// ...the rest of the module code...
 ```
 
 ## Description
