@@ -134,8 +134,10 @@ function processProgram({ types: t }, programPath, programState) {
                 return path.get('local').node;
             }
         } else {
-            throw new TypeError('Unknown node.type = ' + path.node.type);
-            // TODO: log warning here using babel logger
+            throw path.buildCodeFrameError(
+                'Cannot apply declarationToScope() to an anknown node.type: ' +
+                    path.node.type
+            );
         }
     };
 
