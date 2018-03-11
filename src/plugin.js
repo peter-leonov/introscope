@@ -275,6 +275,23 @@ module.exports = function(babel) {
                 ) {
                     return;
                 }
+                if (
+                    typeof process == 'object' &&
+                    process.env.INTROSCOPE_CONFIG
+                ) {
+                    try {
+                        const envConfig = JSON.parse(
+                            process.env.INTROSCOPE_CONFIG
+                        );
+                        Object.assign(state.opts, envConfig);
+                    } catch (ex) {
+                        console.error(
+                            'Cannot parse INTROSCOPE_CONFIG:',
+                            process.env.INTROSCOPE_CONFIG,
+                            ex
+                        );
+                    }
+                }
                 processProgram(babel, path, state);
             }
         }

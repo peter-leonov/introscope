@@ -157,10 +157,10 @@ describe('options', () => {
 
     it('ignore', () => {
         shoot(`
-            // @introscope-config "ignore": ["localIgnored", "Error", "deepGlobalIgnored"]
-            const x = { deep: { global: { variable: deepGlobal, variableIgnored: deepGlobalIgnored }}}
-            const localIgnored = 1;
-            localIgnored++;
+        // @introscope-config "ignore": ["localIgnored", "Error", "deepGlobalIgnored"]
+        const x = { deep: { global: { variable: deepGlobal, variableIgnored: deepGlobalIgnored }}}
+        const localIgnored = 1;
+        localIgnored++;
         function throwError (message) {
             throw new Error(message)
         }
@@ -213,5 +213,16 @@ describe('options', () => {
             let shouldBeTransformed = true;
         `
         );
+    });
+
+    it('INTROSCOPE_CONFIG', () => {
+        process.env.INTROSCOPE_CONFIG = '{ "enable": true }';
+        shoot(
+            `
+            let shouldBeTransformed = true;
+        `,
+            { enable: false }
+        );
+        delete process.env.INTROSCOPE_CONFIG;
     });
 });
