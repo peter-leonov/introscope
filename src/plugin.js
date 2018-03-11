@@ -241,6 +241,8 @@ function processProgram({ types: t }, programPath, programState) {
             moduleExports(wrapInFunction(globalIds, bodyWithoutImports))
         );
 
+        // globals become locals after wrapInFunction()
+        // TODO: make it more explicit in the code
         const globalBindings = {};
         path.traverse({
             Scope(path, state) {
