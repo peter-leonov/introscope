@@ -1,5 +1,23 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`options disable 1`] = `
+"
+let shouldBeUntouched = true;"
+`;
+
+exports[`options disable 2`] = `
+"
+// @introscope-config \\"disable\\": true
+let shouldBeUntouched = true;"
+`;
+
+exports[`options disable 3`] = `
+"module.exports = function (_scope = {}) {
+            let shouldBeTransformed = _scope.shouldBeTransformed = true;
+            return _scope;
+};"
+`;
+
 exports[`options does nothing if NODE_ENV == "production" 1`] = `
 "
 var shouldBeUntouched = true;"

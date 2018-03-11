@@ -158,9 +158,30 @@ describe('options', () => {
             const x = { deep: { global: { variable: deepGlobal, variableIgnored: deepGlobalIgnored }}}
             const localIgnored = 1;
             localIgnored++;
-            function throwError (message) {
-                throw new Error(message)
-            }
+        function throwError (message) {
+            throw new Error(message)
+        }
         `);
+    });
+    it('disable', () => {
+        shoot(
+            `
+            let shouldBeUntouched = true;
+        `,
+            { disable: true }
+        );
+
+        shoot(
+            `
+            // @introscope-config "disable": true
+            let shouldBeUntouched = true;
+        `
+        );
+
+        shoot(
+            `
+            let shouldBeTransformed = true;
+        `
+        );
     });
 });

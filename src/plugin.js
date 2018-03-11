@@ -205,6 +205,7 @@ function processProgram({ types: t }, programPath, programState) {
 
     const program = (path, state) => {
         parseConfig(path);
+        if (options.disable) return;
 
         const globalIds = toPairs(path.scope.globals)
             .filter(([name, _]) => !options.ignore.includes(name))
