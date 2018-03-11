@@ -6,20 +6,15 @@ let shouldBeUntouched = true;"
 `;
 
 exports[`options disable 2`] = `
-"
-// @introscope-config \\"disable\\": true
-let shouldBeUntouched = true;"
-`;
-
-exports[`options disable 3`] = `
 "module.exports = function (_scope = {}) {
-            // @introscope-config \\"disable\\": false
+            // inline \\"disable\\" is ignored, use \\"enable\\": false
+            // @introscope-config \\"disable\\": true
             let shouldBeTransformed = _scope.shouldBeTransformed = true;
             return _scope;
 };"
 `;
 
-exports[`options disable 4`] = `
+exports[`options disable 3`] = `
 "module.exports = function (_scope = {}) {
             let shouldBeTransformed = _scope.shouldBeTransformed = true;
             return _scope;

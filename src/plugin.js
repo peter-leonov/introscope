@@ -268,6 +268,7 @@ module.exports = function(babel) {
     return {
         visitor: {
             Program(path, state) {
+                if (state.opts.disable) return;
                 if (
                     typeof process == 'object' &&
                     process.env.NODE_ENV == 'production'

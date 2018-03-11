@@ -192,7 +192,7 @@ describe('options', () => {
         );
     });
 
-    xit('disable', () => {
+    it('disable', () => {
         shoot(
             `
             let shouldBeUntouched = true;
@@ -202,17 +202,10 @@ describe('options', () => {
 
         shoot(
             `
+            // inline "disable" is ignored, use "enable": false
             // @introscope-config "disable": true
-            let shouldBeUntouched = true;
-        `
-        );
-
-        shoot(
-            `
-            // @introscope-config "disable": false
             let shouldBeTransformed = true;
-        `,
-            { disable: true }
+        `
         );
 
         shoot(
