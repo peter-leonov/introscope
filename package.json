@@ -1,6 +1,6 @@
 {
     "name": "babel-plugin-introscope",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "description": "Helps non-intrusively test ES modules",
     "repository": "github:peter-leonov/babel-plugin-introscope",
     "main": "src/plugin.js",
