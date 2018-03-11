@@ -3,7 +3,11 @@
 A reflection / introspection tool for unit testing ES modules.
 
 ```js
-// @introscope
+// any-module.js
+// @introscope-config "enable": true
+// ...the rest of the code...
+
+// any-module.test.js
 import anyModuleScope from './any-module';
 
 test('privateFunction', () => {
@@ -43,16 +47,14 @@ Add it to the project's babel configuration (most likely `.babelrc`):
 and use it in tests:
 
 ```js
-// @introscope
 import scopeFactory from './tested-module';
 
 // or
 
-// @introscope
 const scopeFactory = require('./tested-module');
 ```
 
-Just in case, this plugin does nothing if `NODE_ENV` equals to `'production'`.
+Just in case, this plugin do anything only if `NODE_ENV` equals to `'test'`.
 
 Introscope supports all the new ES features (if not, create an issue 🙏), so if your babel configuration supports some new fancy syntax, Introscope should too.
 
@@ -72,7 +74,7 @@ const ensureOkStatus = response => {
 };
 
 export const getTodos = httpGet('/todos').then(ensureOkStatus);
-// @introscope-config "ignore": ["Error"]
+// @introscope-config "enable": true, "ignore": ["Error"]
 ```
 
 gets transpiled to code like this:
@@ -105,7 +107,6 @@ The resulting code you can then import in your Babel powered test environment an
 ```js
 // api.spec.js
 
-// @introscope
 import apiScopeFactory from './api.js';
 // Introscope exports a factory function for module scope,
 // it creates a new module scope on each call,
@@ -146,6 +147,10 @@ describe('getTodos', () => {
     });
 });
 ```
+
+## Limitation
+
+As far as Introscope requires a magic comment `@introscope-config "enable": true` in every module which gets tested it's currently impossible to require introscoped modules from withing introscoped modules. The better solution is in progress for Jest.
 
 ## TODOs
 

@@ -21,19 +21,17 @@ exports[`options disable 3`] = `
 };"
 `;
 
-exports[`options does nothing if NODE_ENV == "production" 1`] = `
+exports[`options does nothing if NODE_ENV != "test" 1`] = `
 "
 var shouldBeUntouched = true;"
 `;
 
-exports[`options does nothing if NODE_ENV == "production" 2`] = `
-"module.exports = function (_scope = {}) {
-            var shouldBeTransformed = _scope.shouldBeTransformed = true;
-            return _scope;
-};"
+exports[`options does nothing if NODE_ENV != "test" 2`] = `
+"
+var shouldBeUntouched = true;"
 `;
 
-exports[`options does nothing if NODE_ENV == "production" 3`] = `
+exports[`options does nothing if NODE_ENV != "test" 3`] = `
 "module.exports = function (_scope = {}) {
             var shouldBeTransformed = _scope.shouldBeTransformed = true;
             return _scope;

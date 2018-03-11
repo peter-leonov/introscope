@@ -104,7 +104,7 @@ describe('plugin', () => {
 });
 
 describe('options', () => {
-    it('does nothing if NODE_ENV == "production"', () => {
+    it('does nothing if NODE_ENV != "test"', () => {
         const NODE_ENV = process.env.NODE_ENV;
         process.env.NODE_ENV = 'production';
         shoot(`
@@ -112,7 +112,7 @@ describe('options', () => {
         `);
         process.env.NODE_ENV = 'development';
         shoot(`
-            var shouldBeTransformed = true;
+        var shouldBeUntouched = true;
         `);
         process.env.NODE_ENV = 'test';
         shoot(`

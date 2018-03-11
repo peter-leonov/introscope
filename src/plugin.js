@@ -272,7 +272,7 @@ module.exports = function(babel) {
 
                 if (
                     typeof process == 'object' &&
-                    process.env.NODE_ENV == 'production'
+                    process.env.NODE_ENV != 'test'
                 ) {
                     return;
                 }
