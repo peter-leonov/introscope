@@ -2,7 +2,23 @@
 
 A reflection / introspection tool for unit testing ES modules.
 
-Introscope is (mostly) a babel plugin which allows a unit test code look inside an ES module without rewriting the code of the module just for making it testable. Introscope does it by transpiling the module source to a function which exports the full internal scope of a module on the fly.
+```js
+// @introscope
+import anyModuleScope from './any-module';
+
+test('privateFunction', () => {
+    const scope = anyModuleScope({
+        PRIVATE_CONSTANT: 123
+    });
+    expect(scope.privateFunction()).toBe(scope.ANOTHER_PRIVATE_CONSTANT);
+});
+```
+
+## Description
+
+**TL;DR;** no need to export all the functions/constants of your module just for make it testable, Introscope makes it automatically.
+
+Introscope is (mostly) a babel plugin which allows a unit test code look inside an ES module without rewriting the code of the module just for making it testable. Introscope does it by transpiling the module source to a function which exports the full internal scope of a module on the fly. This helps separate how the actuall application consumes the module via it's exported API and how it gets tested using Introscope with all functions/variables visible and mockable.
 
 Handy intergrations with popular unit testing tools and nice tricks like `Proxy` based wrappers/spies to come soon.
 
