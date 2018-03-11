@@ -18,13 +18,13 @@ test('privateFunction', () => {
 
 **TL;DR;** no need to export all the functions/constants of your module just for make it testable, Introscope makes it automatically.
 
-Introscope is (mostly) a babel plugin which allows a unit test code look inside an ES module without rewriting the code of the module just for making it testable. Introscope does it by transpiling the module source to a function which exports the full internal scope of a module on the fly. This helps separate how the actuall application consumes the module via it's exported API and how it gets tested using Introscope with all functions/variables visible and mockable.
+Introscope is (mostly) a babel plugin which allows a unit test code look inside an ES module without rewriting the code of the module just for making it testable. Introscope does it by transpiling the module source to a function which exports the full internal scope of a module on the fly. This helps separate how the actual application consumes the module via it's exported API and how it gets tested using Introscope with all functions/variables visible and mockable.
 
-Handy intergrations with popular unit testing tools and nice tricks like `Proxy` based wrappers/spies to come soon.
+Handy integrations with popular unit testing tools and nice tricks like `Proxy` based wrappers/spies to come soon.
 
 ## Usage
 
-Intall the babel plugin first:
+Install the babel plugin first:
 
 ```sh
 yarn add --dev babel-plugin-introscope
@@ -54,7 +54,7 @@ const scopeFactory = require('./tested-module');
 
 Just in case, this plugin does nothing if `NODE_ENV` equals to `'production'`.
 
-Introscope supports all the new ES features (if not, create an issue 🙏), so if your babel configuratiob supports some new fancy syntax, Introscope should too.
+Introscope supports all the new ES features (if not, create an issue 🙏), so if your babel configuration supports some new fancy syntax, Introscope should too.
 
 ## Example
 
@@ -165,7 +165,7 @@ const listToStrings = fmap(toString);
 
 ### Importing live binding
 
-Can be in principal supported using a getter on the scope object combined with a clojure returning the current value of a live binding. To be implemented once the overall design of unit testing with Introscope becomes clear.
+Can be in principal supported using a getter on the scope object combined with a closure returning the current value of a live binding. To be implemented once the overall design of unit testing with Introscope becomes clear.
 
 Example:
 
@@ -192,7 +192,7 @@ Or even worse:
 import map from 'lodash';
 // map() just maps here
 import 'weird-monkey-patch';
-// map launches missles here
+// map launches missiles here
 ```
 
 ### Support any test runner environment
@@ -206,7 +206,7 @@ import { transformToFile } from 'introscope';
 const moduleScopeFactory = require(transformToFile('./module'));
 ```
 
-Or even simplier (but not easier):
+Or even simpler (but not easier):
 
 ```js
 import { readFileSync } from 'fs';
@@ -218,7 +218,7 @@ const moduleScopeFactory = _module.exports;
 
 ## Nice tricks
 
-Wrap all possible IDs in a test-plan like proxy, mock imported side effects and then just run each funtion with different input and record how proxies been called and what returned.
+Wrap all possible IDs in a test-plan like proxy, mock imported side effects and then just run each function with different input and record how proxies been called and what returned.
 
 ## Notes
 
