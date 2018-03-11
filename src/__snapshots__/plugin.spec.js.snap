@@ -13,6 +13,14 @@ let shouldBeUntouched = true;"
 
 exports[`options disable 3`] = `
 "module.exports = function (_scope = {}) {
+            // @introscope-config \\"disable\\": false
+            let shouldBeTransformed = _scope.shouldBeTransformed = true;
+            return _scope;
+};"
+`;
+
+exports[`options disable 4`] = `
+"module.exports = function (_scope = {}) {
             let shouldBeTransformed = _scope.shouldBeTransformed = true;
             return _scope;
 };"

@@ -180,6 +180,14 @@ describe('options', () => {
 
         shoot(
             `
+            // @introscope-config "disable": false
+            let shouldBeTransformed = true;
+        `,
+            { disable: true }
+        );
+
+        shoot(
+            `
             let shouldBeTransformed = true;
         `
         );
