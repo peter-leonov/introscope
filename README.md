@@ -45,6 +45,12 @@ Add it to the project's babel configuration (most likely `.babelrc`):
 }
 ```
 
+add a magic comment to the module you're testing:
+
+```js
+// @introscope-config "enable": true
+```
+
 and use it in tests:
 
 ```js
@@ -55,7 +61,7 @@ import scopeFactory from './tested-module';
 const scopeFactory = require('./tested-module');
 ```
 
-Just in case, this plugin do anything only if `NODE_ENV` equals to `'test'`.
+Just in case, this plugin does something only if `NODE_ENV` equals to `'test'`.
 
 Introscope supports all the new ES features (if not, create an issue 🙏), so if your babel configuration supports some new fancy syntax, Introscope should too.
 
