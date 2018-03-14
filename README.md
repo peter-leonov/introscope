@@ -161,6 +161,30 @@ As far as Introscope requires a magic comment `@introscope-config "enable": true
 
 ## TODOs
 
+### Usage with flow
+
+If it's ok for you to have `any` type in tests, then just export `introscope` like this:
+
+```js
+export { introscope } from 'introscope';
+```
+
+The function `introscope` has type `mixed => {[string]: any}`, so a scope created from this function type will have type `any` for every property.
+
+And in case you prefer strict type checking, here is an example on how to make flow getting the correct type for the `introscope` export:
+
+```js
+type Introscope<Scope> = ($Shape<Scope>) => Scope;
+const scope = {
+    constantA,
+    functionB
+    // other identifiers of your module
+};
+
+import { type Introscope, anyScope } from 'introscope';
+export const introscope: Introscope<typeof scope> = anyScope;
+```
+
 ### Imported values in curried functions
 
 Currently, any call to a curried function during the initial call to the module scope factory will remember values from the imports. It's still possible to overcome this by providing an initial value to the `scope` argument with a getter for the desired module import. To be fixed by tooling in `introscope` package, not in the babel plugin.
