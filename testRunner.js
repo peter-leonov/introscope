@@ -3,11 +3,13 @@ const Runtime = require('jest-runtime');
 const shouldInstrument = require('jest-runtime/build/should_instrument')
     .default;
 
-const method = '_createRequireImplementation';
+// wrapper : real => (...args) => mixed
+const wrap = (method, obj, wrapper) => {
+    obj[method] = wrapper(obj[method]);
+};
 
-Runtime.prototype[method + '_real'] = Runtime.prototype[method];
-Runtime.prototype[method] = function(from, options) {
-    const moduleRequire = this[method + '_real'].apply(this, arguments);
+wrap('_createRequireImplementation', Runtime.prototype, inner => function(from, options) {
+    const moduleRequire = inner.apply(this, arguments);
     moduleRequire.introscope = moduleName => {
         // dirty copy paste from here:
         //   https://github.com/facebook/jest/blob/23eec748db0de7b6b5fcda28cc51c48ddae16545/packages/jest-runtime/src/index.js#L270
