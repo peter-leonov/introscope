@@ -270,6 +270,12 @@ module.exports = function(babel) {
             Program(path, state) {
                 if (state.opts.disable) return;
 
+                // console.log('Program', global.introscope);
+                if (global.introscopePath == state.file.opts.filename) {
+                    global.introscopePath = undefined;
+                    state.opts.enable = true;
+                }
+
                 if (
                     typeof process == 'object' &&
                     process.env.NODE_ENV != 'test'

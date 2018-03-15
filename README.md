@@ -45,12 +45,6 @@ Add it to the project's babel configuration (most likely `.babelrc`):
 }
 ```
 
-add a magic comment to the module you're testing:
-
-```js
-// @introscope-config "enable": true
-```
-
 and use it in tests:
 
 ```js

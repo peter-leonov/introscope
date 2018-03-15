@@ -9,4 +9,4 @@ const ensureOkStatus = response => {
 
 export const getTodos = () => httpGet('/todos').then(ensureOkStatus);
 
-// @introscope-config "enable": true, "ignore": ["Error"]
+// @introscope-config "ignore": ["Error"]
