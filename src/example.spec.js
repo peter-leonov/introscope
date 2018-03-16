@@ -1,6 +1,10 @@
-import { introscope as bla } from './example.js';
-// =>
-const bla = introscope(require.resolve('./example.js'));
+// import { introscope as bla } from './example.js';
+// // =>
+// const bla = introscope(require.resolve('./example.js'));
+
+// cache original transformation first
+require('./example');
+const introscope = require.introscope('./example');
 
 // Introscope exports a factory function for module scope,
 // it creates a new module scope on each call,
