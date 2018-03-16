@@ -9,7 +9,7 @@ const toPairs = obj => {
 const byType = type => node => node.type == type;
 const not = fn => (...args) => !fn(...args);
 
-function processProgram({ types: t }, programPath, programState) {
+function processProgram({ types: t }, programPath, programOpts) {
     const defaultOptions = {
         enable: false,
         ignore: [],
@@ -18,7 +18,7 @@ function processProgram({ types: t }, programPath, programState) {
 
     let options = {
         ...defaultOptions,
-        ...programState.opts
+        ...programOpts
     };
 
     const scopeId = programPath.scope.generateUidIdentifier('scope');
@@ -208,9 +208,11 @@ function processProgram({ types: t }, programPath, programState) {
         });
     };
 
-    const program = (path, state) => {
+    const program = path => {
         parseConfig(path);
-        if (!options.enable) return;
+        if (!options.enable) {
+            return;
+        }
 
         const globalIds = toPairs(path.scope.globals)
             .filter(([name, _]) => !options.ignore.includes(name))
@@ -261,7 +263,7 @@ function processProgram({ types: t }, programPath, programState) {
         bindingsToScope(globalBindings);
     };
 
-    program(programPath, programState);
+    program(programPath);
 }
 
 module.exports = function(babel) {
@@ -270,12 +272,6 @@ module.exports = function(babel) {
             Program(path, state) {
                 if (state.opts.disable) return;
 
-                // console.log('Program', global.introscope);
-                if (global.introscopePath == state.file.opts.filename) {
-                    global.introscopePath = undefined;
-                    state.opts.enable = true;
-                }
-
                 if (
                     typeof process == 'object' &&
                     process.env.NODE_ENV != 'test'
@@ -283,7 +279,16 @@ module.exports = function(babel) {
                     return;
                 }
 
-                processProgram(babel, path, state);
+                const opts = {
+                    ...state.opts
+                };
+
+                if (global.introscopePath == state.file.opts.filename) {
+                    global.introscopePath = undefined;
+                    opts.enable = true;
+                }
+
+                processProgram(babel, path, opts);
             }
         }
     };
