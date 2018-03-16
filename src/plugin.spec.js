@@ -215,3 +215,25 @@ describe('options', () => {
         );
     });
 });
+
+describe('test', () => {
+    const code = `
+    import { introscope } from 'directModule';
+    import { introscope as renamed } from 'renamedModule';
+    import { otherNamedImport } from 'otheModule';
+    `;
+
+    it('does normal transpilation if enabled in opts', () => {
+        shoot(code, { enable: true });
+    });
+
+    it('does normal transpilation if enabled in code', () => {
+        shoot(code + '\n// @introscope-config "enable": true', {
+            enable: false
+        });
+    });
+
+    it('in test code does transpile only introscope import', () => {
+        shoot(code, { enable: false });
+    });
+});

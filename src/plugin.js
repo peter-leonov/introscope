@@ -211,7 +211,7 @@ function processProgram({ types: t }, programPath, programOpts) {
     const program = path => {
         parseConfig(path);
         if (!options.enable) {
-            return;
+            return false;
         }
 
         const globalIds = toPairs(path.scope.globals)
@@ -261,9 +261,21 @@ function processProgram({ types: t }, programPath, programOpts) {
             }
         });
         bindingsToScope(globalBindings);
+
+        return true;
     };
 
-    program(programPath);
+    function test(path, statepath) {
+        const imports = path.node.body.filter(byType('ImportDeclaration'));
+        imports
+            .filter(node => node.specifiers.length == 1)
+            .filter(node => node.specifiers[0].imported.name == 'introscope')
+            .forEach(node => {
+                node.source.value += '.introscope';
+            });
+    }
+
+    program(programPath) || test(programPath);
 }
 
 module.exports = function(babel) {

@@ -253,3 +253,40 @@ exports[`plugin scopes 1`] = `
             return _scope;
 };"
 `;
+
+exports[`test does normal transpilation if enabled in code 1`] = `
+"
+import { introscope } from 'directModule';
+import { introscope as renamed } from 'renamedModule';
+import { otherNamedImport } from 'otheModule';
+
+// @introscope-config \\"enable\\": true
+
+module.exports = function (_scope = {}) {
+    _scope.introscope = introscope;
+    _scope.renamed = renamed;
+    _scope.otherNamedImport = otherNamedImport;
+    return _scope;
+};"
+`;
+
+exports[`test does normal transpilation if enabled in opts 1`] = `
+"
+import { introscope } from 'directModule';
+import { introscope as renamed } from 'renamedModule';
+import { otherNamedImport } from 'otheModule';
+
+module.exports = function (_scope = {}) {
+    _scope.introscope = introscope;
+    _scope.renamed = renamed;
+    _scope.otherNamedImport = otherNamedImport;
+    return _scope;
+};"
+`;
+
+exports[`test in test code does transpile only introscope import 1`] = `
+"
+import { introscope } from 'directModule.introscope';
+import { introscope as renamed } from 'renamedModule.introscope';
+import { otherNamedImport } from 'otheModule';"
+`;
