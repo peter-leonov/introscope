@@ -16,15 +16,15 @@ test('privateFunction', () => {
 
 ## Description
 
-**TL;DR;** no need to export all the functions/constants of your module just for make it testable, Introscope makes it automatically.
+**TL;DR;** no need to export all the functions/variables of your module just to make it testable, Introscope does it automatically.
 
-Introscope is (mostly) a babel plugin which allows a unit test code look inside an ES module without rewriting the code of the module just for making it testable. Introscope does it by transpiling the module source to a function which exports the full internal scope of a module on the fly. This helps separate how the actual application consumes the module via it's exported API and how it gets tested using Introscope with all functions/variables visible and mockable.
+Introscope is (mostly) a babel plugin which allows a unit test code look inside an ES module without rewriting the code of the module. Introscope does it by transpiling the module source to a function which exposes the full internal scope of a module on the fly. This helps separate how the actual application consumes the module via it's exported API and how it gets tested using Introscope with all functions/variables visible, mockable and spy-able.
 
-Handy integrations with popular unit testing tools and nice tricks like `Proxy` based wrappers/spies to come soon.
+It has Handy [integration with Jest](#usage). Support for more popular unit testing tools and nice tricks like `Proxy` based wrappers/spies to come soon.
 
 ## Usage
 
-Install the babel plugin first:
+Install:
 
 ```sh
 yarn add --dev introscope
@@ -32,7 +32,7 @@ yarn add --dev introscope
 npm install --save-dev introscope
 ```
 
-Add it to the project's babel configuration (most likely `.babelrc`):
+Add the babel plugin to the project's babel configuration (most likely `.babelrc`):
 
 ```json
 {
@@ -40,7 +40,7 @@ Add it to the project's babel configuration (most likely `.babelrc`):
 }
 ```
 
-and for easy integration modify the Jest configuration (most likely `jest.config.js`):
+and for easy integration with Jest modify it's configuration (most likely `jest.config.js`):
 
 ```js
 module.exports = {
@@ -58,9 +58,9 @@ import { introscope } from './tested-module';
 const { introscope } = require('./tested-module?introscope');
 ```
 
-Just in case, this plugin does something only if `NODE_ENV` equals to `'test'`.
+For safety reasons this plugin does anything only when `NODE_ENV` equals to `'test'`, in production or development it's a no-op.
 
-Introscope supports all the new ES features (if not, create an issue 🙏), so if Babel supports some new fancy syntax, Introscope should too.
+Introscope supports all the new ES features (if not, create an issue 🙏. That means, if Babel supports some new fancy syntax, Introscope should too.
 
 ## Example
 
@@ -174,6 +174,10 @@ export const introscope = scope({
 ```
 
 ## TODOs
+
+### Usage without Jest
+
+Add option to ignore `import { introscope } …` and rely only on magic comments.
 
 ### Imported values in curried functions
 
