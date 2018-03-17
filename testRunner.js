@@ -46,11 +46,6 @@ function introscopeRequire(from, moduleName) {
     );
     const modulePath = realmodulePath + '?introscope.js';
 
-    // It's enough to just set it to true
-    // but better be sure we are not instrumenting
-    // some core module.
-    global.introscopePath = modulePath;
-
     // the first layer of caching
     const localModule = {
         children: [],

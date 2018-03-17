@@ -298,11 +298,6 @@ module.exports = function(babel) {
                     ...state.opts
                 };
 
-                if (global.introscopePath == state.file.opts.filename) {
-                    global.introscopePath = undefined;
-                    opts.enable = true;
-                }
-
                 processProgram(babel, path, opts);
             }
         }
