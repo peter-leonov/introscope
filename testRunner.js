@@ -101,9 +101,26 @@ wrap(
     inner =>
         function(from, options) {
             const moduleRequire = inner.apply(this, arguments);
-            moduleRequire.introscope = introscopeRequire.bind(this, from);
-            // console.log(method, moduleName);
-            return moduleRequire;
+            const moduleRequireIntroscope = introscopeRequire.bind(this, from);
+
+            // route paths ending with `?introscope` to "our" loader
+            return new Proxy(moduleRequire, {
+                apply(target, thisArg, argumentsList) {
+                    const path = argumentsList[0];
+                    if (
+                        typeof path == 'string' &&
+                        path.endsWith('?introscope')
+                    ) {
+                        argumentsList[0] = path.replace(/\?introscope$/, '');
+                        return moduleRequireIntroscope.apply(
+                            thisArg,
+                            argumentsList
+                        );
+                    } else {
+                        return moduleRequire.apply(thisArg, argumentsList);
+                    }
+                }
+            });
         }
 );
 

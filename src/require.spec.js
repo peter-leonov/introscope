@@ -10,7 +10,7 @@ describe('require.introscope', () => {
         expect(firstRequire.privateVariable).toBe(undefined);
 
         // require with introscope enabled
-        const firstIntroscope = require.introscope(file);
+        const firstIntroscope = require(file + '?introscope');
         expect(typeof firstIntroscope).toBe('function');
         const scope1 = firstIntroscope();
         expect(scope1.publicVariable).toBe('publicValue');
@@ -28,7 +28,7 @@ describe('require.introscope', () => {
         const file = './require2';
 
         // require with introscope enabled first
-        const firstIntroscope = require.introscope(file);
+        const firstIntroscope = require(file + '?introscope');
         expect(typeof firstIntroscope).toBe('function');
         const scope1 = firstIntroscope();
         expect(scope1.publicVariable).toBe('publicValue');
@@ -41,7 +41,7 @@ describe('require.introscope', () => {
         expect(firstRequire.privateVariable).toBe(undefined);
 
         // require again with introscope enabled
-        const secondIntroscope = require.introscope(file);
+        const secondIntroscope = require(file + '?introscope');
         expect(typeof secondIntroscope).toBe('function');
         const scope2 = secondIntroscope();
         expect(scope2.publicVariable).toBe('publicValue');
