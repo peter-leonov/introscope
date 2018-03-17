@@ -38,6 +38,16 @@ const wrapOnce = (method, obj, wrapper) => {
     return inner;
 };
 
+wrap(
+    'statSync',
+    fs,
+    inner =>
+        function() {
+            arguments[0] = String(arguments[0]).replace(/\?.*$/, '');
+            return inner.apply(this, arguments);
+        }
+);
+
 function transform(filename, options, fileSource) {
     let instrument = false;
 
@@ -47,34 +57,32 @@ function transform(filename, options, fileSource) {
     }
 
     // here we fight the third layer of caching
-    const originalCache = this._config.cache;
+    // const originalCache = this._config.cache;
     // jest will not read from the cache
-    this._config.cache = false;
-    const original_getCacheKey = this._getCacheKey;
+    // this._config.cache = false;
+    // const original_getCacheKey = this._getCacheKey;
     // jest will not write to the normal cache
-    this._getCacheKey = () => 'introscope-anti-cache';
+    // this._getCacheKey = () => 'introscope-anti-cache';
 
     const transformed = this._transformAndBuildScript(
-        filename,
+        filename, //.replace(/\?.*$/, ''),
         options,
         instrument,
         fileSource
     );
-    this._getCacheKey = original_getCacheKey;
-    this._config.cache = originalCache;
+    // this._getCacheKey = original_getCacheKey;
+    // this._config.cache = originalCache;
     return transformed;
 }
 
 function introscopeRequire(from, moduleName) {
-    // moduleName = ;
-
-    // dirty copy paste from here:
+    // dirty patched copy paste from here:
     //   https://github.com/facebook/jest/blob/23eec748db0de7b6b5fcda28cc51c48ddae16545/packages/jest-runtime/src/index.js#L270
     const realmodulePath = this._resolveModule(
         from.filename,
         moduleName.replace(/\?.*$/, '')
     );
-    const modulePath = realmodulePath; // + '?introscope.js';
+    const modulePath = realmodulePath + '?introscope.js';
 
     // It's enough to just set it to true
     // but better be sure we are not instrumenting
@@ -93,14 +101,16 @@ function introscopeRequire(from, moduleName) {
     const moduleRegistry = {
         [modulePath]: localModule
     };
-    const transformOriginal = wrapOnce(
-        'transform',
-        this._scriptTransformer,
-        inner => transform
-    );
-    this._cacheFS[modulePath] = fs.readFileSync(realmodulePath, 'utf8');
+    // const transformOriginal = wrapOnce(
+    //     'transform',
+    //     this._scriptTransformer,
+    //     inner => transform
+    // );
+    this._cacheFS[modulePath] =
+        fs.readFileSync(realmodulePath, 'utf8') +
+        '\n\n// @introscope-config "enable": true';
     this._execModule(localModule, undefined, moduleRegistry, from);
-    this._scriptTransformer.transform = transformOriginal;
+    // this._scriptTransformer.transform = transformOriginal;
     localModule.loaded = true;
     return moduleRegistry[modulePath].exports;
 }
