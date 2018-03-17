@@ -20,6 +20,11 @@ const Runtime = require('jest-runtime');
 const shouldInstrument = require('jest-runtime/build/should_instrument')
     .default;
 
+const removeQuery = path => {
+    if (typeof path != 'string') return path;
+    return path.replace(/\?.*$/, '');
+};
+
 // wrapper : real => (...args) => mixed
 const wrap = (method, obj, wrapper) => {
     const inner = obj[method];
@@ -32,7 +37,7 @@ wrap(
     fs,
     inner =>
         function() {
-            arguments[0] = String(arguments[0]).replace(/\?.*$/, '');
+            arguments[0] = removeQuery(arguments[0]);
             return inner.apply(this, arguments);
         }
 );
@@ -42,7 +47,7 @@ function introscopeRequire(from, moduleName) {
     //   https://github.com/facebook/jest/blob/23eec748db0de7b6b5fcda28cc51c48ddae16545/packages/jest-runtime/src/index.js#L270
     const realmodulePath = this._resolveModule(
         from.filename,
-        moduleName.replace(/\?.*$/, '')
+        removeQuery(moduleName)
     );
     const modulePath = realmodulePath + '?introscope.js';
 
@@ -70,7 +75,7 @@ function introscopeRequire(from, moduleName) {
         inner =>
             function() {
                 // filename
-                arguments[1] = arguments[1].replace(/\?.*$/, '');
+                arguments[1] = removeQuery(arguments[1]);
                 return inner.apply(this, arguments);
             }
     );
