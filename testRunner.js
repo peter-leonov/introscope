@@ -60,77 +60,36 @@ wrap(
         }
 );
 
-function introscopeRequire(from, moduleName) {
-    // dirty patched copy paste from here:
-    //   https://github.com/facebook/jest/blob/23eec748db0de7b6b5fcda28cc51c48ddae16545/packages/jest-runtime/src/index.js#L270
-    const modulePath = this._resolveModule(from.filename, moduleName);
-    // const modulePath = realmodulePath + '?introscope.js';
-    // console.log(modulePath);
-    // // the first layer of caching
-    // const localModule = {
-    //     children: [],
-    //     exports: {},
-    //     filename: modulePath,
-    //     id: modulePath,
-    //     loaded: false
-    // };
-
-    // const moduleRegistry = {
-    //     [modulePath]: localModule
-    // };
-    this._cacheFS[modulePath] =
-        fs.readFileSync(removeQuery(modulePath), 'utf8') +
-        '\n\n// @introscope-config "enable": true';
-
-    const transformer = this._scriptTransformer._getTransformer(modulePath);
-
-    wrap(
-        'process',
-        transformer,
-        inner =>
-            function() {
-                // filename
-                arguments[1] = removeQuery(arguments[1]);
-                return inner.apply(this, arguments);
-            }
-    );
-
-    // return this.requireModule(from, moduleName);
-    // localModule.loaded = true;
-    // return moduleRegistry[modulePath].exports;
-}
-
-// wrap(
-//     '_resolveModule',
-//     Runtime.prototype,
-//     inner => function(from, moduleName) {
-//         const modulePath
-//     }
-// );
-
 wrap(
-    '_createRequireImplementation',
+    'requireModule',
     Runtime.prototype,
     inner =>
-        function(from, options) {
-            const moduleRequire = inner.apply(this, arguments);
-            const moduleRequireIntroscope = introscopeRequire.bind(this, from);
+        function(from, moduleName) {
+            if (
+                typeof moduleName == 'string' &&
+                moduleName.endsWith('?introscope.js')
+            ) {
+                const modulePath = this._resolveModule(from, moduleName);
 
-            // route paths ending with `?introscope` to "our" loader
-            return new Proxy(moduleRequire, {
-                apply(target, thisArg, argumentsList) {
-                    const path = argumentsList[0];
-                    if (
-                        typeof path == 'string' &&
-                        path.endsWith('?introscope.js')
-                    ) {
-                        moduleRequireIntroscope(path);
-                        return moduleRequire.apply(thisArg, argumentsList);
-                    } else {
-                        return moduleRequire.apply(thisArg, argumentsList);
-                    }
-                }
-            });
+                this._cacheFS[modulePath] =
+                    fs.readFileSync(removeQuery(modulePath), 'utf8') +
+                    '\n\n// @introscope-config "enable": true';
+
+                const transformer = this._scriptTransformer._getTransformer(
+                    modulePath
+                );
+                wrap(
+                    'process',
+                    transformer,
+                    inner =>
+                        function() {
+                            // filename
+                            arguments[1] = removeQuery(arguments[1]);
+                            return inner.apply(this, arguments);
+                        }
+                );
+            }
+            return inner.apply(this, arguments);
         }
 );
 
