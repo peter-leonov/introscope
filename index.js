@@ -2,7 +2,8 @@
 
 /*::
 // $FlowFixMe
-declare function introscope(scope: any): any
+type AnyScope = {[string]: any}
+declare function introscope(scope: AnyScope): AnyScope
 
 declare function scope<Scope>(scope: Scope): $Shape<Scope> => Scope
 */

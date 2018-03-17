@@ -45,7 +45,16 @@ Add it to the project's babel configuration (most likely `.babelrc`):
 }
 ```
 
-and use it in tests:
+and for easy integration modify the Jest configuration (most likely `jest.config.js`):
+
+```js
+module.exports = {
+    // this makes the `?introscope` suffix work
+    testRunner: 'introscope/testRunner'
+};
+```
+
+Done! Start using Introscope in tests:
 
 ```js
 import { introscope } from './tested-module';
@@ -56,11 +65,11 @@ const { introscope } = require('./tested-module?introscope');
 
 Just in case, this plugin does something only if `NODE_ENV` equals to `'test'`.
 
-Introscope supports all the new ES features (if not, create an issue 🙏), so if your babel configuration supports some new fancy syntax, Introscope should too.
+Introscope supports all the new ES features (if not, create an issue 🙏), so if Babel supports some new fancy syntax, Introscope should too.
 
 ## Example
 
-What Introscope does is it wraps a whole module code in a function that accepts one argument `scope` object and returns all variables, functions and classes defined in the module as properties of the `scope` object. Here is a little example. Code like this:
+What Introscope does is it just wraps a whole module code in a function that accepts one object argument `scope` and returns it with all module internals (variables, functions, classes and imports) exposed as properties. Here is a little example, a module like this one:
 
 ```js
 // api.js
@@ -77,7 +86,7 @@ export const getTodos = httpGet('/todos').then(ensureOkStatus);
 // @introscope-config "enable": true, "ignore": ["Error"]
 ```
 
-gets transpiled to code like this:
+gets transpiled on the fly to a module like this:
 
 ```js
 // api.js
@@ -148,17 +157,15 @@ describe('getTodos', () => {
 });
 ```
 
-## TODOs
-
 ### Usage with flow
 
-If it's ok for you to have `any` type in tests, then just export `introscope` like this:
+If it's ok for you to have `any` type in tests, then just export `introscope` from the tested module like this:
 
 ```js
 export { introscope } from 'introscope';
 ```
 
-The function `introscope` has type `mixed => {[string]: any}`, so a scope created from this function type will have type `any` for every property.
+The function `introscope` has type `{[string]: any} => {[string]: any}`, so a scope created from this function will have type `any` for any property.
 
 And in case you prefer strict type checking, here is an example on how to make flow getting the correct type for the `introscope` export:
 
@@ -170,6 +177,8 @@ export const introscope = scope({
     // other identifiers of your module
 });
 ```
+
+## TODOs
 
 ### Imported values in curried functions
 
