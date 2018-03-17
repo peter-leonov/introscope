@@ -17,9 +17,6 @@ const fs = require('graceful-fs');
 
 const Runtime = require('jest-runtime');
 
-const shouldInstrument = require('jest-runtime/build/should_instrument')
-    .default;
-
 const removeQuery = path => {
     if (typeof path != 'string') return path;
     return path.replace(/\?.*$/, '');
