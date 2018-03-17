@@ -14,13 +14,16 @@
  */
 
 // wrapper : real => (...args) => mixed
-const wrap = (method, obj, wrapper) => {
-    const inner = obj[method];
-    // if (inner.__wrapped_by_introscope)
-    //     return
+const wrap = (obj, method, wrapper) => {
+    let inner = obj[method];
+    if (inner.__wrapped_by_introscope) {
+        inner = inner.__wrapped_by_introscope;
+    }
+
     const wrapped = wrapper(inner);
-    // wrapped.__wrapped_by_introscope = inner
+    wrapped.__wrapped_by_introscope = inner;
     obj[method] = wrapped;
+
     return inner;
 };
 
@@ -35,8 +38,8 @@ const removeQuery = path => {
 };
 
 wrap(
-    'statSync',
     fs,
+    'statSync',
     inner =>
         function() {
             arguments[0] = removeQuery(arguments[0]);
@@ -45,8 +48,8 @@ wrap(
 );
 
 wrap(
-    'findNodeModule',
     Resolver,
+    'findNodeModule',
     inner =>
         function(path) {
             const [clearPath, query] = path.split('?');
@@ -61,8 +64,8 @@ wrap(
 );
 
 wrap(
-    'requireModule',
     Runtime.prototype,
+    'requireModule',
     inner =>
         function(from, moduleName) {
             if (
@@ -79,8 +82,8 @@ wrap(
                     modulePath
                 );
                 wrap(
-                    'process',
                     transformer,
+                    'process',
                     inner =>
                         function() {
                             // filename
