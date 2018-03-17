@@ -1,4 +1,4 @@
 {
     "presets": ["env"],
-    "plugins": ["./src/plugin"]
+    "plugins": ["./babel-plugin.js"]
 }

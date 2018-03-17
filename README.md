@@ -41,7 +41,7 @@ Add it to the project's babel configuration (most likely `.babelrc`):
 
 ```json
 {
-    "plugins": ["introscope"]
+    "plugins": ["introscope/babel-plugin"]
 }
 ```
 
