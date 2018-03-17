@@ -13,6 +13,8 @@
  * 6. Jump to file will not work in editors
  */
 
+const fs = require('graceful-fs');
+
 const Runtime = require('jest-runtime');
 
 const shouldInstrument = require('jest-runtime/build/should_instrument')
@@ -51,6 +53,7 @@ function transform(filename, options, fileSource) {
     const original_getCacheKey = this._getCacheKey;
     // jest will not write to the normal cache
     this._getCacheKey = () => 'introscope-anti-cache';
+
     const transformed = this._transformAndBuildScript(
         filename,
         options,
@@ -63,9 +66,15 @@ function transform(filename, options, fileSource) {
 }
 
 function introscopeRequire(from, moduleName) {
+    // moduleName = ;
+
     // dirty copy paste from here:
     //   https://github.com/facebook/jest/blob/23eec748db0de7b6b5fcda28cc51c48ddae16545/packages/jest-runtime/src/index.js#L270
-    const modulePath = this._resolveModule(from.filename, moduleName);
+    const realmodulePath = this._resolveModule(
+        from.filename,
+        moduleName.replace(/\?.*$/, '')
+    );
+    const modulePath = realmodulePath + '?introscope.js';
 
     // It's enough to just set it to true
     // but better be sure we are not instrumenting
@@ -89,6 +98,7 @@ function introscopeRequire(from, moduleName) {
         this._scriptTransformer,
         inner => transform
     );
+    this._cacheFS[modulePath] = fs.readFileSync(realmodulePath, 'utf8');
     this._execModule(localModule, undefined, moduleRegistry, from);
     this._scriptTransformer.transform = transformOriginal;
     localModule.loaded = true;
@@ -109,9 +119,8 @@ wrap(
                     const path = argumentsList[0];
                     if (
                         typeof path == 'string' &&
-                        path.endsWith('?introscope')
+                        path.endsWith('?introscope.js')
                     ) {
-                        argumentsList[0] = path.replace(/\?introscope$/, '');
                         return moduleRequireIntroscope.apply(
                             thisArg,
                             argumentsList

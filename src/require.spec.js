@@ -1,3 +1,5 @@
+const introscope = path => require(path + '?introscope.js');
+
 describe('require.introscope', () => {
     it('does not cache when require() goes first', () => {
         // in each require order test filenames should be uniqe
@@ -10,7 +12,7 @@ describe('require.introscope', () => {
         expect(firstRequire.privateVariable).toBe(undefined);
 
         // require with introscope enabled
-        const firstIntroscope = require(file + '?introscope');
+        const firstIntroscope = introscope(file);
         expect(typeof firstIntroscope).toBe('function');
         const scope1 = firstIntroscope();
         expect(scope1.publicVariable).toBe('publicValue');
@@ -28,7 +30,7 @@ describe('require.introscope', () => {
         const file = './require2';
 
         // require with introscope enabled first
-        const firstIntroscope = require(file + '?introscope');
+        const firstIntroscope = introscope(file);
         expect(typeof firstIntroscope).toBe('function');
         const scope1 = firstIntroscope();
         expect(scope1.publicVariable).toBe('publicValue');
@@ -41,7 +43,7 @@ describe('require.introscope', () => {
         expect(firstRequire.privateVariable).toBe(undefined);
 
         // require again with introscope enabled
-        const secondIntroscope = require(file + '?introscope');
+        const secondIntroscope = introscope(file);
         expect(typeof secondIntroscope).toBe('function');
         const scope2 = secondIntroscope();
         expect(scope2.publicVariable).toBe('publicValue');
