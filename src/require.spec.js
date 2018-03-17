@@ -1,3 +1,5 @@
+import { resolve } from 'path';
+
 const introscope = path => require(path + '?introscope.js');
 
 describe('require.introscope', () => {
@@ -48,5 +50,25 @@ describe('require.introscope', () => {
         const scope2 = secondIntroscope();
         expect(scope2.publicVariable).toBe('publicValue');
         expect(scope2.privateVariable).toBe('privateValue');
+    });
+});
+
+describe('source maps', () => {
+    it('stack trace is correct', () => {
+        expect.assertions(2);
+        const errorScope = introscope('./error.js');
+        expect(() => {
+            try {
+                errorScope().throws();
+            } catch (err) {
+                const root = resolve(__dirname, '../../');
+                expect(
+                    err.stack
+                        .split('/Users/peter/w/babel-module-function')
+                        .join('__dirname')
+                ).toMatchSnapshot();
+                throw err;
+            }
+        }).toThrow();
     });
 });
