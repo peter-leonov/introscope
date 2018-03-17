@@ -33,6 +33,7 @@ const wrap = (obj, method, wrapper) => {
 const fs = require('graceful-fs');
 const Runtime = require('jest-runtime');
 const Resolver = require('jest-resolve');
+const Transformer = require('babel-jest');
 
 const isIntroscopedModule = moduleName => /\?introscope/.test(moduleName);
 
@@ -67,6 +68,24 @@ wrap(
         }
 );
 
+Transformer.createTransformer = undefined;
+wrap(
+    Transformer,
+    'process',
+    inner =>
+        function() {
+            if (isIntroscopedModule(arguments[1])) {
+                // content
+                arguments[0] =
+                    arguments[0] + '\n\n// @introscope-config "enable": true';
+            }
+            // filename
+            arguments[1] = removeQuery(arguments[1]);
+
+            return inner.apply(this, arguments);
+        }
+);
+
 wrap(
     Runtime.prototype,
     'requireModule',
@@ -83,27 +102,6 @@ wrap(
                 arguments[1] = moduleName;
 
                 this._cacheFS[modulePath] = fs.readFileSync(realPath, 'utf8');
-
-                const transformer = this._scriptTransformer._getTransformer(
-                    moduleName
-                );
-                wrap(
-                    transformer,
-                    'process',
-                    inner =>
-                        function() {
-                            if (isIntroscopedModule(arguments[1])) {
-                                // content
-                                arguments[0] =
-                                    arguments[0] +
-                                    '\n\n// @introscope-config "enable": true';
-                            }
-                            // filename
-                            arguments[1] = removeQuery(arguments[1]);
-
-                            return inner.apply(this, arguments);
-                        }
-                );
             }
             return inner.apply(this, arguments);
         }
