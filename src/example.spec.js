@@ -1,5 +1,4 @@
-// import { introscope as exampleScope } from './example';
-const exampleScope = require.introscope('./example');
+import { introscope as exampleScope } from './example';
 
 // Introscope exports a factory function for module scope,
 // it creates a new module scope on each call,

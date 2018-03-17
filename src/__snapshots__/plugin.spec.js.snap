@@ -6,7 +6,7 @@ let shouldBeUntouched = true;"
 `;
 
 exports[`options disable 2`] = `
-"module.exports = function (_scope = {}) {
+"export const introscope = function (_scope = {}) {
             // inline \\"disable\\" is ignored, use \\"enable\\": false
             // @introscope-config \\"disable\\": true
             let shouldBeTransformed = _scope.shouldBeTransformed = true;
@@ -15,7 +15,7 @@ exports[`options disable 2`] = `
 `;
 
 exports[`options disable 3`] = `
-"module.exports = function (_scope = {}) {
+"export const introscope = function (_scope = {}) {
             let shouldBeTransformed = _scope.shouldBeTransformed = true;
             return _scope;
 };"
@@ -32,7 +32,7 @@ var shouldBeUntouched = true;"
 `;
 
 exports[`options does nothing if NODE_ENV != "test" 3`] = `
-"module.exports = function (_scope = {}) {
+"export const introscope = function (_scope = {}) {
             var shouldBeTransformed = _scope.shouldBeTransformed = true;
             return _scope;
 };"
@@ -50,7 +50,7 @@ let shouldBeUntouched = true;"
 `;
 
 exports[`options enable 3`] = `
-"module.exports = function (_scope = {}) {
+"export const introscope = function (_scope = {}) {
             // @introscope-config \\"enable\\": true
             let shouldBeTransformed = _scope.shouldBeTransformed = true;
             return _scope;
@@ -58,7 +58,7 @@ exports[`options enable 3`] = `
 `;
 
 exports[`options ignore 1`] = `
-"module.exports = function (_scope = {}) {
+"export const introscope = function (_scope = {}) {
     var deepGlobal;
     _scope.throwError = throwError;
 
@@ -74,14 +74,14 @@ exports[`options ignore 1`] = `
 `;
 
 exports[`options removeImports 1`] = `
-"module.exports = function (_scope = {}) {
+"export const introscope = function (_scope = {}) {
             _scope.sholdBeRemoved++;
             return _scope;
 };"
 `;
 
 exports[`options removeImports 2`] = `
-"module.exports = function (_scope = {}) {
+"export const introscope = function (_scope = {}) {
             _scope.sholdBeRemoved++;
             // @introscope-config \\"removeImports\\": true
 
@@ -93,8 +93,7 @@ exports[`options removeImports 3`] = `
 "
 // @introscope-config \\"removeImports\\": false
 import sholdNotBeRemoved from 'some-module1';
-
-module.exports = function (_scope = {}) {
+export const introscope = function (_scope = {}) {
             _scope.sholdNotBeRemoved = sholdNotBeRemoved;
             _scope.sholdNotBeRemoved++;
             return _scope;
@@ -105,8 +104,7 @@ exports[`options removeImports 4`] = `
 "
 // @introscope-config \\"removeImports\\": true
 import sholdNotBeRemoved from 'some-module1';
-
-module.exports = function (_scope = {}) {
+export const introscope = function (_scope = {}) {
             _scope.sholdNotBeRemoved = sholdNotBeRemoved;
             _scope.sholdNotBeRemoved++;
             // last takes precedence
@@ -119,8 +117,7 @@ module.exports = function (_scope = {}) {
 exports[`options removeImports 5`] = `
 "
 import sholdNotBeRemoved from 'some-module1';
-
-module.exports = function (_scope = {}) {
+export const introscope = function (_scope = {}) {
             var defaultImport1;
             _scope.sholdNotBeRemoved = sholdNotBeRemoved;
             _scope.defaultImport1++;
@@ -129,7 +126,7 @@ module.exports = function (_scope = {}) {
 `;
 
 exports[`plugin assignments 1`] = `
-"module.exports = function (_scope = {}) {
+"export const introscope = function (_scope = {}) {
             let x;
             _scope.x++;
             _scope.x = 1;
@@ -138,7 +135,7 @@ exports[`plugin assignments 1`] = `
 `;
 
 exports[`plugin declarations 1`] = `
-"module.exports = function (_scope = {}) {
+"export const introscope = function (_scope = {}) {
             _scope.functionName = functionName;
 
             let noInitValue;
@@ -173,7 +170,7 @@ exports[`plugin declarations 1`] = `
 `;
 
 exports[`plugin export 1`] = `
-"module.exports = function (_scope = {}) {
+"export const introscope = function (_scope = {}) {
             let defaultExport, toBeNameExport1, toBeNameExport2;
             _scope.default = _scope.defaultExport;
             const namedSingleExport = _scope.namedSingleExport = 'namedSingleExportValue';
@@ -182,7 +179,7 @@ exports[`plugin export 1`] = `
 `;
 
 exports[`plugin globals 1`] = `
-"module.exports = function (_scope = {}) {
+"export const introscope = function (_scope = {}) {
             var global2, global1, globalFunction, nestedGlobal1;
 
             let x = _scope.x = _scope.global1;
@@ -205,7 +202,7 @@ import { namedImport1, namedImport2 } from 'some-module4';
 import { originalImportName as localImportName } from 'some-module5';
 import * as namespaceImport from 'some-module6';
 
-module.exports = function (_scope = {}) {
+export const introscope = function (_scope = {}) {
     _scope.defaultImport = defaultImport;
     _scope.singleNamedImport = singleNamedImport;
     _scope.namedImport1 = namedImport1;
@@ -218,7 +215,7 @@ module.exports = function (_scope = {}) {
 `;
 
 exports[`plugin import 2`] = `
-"module.exports = function (_scope = {}) {
+"export const introscope = function (_scope = {}) {
 
     [_scope.defaultImport, _scope.singleNamedImport, _scope.namedImport1, _scope.namedImport2, _scope.localImportName, _scope.namespaceImport];
     return _scope;
@@ -226,7 +223,7 @@ exports[`plugin import 2`] = `
 `;
 
 exports[`plugin references 1`] = `
-"module.exports = function (_scope = {}) {
+"export const introscope = function (_scope = {}) {
             let x;
             (0, _scope.x)();
             !function () {
@@ -241,7 +238,7 @@ exports[`plugin references 1`] = `
 `;
 
 exports[`plugin scopes 1`] = `
-"module.exports = function (_scope = {}) {
+"export const introscope = function (_scope = {}) {
             let x = _scope.x = true;
             for (let x = 0; x != 0; x++);
             {
@@ -262,7 +259,7 @@ import { otherNamedImport } from 'otheModule';
 
 // @introscope-config \\"enable\\": true
 
-module.exports = function (_scope = {}) {
+export const introscope = function (_scope = {}) {
     _scope.introscope = introscope;
     _scope.renamed = renamed;
     _scope.otherNamedImport = otherNamedImport;
@@ -275,8 +272,7 @@ exports[`test does normal transpilation if enabled in opts 1`] = `
 import { introscope } from 'directModule';
 import { introscope as renamed } from 'renamedModule';
 import { otherNamedImport } from 'otheModule';
-
-module.exports = function (_scope = {}) {
+export const introscope = function (_scope = {}) {
     _scope.introscope = introscope;
     _scope.renamed = renamed;
     _scope.otherNamedImport = otherNamedImport;

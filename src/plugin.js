@@ -72,15 +72,11 @@ function processProgram({ types: t }, programPath, programOpts) {
         );
 
     const moduleExports = right =>
-        t.expressionStatement(
-            t.assignmentExpression(
-                '=',
-                t.memberExpression(
-                    t.identifier('module'),
-                    t.identifier('exports')
-                ),
-                right
-            )
+        t.exportNamedDeclaration(
+            t.variableDeclaration('const', [
+                t.variableDeclarator(t.identifier('introscope'), right)
+            ]),
+            []
         );
 
     const variableDeclaratorToScope = (path, identifier) => {
@@ -269,9 +265,13 @@ function processProgram({ types: t }, programPath, programOpts) {
         const imports = path.node.body.filter(byType('ImportDeclaration'));
         imports
             .filter(node => node.specifiers.length == 1)
-            .filter(node => node.specifiers[0].imported.name == 'introscope')
+            .filter(
+                node =>
+                    node.specifiers[0].imported &&
+                    node.specifiers[0].imported.name == 'introscope'
+            )
             .forEach(node => {
-                node.source.value += '.introscope';
+                node.source.value += '?introscope.js';
             });
     }
 
