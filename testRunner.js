@@ -27,17 +27,6 @@ const wrap = (method, obj, wrapper) => {
     return inner;
 };
 
-// wrapper : real => (...args) => mixed
-const wrapOnce = (method, obj, wrapper) => {
-    const inner = obj[method];
-    const outer = wrapper(inner);
-    obj[method] = function() {
-        obj[method] = inner;
-        return outer.apply(this, arguments);
-    };
-    return inner;
-};
-
 wrap(
     'statSync',
     fs,
@@ -47,33 +36,6 @@ wrap(
             return inner.apply(this, arguments);
         }
 );
-
-function transform(filename, options, fileSource) {
-    let instrument = false;
-
-    // in original code here is the second layer of caching
-    if (!options.isCoreModule) {
-        instrument = shouldInstrument(filename, options, this._config);
-    }
-
-    // here we fight the third layer of caching
-    // const originalCache = this._config.cache;
-    // jest will not read from the cache
-    // this._config.cache = false;
-    // const original_getCacheKey = this._getCacheKey;
-    // jest will not write to the normal cache
-    // this._getCacheKey = () => 'introscope-anti-cache';
-
-    const transformed = this._transformAndBuildScript(
-        filename, //.replace(/\?.*$/, ''),
-        options,
-        instrument,
-        fileSource
-    );
-    // this._getCacheKey = original_getCacheKey;
-    // this._config.cache = originalCache;
-    return transformed;
-}
 
 function introscopeRequire(from, moduleName) {
     // dirty patched copy paste from here:
@@ -101,16 +63,24 @@ function introscopeRequire(from, moduleName) {
     const moduleRegistry = {
         [modulePath]: localModule
     };
-    // const transformOriginal = wrapOnce(
-    //     'transform',
-    //     this._scriptTransformer,
-    //     inner => transform
-    // );
     this._cacheFS[modulePath] =
         fs.readFileSync(realmodulePath, 'utf8') +
         '\n\n// @introscope-config "enable": true';
+
+    const transformer = this._scriptTransformer._getTransformer(modulePath);
+
+    wrap(
+        'process',
+        transformer,
+        inner =>
+            function() {
+                // filename
+                arguments[1] = arguments[1].replace(/\?.*$/, '');
+                return inner.apply(this, arguments);
+            }
+    );
+
     this._execModule(localModule, undefined, moduleRegistry, from);
-    // this._scriptTransformer.transform = transformOriginal;
     localModule.loaded = true;
     return moduleRegistry[modulePath].exports;
 }

@@ -286,7 +286,7 @@ module.exports = function (_scope = {}) {
 
 exports[`test in test code does transpile only introscope import 1`] = `
 "
-import { introscope } from 'directModule.introscope';
-import { introscope as renamed } from 'renamedModule.introscope';
+import { introscope } from 'directModule?introscope.js';
+import { introscope as renamed } from 'renamedModule?introscope.js';
 import { otherNamedImport } from 'otheModule';"
 `;
