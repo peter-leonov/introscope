@@ -1,0 +1,17 @@
+[ignore]
+.*/node_modules/.*
+.*/.history/.*
+
+[include]
+
+[libs]
+
+[lints]
+all=error
+
+[options]
+module.use_strict=true
+suppress_comment= \\(.\\|\n\\)*\\$FlowFixMe
+suppress_comment= \\(.\\|\n\\)*\\$FlowError
+
+[strict]

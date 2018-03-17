@@ -163,15 +163,12 @@ The function `introscope` has type `mixed => {[string]: any}`, so a scope create
 And in case you prefer strict type checking, here is an example on how to make flow getting the correct type for the `introscope` export:
 
 ```js
-type Introscope<Scope> = ($Shape<Scope>) => Scope;
-const scope = {
+import { scope } from 'introscope';
+export const introscope = scope({
     constantA,
     functionB
     // other identifiers of your module
-};
-
-import { type Introscope, anyScope } from 'introscope';
-export const introscope: Introscope<typeof scope> = anyScope;
+});
 ```
 
 ### Imported values in curried functions
