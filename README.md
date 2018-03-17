@@ -32,9 +32,9 @@ Handy integrations with popular unit testing tools and nice tricks like `Proxy` 
 Install the babel plugin first:
 
 ```sh
-yarn add --dev babel-plugin-introscope
+yarn add --dev introscope
 # or
-npm install --save-dev babel-plugin-introscope
+npm install --save-dev introscope
 ```
 
 Add it to the project's babel configuration (most likely `.babelrc`):
@@ -50,9 +50,8 @@ and use it in tests:
 ```js
 import { introscope } from './tested-module';
 
-// or
-
-const { introscope } = require('./tested-module');
+// or using common modules (note the `?introscope` suffix)
+const { introscope } = require('./tested-module?introscope');
 ```
 
 Just in case, this plugin does something only if `NODE_ENV` equals to `'test'`.
