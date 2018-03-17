@@ -3,20 +3,15 @@
 A reflection / introspection babel plugin for delightful ES modules testing.
 
 ```js
-// any-module.test.js
-import { introscope as anyModuleScope } from './any-module';
+// Babel plugin creates `introscope` export on the fly for tests
+import { introscope } from './cool-es-module';
 
 test('privateFunction', () => {
-    const scope = anyModuleScope({
+    const scope = introscope({
         PRIVATE_CONSTANT: 123
     });
     expect(scope.privateFunction()).toBe(scope.ANOTHER_PRIVATE_CONSTANT);
 });
-
-// any-module.js
-// @introscope-config "enable": true
-
-// ...the rest of the module code...
 ```
 
 ## Description
