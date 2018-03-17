@@ -148,10 +148,6 @@ describe('getTodos', () => {
 });
 ```
 
-## Limitation
-
-As far as Introscope requires a magic comment `@introscope-config "enable": true` in every module which gets tested it's currently impossible to require introscoped modules from withing introscoped modules. The better solution is in progress for Jest.
-
 ## TODOs
 
 ### Usage with flow
