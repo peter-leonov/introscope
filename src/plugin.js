@@ -271,7 +271,7 @@ function processProgram({ types: t }, programPath, programOpts) {
                     node.specifiers[0].imported.name == 'introscope'
             )
             .forEach(node => {
-                node.source.value += '?introscope.js';
+                node.source.value += '?introscope';
             });
     }
 

@@ -13,6 +13,8 @@
  * 6. Jump to file will not work in editors
  */
 
+const { extname } = require('path');
+
 // wrapper : real => (...args) => mixed
 const wrap = (obj, method, wrapper) => {
     let inner = obj[method];
@@ -31,6 +33,8 @@ const wrap = (obj, method, wrapper) => {
 const fs = require('graceful-fs');
 const Runtime = require('jest-runtime');
 const Resolver = require('jest-resolve');
+
+const isIntroscopedModule = moduleName => /\?introscope/.test(moduleName);
 
 const removeQuery = path => {
     if (typeof path != 'string') return path;
@@ -68,26 +72,35 @@ wrap(
     'requireModule',
     inner =>
         function(from, moduleName) {
-            if (
-                typeof moduleName == 'string' &&
-                moduleName.endsWith('?introscope.js')
-            ) {
-                const modulePath = this._resolveModule(from, moduleName);
+            if (isIntroscopedModule(moduleName)) {
+                let modulePath = this._resolveModule(from, moduleName);
+                const realPath = removeQuery(modulePath);
 
-                this._cacheFS[modulePath] =
-                    fs.readFileSync(removeQuery(modulePath), 'utf8') +
-                    '\n\n// @introscope-config "enable": true';
+                // makes module resolver find the proper transformer
+                const ext = extname(realPath);
+                moduleName += ext;
+                modulePath += ext;
+                arguments[1] = moduleName;
+
+                this._cacheFS[modulePath] = fs.readFileSync(realPath, 'utf8');
 
                 const transformer = this._scriptTransformer._getTransformer(
-                    modulePath
+                    moduleName
                 );
                 wrap(
                     transformer,
                     'process',
                     inner =>
                         function() {
+                            if (isIntroscopedModule(arguments[1])) {
+                                // content
+                                arguments[0] =
+                                    arguments[0] +
+                                    '\n\n// @introscope-config "enable": true';
+                            }
                             // filename
                             arguments[1] = removeQuery(arguments[1]);
+
                             return inner.apply(this, arguments);
                         }
                 );

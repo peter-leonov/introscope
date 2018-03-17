@@ -1,6 +1,6 @@
 import { resolve } from 'path';
 
-const introscope = path => require(path + '?introscope.js').introscope;
+const introscope = path => require(path + '?introscope').introscope;
 
 describe('require.introscope', () => {
     it('does not cache when require() goes first', () => {
