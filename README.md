@@ -4,7 +4,7 @@ A reflection / introspection tool for unit testing ES modules.
 
 ```js
 // any-module.test.js
-import anyModuleScope from './any-module';
+import { introscope as anyModuleScope } from './any-module';
 
 test('privateFunction', () => {
     const scope = anyModuleScope({
@@ -84,7 +84,7 @@ gets transpiled to code like this:
 // api.js
 import httpGet from 'some-http-library';
 
-module.exports = function(_scope = {}) {
+export const introscope = function(_scope = {}) {
     _scope.httpGet = httpGet;
 
     const ensureOkStatus = (_scope.ensureOkStatus = response => {
@@ -101,7 +101,7 @@ module.exports = function(_scope = {}) {
 };
 ```
 
-You can play with the transpilation in this [AST explorer example](https://astexplorer.net/#/gist/43715a3277b223b363349129a8741f13/aa91fdf81ae4574491d87385426550c2633b8690).
+You can play with the transpilation in this [AST explorer example](https://astexplorer.net/#/gist/eae4a1db26c203390763fd5d1b6ed67a/5afa750c98ca6f775d2b4562f1c837f959f7108a).
 
 The resulting code you can then import in your Babel powered test environment and examine like this:
 
