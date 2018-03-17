@@ -1,6 +1,6 @@
 {
     "name": "introscope",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "description": "Babel plugin which helps with ES modules testing",
     "repository": "github:peter-leonov/introscope",
     "author": "Peter Leonov",
