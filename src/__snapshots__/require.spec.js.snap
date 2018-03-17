@@ -2,16 +2,6 @@
 
 exports[`source maps stack trace is correct 1`] = `
 "TypeError: Cannot read property 'nonExisting' of undefined
-    at Object._scope.throws (__dirname/src/error.js?introscope.js:5:29)
-    at __dirname/src/require.spec.js:62:30
-    at Object.<anonymous> (__dirname/node_modules/expect/build/to_throw_matchers.js:43:7)
-    at Object.throwingMatcher [as toThrow] (__dirname/node_modules/expect/build/index.js:214:24)
-    at Object.<anonymous> (__dirname/src/require.spec.js:72:12)
-    at Object.asyncFn (__dirname/node_modules/jest-jasmine2/build/jasmine_async.js:82:37)
-    at resolve (__dirname/node_modules/jest-jasmine2/build/queue_runner.js:52:12)
-    at new Promise (<anonymous>)
-    at mapper (__dirname/node_modules/jest-jasmine2/build/queue_runner.js:39:19)
-    at promise.then (__dirname/node_modules/jest-jasmine2/build/queue_runner.js:73:82)
-    at <anonymous>
-    at process._tickCallback (internal/process/next_tick.js:188:7)"
+    at Object._scope.throws (__dirname/error.js:5:29)
+    at "
 `;

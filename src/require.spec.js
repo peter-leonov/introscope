@@ -55,17 +55,21 @@ describe('require.introscope', () => {
 
 describe('source maps', () => {
     it('stack trace is correct', () => {
-        expect.assertions(2);
+        expect.assertions(4);
+
         const errorScope = introscope('./error.js');
+        expect(typeof errorScope).toBe('function');
+        const scope = errorScope();
+        expect(typeof scope.throws).toBe('function');
+
         expect(() => {
             try {
-                errorScope().throws();
+                scope.throws();
             } catch (err) {
-                const root = resolve(__dirname, '../../');
+                const introscopedPart = err.stack.split(__filename)[0];
+
                 expect(
-                    err.stack
-                        .split('/Users/peter/w/babel-module-function')
-                        .join('__dirname')
+                    introscopedPart.split(__dirname).join('__dirname')
                 ).toMatchSnapshot();
                 throw err;
             }

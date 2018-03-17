@@ -74,7 +74,7 @@ function introscopeRequire(from, moduleName) {
         from.filename,
         moduleName.replace(/\?.*$/, '')
     );
-    const modulePath = realmodulePath + '?introscope.js';
+    const modulePath = realmodulePath; // + '?introscope.js';
 
     // It's enough to just set it to true
     // but better be sure we are not instrumenting
