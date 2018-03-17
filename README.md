@@ -1,6 +1,6 @@
 # Introscope
 
-A reflection / introspection tool for unit testing ES modules.
+A reflection / introspection babel plugin for delightful ES modules testing.
 
 ```js
 // any-module.test.js
