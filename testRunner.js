@@ -1,6 +1,6 @@
 /**
  * This horrible hack does two things:
- * 1. enables babel plugin via global variable to transpile
+ * 1. enables babel plugin by appending "enable": true to content
  * 2. prevents Jest from caching the introscope transpiled code
  *
  * Why not just transpile the file content manually in a test code?
@@ -13,20 +13,25 @@
  * 6. Jump to file will not work in editors
  */
 
-const fs = require('graceful-fs');
+// wrapper : real => (...args) => mixed
+const wrap = (method, obj, wrapper) => {
+    const inner = obj[method];
+    // if (inner.__wrapped_by_introscope)
+    //     return
+    const wrapped = wrapper(inner);
+    // wrapped.__wrapped_by_introscope = inner
+    obj[method] = wrapped;
+    return inner;
+};
 
+// to be monkey patched
+const fs = require('graceful-fs');
 const Runtime = require('jest-runtime');
+const Resolver = require('jest-resolve');
 
 const removeQuery = path => {
     if (typeof path != 'string') return path;
     return path.replace(/\?.*$/, '');
-};
-
-// wrapper : real => (...args) => mixed
-const wrap = (method, obj, wrapper) => {
-    const inner = obj[method];
-    obj[method] = wrapper(obj[method]);
-    return inner;
 };
 
 wrap(
@@ -39,29 +44,42 @@ wrap(
         }
 );
 
+wrap(
+    'findNodeModule',
+    Resolver,
+    inner =>
+        function(path) {
+            const [clearPath, query] = path.split('?');
+
+            if (!query) {
+                return inner.apply(this, arguments);
+            } else {
+                arguments[0] = clearPath;
+                return inner.apply(this, arguments) + '?' + query;
+            }
+        }
+);
+
 function introscopeRequire(from, moduleName) {
     // dirty patched copy paste from here:
     //   https://github.com/facebook/jest/blob/23eec748db0de7b6b5fcda28cc51c48ddae16545/packages/jest-runtime/src/index.js#L270
-    const realmodulePath = this._resolveModule(
-        from.filename,
-        removeQuery(moduleName)
-    );
-    const modulePath = realmodulePath + '?introscope.js';
+    const modulePath = this._resolveModule(from.filename, moduleName);
+    // const modulePath = realmodulePath + '?introscope.js';
+    // console.log(modulePath);
+    // // the first layer of caching
+    // const localModule = {
+    //     children: [],
+    //     exports: {},
+    //     filename: modulePath,
+    //     id: modulePath,
+    //     loaded: false
+    // };
 
-    // the first layer of caching
-    const localModule = {
-        children: [],
-        exports: {},
-        filename: modulePath,
-        id: modulePath,
-        loaded: false
-    };
-
-    const moduleRegistry = {
-        [modulePath]: localModule
-    };
+    // const moduleRegistry = {
+    //     [modulePath]: localModule
+    // };
     this._cacheFS[modulePath] =
-        fs.readFileSync(realmodulePath, 'utf8') +
+        fs.readFileSync(removeQuery(modulePath), 'utf8') +
         '\n\n// @introscope-config "enable": true';
 
     const transformer = this._scriptTransformer._getTransformer(modulePath);
@@ -77,10 +95,18 @@ function introscopeRequire(from, moduleName) {
             }
     );
 
-    this._execModule(localModule, undefined, moduleRegistry, from);
-    localModule.loaded = true;
-    return moduleRegistry[modulePath].exports;
+    // return this.requireModule(from, moduleName);
+    // localModule.loaded = true;
+    // return moduleRegistry[modulePath].exports;
 }
+
+// wrap(
+//     '_resolveModule',
+//     Runtime.prototype,
+//     inner => function(from, moduleName) {
+//         const modulePath
+//     }
+// );
 
 wrap(
     '_createRequireImplementation',
@@ -98,10 +124,8 @@ wrap(
                         typeof path == 'string' &&
                         path.endsWith('?introscope.js')
                     ) {
-                        return moduleRequireIntroscope.apply(
-                            thisArg,
-                            argumentsList
-                        );
+                        moduleRequireIntroscope(path);
+                        return moduleRequire.apply(thisArg, argumentsList);
                     } else {
                         return moduleRequire.apply(thisArg, argumentsList);
                     }
