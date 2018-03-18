@@ -6,8 +6,7 @@
     "author": "Peter Leonov",
     "license": "MIT",
     "scripts": {
-        "test": "jest && flow check",
-        "build": "babel src -d dist"
+        "test": "jest && flow check"
     },
     "peerDependencies": {
         "babel-core": "^6.26.0"
