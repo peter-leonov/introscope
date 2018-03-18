@@ -8,10 +8,15 @@ declare function introscope(scope: AnyScope): AnyScope
 declare function scope<Scope>(scope: Scope): $Shape<Scope> => Scope
 */
 
-export function introscope(scope) {
+function introscope(scope) {
     return scope;
 }
 
-export function scope(scope) {
+function scope(scope) {
     return introscope;
 }
+
+module.exports = {
+    introscope,
+    scope
+};

@@ -1,1 +1,8 @@
-export const httpGet = path => Promise.resolve({ status: 200 });
+// @flow
+
+type MyResponse = {
+    status: number
+};
+
+export const httpGet = (path: string): Promise<MyResponse> =>
+    Promise.resolve({ status: 200 });

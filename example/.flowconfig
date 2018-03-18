@@ -1,0 +1,14 @@
+[ignore]
+.*/.history/.*
+
+[include]
+
+[libs]
+
+[lints]
+all=error
+
+[options]
+module.use_strict=true
+
+[strict]

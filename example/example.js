@@ -1,12 +1,20 @@
+// @flow
+// @introscope-config "ignore": ["Error"]
+
 import { httpGet } from './some-http-library';
 
 const ensureOkStatus = response => {
     if (response.status !== 200) {
-        throw 'Non OK status';
+        throw new Error('Non OK status');
     }
     return response;
 };
 
 export const getTodos = () => httpGet('/todos').then(ensureOkStatus);
 
-// @introscope-config "ignore": ["Error"]
+import { scope } from 'introscope';
+export const introscope = scope({
+    httpGet,
+    ensureOkStatus,
+    getTodos
+});

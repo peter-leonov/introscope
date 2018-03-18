@@ -1,3 +1,4 @@
+// @flow
 import { introscope as exampleScope } from './example';
 
 // Introscope exports a factory function for module scope,
@@ -13,7 +14,7 @@ describe('ensureOkStatus', () => {
         const errorResponse = { status: 500 };
         expect(() => {
             scope.ensureOkStatus(errorResponse);
-        }).toThrowError('Non OK status');
+        }).toThrow(Error);
     });
     it('passes response 200 status', () => {
         // creates a new unaltered scope
@@ -29,7 +30,7 @@ describe('getTodos', () => {
         // creates a new unaltered scope
         const scope = exampleScope();
         // mock the local module functions
-        scope.httpGet = jest.fn(() => Promise.resolve());
+        scope.httpGet = jest.fn(() => Promise.resolve({ status: 200 }));
         scope.ensureOkStatus = jest.fn();
 
         // call with altered environment
