@@ -8,7 +8,7 @@ let shouldBeUntouched = true;"
 exports[`options disable 2`] = `
 "export const introscope = function (_scope = {}) {
             // inline \\"disable\\" is ignored, use \\"enable\\": false
-            // @introscope-config \\"disable\\": true
+            // @introscope \\"disable\\": true
             let shouldBeTransformed = _scope.shouldBeTransformed = true;
             return _scope;
 };"
@@ -45,13 +45,13 @@ let shouldBeUntouched = true;"
 
 exports[`options enable 2`] = `
 "
-// @introscope-config \\"enable\\": false
+// @introscope \\"enable\\": false
 let shouldBeUntouched = true;"
 `;
 
 exports[`options enable 3`] = `
 "export const introscope = function (_scope = {}) {
-            // @introscope-config \\"enable\\": true
+            // @introscope \\"enable\\": true
             let shouldBeTransformed = _scope.shouldBeTransformed = true;
             return _scope;
 };"
@@ -62,7 +62,7 @@ exports[`options ignore 1`] = `
     var deepGlobal;
     _scope.throwError = throwError;
 
-    // @introscope-config \\"ignore\\": [\\"localIgnored\\", \\"Error\\", \\"deepGlobalIgnored\\"]
+    // @introscope \\"ignore\\": [\\"localIgnored\\", \\"Error\\", \\"deepGlobalIgnored\\"]
     const x = _scope.x = { deep: { global: { variable: _scope.deepGlobal, variableIgnored: deepGlobalIgnored } } };
     const localIgnored = 1;
     localIgnored++;
@@ -83,7 +83,7 @@ exports[`options removeImports 1`] = `
 exports[`options removeImports 2`] = `
 "export const introscope = function (_scope = {}) {
             _scope.sholdBeRemoved++;
-            // @introscope-config \\"removeImports\\": true
+            // @introscope \\"removeImports\\": true
 
             return _scope;
 };"
@@ -91,7 +91,7 @@ exports[`options removeImports 2`] = `
 
 exports[`options removeImports 3`] = `
 "
-// @introscope-config \\"removeImports\\": false
+// @introscope \\"removeImports\\": false
 import sholdNotBeRemoved from 'some-module1';
 export const introscope = function (_scope = {}) {
             _scope.sholdNotBeRemoved = sholdNotBeRemoved;
@@ -102,13 +102,13 @@ export const introscope = function (_scope = {}) {
 
 exports[`options removeImports 4`] = `
 "
-// @introscope-config \\"removeImports\\": true
+// @introscope \\"removeImports\\": true
 import sholdNotBeRemoved from 'some-module1';
 export const introscope = function (_scope = {}) {
             _scope.sholdNotBeRemoved = sholdNotBeRemoved;
             _scope.sholdNotBeRemoved++;
             // last takes precedence
-            // @introscope-config \\"removeImports\\": false
+            // @introscope \\"removeImports\\": false
 
             return _scope;
 };"
@@ -257,7 +257,7 @@ import { introscope } from 'directModule';
 import { introscope as renamed } from 'renamedModule';
 import { otherNamedImport } from 'otheModule';
 
-// @introscope-config \\"enable\\": true
+// @introscope \\"enable\\": true
 
 export const introscope = function (_scope = {}) {
     _scope.introscope = introscope;

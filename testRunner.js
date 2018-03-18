@@ -77,7 +77,7 @@ wrap(
             if (isIntroscopedModule(arguments[1])) {
                 // content
                 arguments[0] =
-                    arguments[0] + '\n\n// @introscope-config "enable": true';
+                    arguments[0] + '\n\n// @introscope "enable": true';
             }
             // filename
             arguments[1] = removeQuery(arguments[1]);

@@ -1,5 +1,5 @@
 // @flow
-// @introscope-config "ignore": ["Error"]
+// @introscope "ignore": ["Error"]
 
 import { httpGet } from './some-http-library';
 

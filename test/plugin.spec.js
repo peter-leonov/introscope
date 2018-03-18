@@ -123,7 +123,7 @@ describe('options', () => {
 
     it('removeImports', () => {
         shoot(`
-            // @introscope-config "removeImports": true
+            // @introscope "removeImports": true
             // other comment
             import sholdBeRemoved from 'some-module1'
             sholdBeRemoved++
@@ -132,22 +132,22 @@ describe('options', () => {
             // @other-at-comment bla bla bla
             import sholdBeRemoved from 'some-module1'
             sholdBeRemoved++
-            // @introscope-config "removeImports": true
+            // @introscope "removeImports": true
         `);
         shoot(
             `
-            // @introscope-config "removeImports": false
+            // @introscope "removeImports": false
             import sholdNotBeRemoved from 'some-module1'
             sholdNotBeRemoved++
         `,
             { removeImports: true }
         );
         shoot(`
-            // @introscope-config "removeImports": true
+            // @introscope "removeImports": true
             import sholdNotBeRemoved from 'some-module1'
             sholdNotBeRemoved++
             // last takes precedence
-            // @introscope-config "removeImports": false
+            // @introscope "removeImports": false
         `);
         shoot(`
             import sholdNotBeRemoved from 'some-module1'
@@ -157,7 +157,7 @@ describe('options', () => {
 
     it('ignore', () => {
         shoot(`
-        // @introscope-config "ignore": ["localIgnored", "Error", "deepGlobalIgnored"]
+        // @introscope "ignore": ["localIgnored", "Error", "deepGlobalIgnored"]
         const x = { deep: { global: { variable: deepGlobal, variableIgnored: deepGlobalIgnored }}}
         const localIgnored = 1;
         localIgnored++;
@@ -177,7 +177,7 @@ describe('options', () => {
 
         shoot(
             `
-            // @introscope-config "enable": false
+            // @introscope "enable": false
             let shouldBeUntouched = true;
         `,
             { enable: true }
@@ -185,7 +185,7 @@ describe('options', () => {
 
         shoot(
             `
-            // @introscope-config "enable": true
+            // @introscope "enable": true
             let shouldBeTransformed = true;
         `,
             { enable: false }
@@ -203,7 +203,7 @@ describe('options', () => {
         shoot(
             `
             // inline "disable" is ignored, use "enable": false
-            // @introscope-config "disable": true
+            // @introscope "disable": true
             let shouldBeTransformed = true;
         `
         );
@@ -228,7 +228,7 @@ describe('test', () => {
     });
 
     it('does normal transpilation if enabled in code', () => {
-        shoot(code + '\n// @introscope-config "enable": true', {
+        shoot(code + '\n// @introscope "enable": true', {
             enable: false
         });
     });

@@ -185,7 +185,7 @@ function processProgram({ types: t }, programPath, programOpts) {
             const trailing = statement.node.trailingComments || [];
             const comments = [].concat(leading).concat(trailing);
             comments.map(node => node.value).forEach(comment => {
-                const [_, configJSON] = comment.split(/^\s*@introscope-config/);
+                const [_, configJSON] = comment.split(/^\s*@introscope/);
                 if (configJSON) {
                     try {
                         const config = JSON.parse(`{${configJSON}}`);
