@@ -1,3 +1,4 @@
 module.exports = {
-    testRunner: '<rootDir>/testRunner'
+    modulePathIgnorePatterns: ['example'],
+    testRunner: './testRunner'
 };
