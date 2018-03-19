@@ -16,10 +16,7 @@ function processProgram({ types: t }, programPath, programOpts) {
         removeImports: false
     };
 
-    let options = {
-        ...defaultOptions,
-        ...programOpts
-    };
+    let options = Object.assign({}, defaultOptions, programOpts);
 
     const scopeId = programPath.scope.generateUidIdentifier('scope');
 
@@ -189,10 +186,7 @@ function processProgram({ types: t }, programPath, programOpts) {
                 if (configJSON) {
                     try {
                         const config = JSON.parse(`{${configJSON}}`);
-                        options = {
-                            ...options,
-                            ...config
-                        };
+                        options = Object.assign({}, options, config);
                     } catch (ex) {
                         console.error(
                             'Error parsing Introscope config:',
@@ -294,9 +288,7 @@ module.exports = function(babel) {
                     return;
                 }
 
-                const opts = {
-                    ...state.opts
-                };
+                const opts = Object.assign({}, state.opts);
 
                 processProgram(babel, path, opts);
             }
