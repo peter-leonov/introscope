@@ -6,6 +6,7 @@ const shoot = (code, opts = {}) =>
         transform(code, {
             sourceType: 'module',
             plugins: [
+                'syntax-flow',
                 'syntax-object-rest-spread',
                 [plugin, { enable: true, ...opts }]
             ]
@@ -99,6 +100,14 @@ describe('plugin', () => {
             export const namedSingleExport = 'namedSingleExportValue'
             export { toBeNameExport1, toBeNameExport2 }
             export * from 'some-module'
+        `);
+    });
+
+    it('flow', () => {
+        shoot(`
+            import type { TypeImportedTypeShouldBeIgnored } from 'x'
+            import { type ImportedTypeShouldBeIgnored } from 'y'
+            type LocalTypeShouldBeIgnored = ImportedTypeShouldBeIgnored | TypeImportedTypeShouldBeIgnored;
         `);
     });
 });

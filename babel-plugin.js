@@ -129,8 +129,16 @@ function processProgram({ types: t }, programPath, programOpts) {
             if (options.removeImports === true) {
                 // ignore
             } else if (path.parentPath.isImportDeclaration()) {
+                if (
+                    path.node.importKind == 'type' ||
+                    path.parentPath.node.importKind == 'type'
+                ) {
+                    return;
+                }
                 return path.get('local').node;
             }
+        } else if (path.isNodeType('TypeAlias')) {
+            // ignore types
         } else {
             console.warn(
                 path.buildCodeFrameError(
@@ -144,6 +152,9 @@ function processProgram({ types: t }, programPath, programOpts) {
     const replaceReferenceWithScope = path => {
         // ExportNamedDeclaration gets properly processed by replaceMutationWithScope()
         if (path.node.type == 'ExportNamedDeclaration') return;
+        // do not touch flow types at all
+        if (path.isNodeType('Flow') || path.parentPath.isNodeType('Flow'))
+            return;
         // ExportSpecifier gets removed by unwrapOrRemoveExports()
         if (path.parent.type == 'ExportSpecifier') return;
         if (path.findParent(path => path.isObjectPattern())) return;

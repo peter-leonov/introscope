@@ -178,6 +178,16 @@ exports[`plugin export 1`] = `
 };"
 `;
 
+exports[`plugin flow 1`] = `
+"
+import type { TypeImportedTypeShouldBeIgnored } from 'x';
+import { type ImportedTypeShouldBeIgnored } from 'y';
+export const introscope = function (_scope = {}) {
+            type LocalTypeShouldBeIgnored = ImportedTypeShouldBeIgnored | TypeImportedTypeShouldBeIgnored;
+            return _scope;
+};"
+`;
+
 exports[`plugin globals 1`] = `
 "export const introscope = function (_scope = {}) {
             var global2, global1, globalFunction, nestedGlobal1;
