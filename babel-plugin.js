@@ -132,9 +132,11 @@ function processProgram({ types: t }, programPath, programOpts) {
                 return path.get('local').node;
             }
         } else {
-            throw path.buildCodeFrameError(
-                'Cannot apply declarationToScope() to an anknown node.type: ' +
-                    path.node.type
+            console.warn(
+                path.buildCodeFrameError(
+                    'Cannot apply declarationToScope() to an anknown node.type: ' +
+                        path.node.type
+                )
             );
         }
     };
