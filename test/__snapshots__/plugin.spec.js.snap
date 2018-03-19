@@ -188,6 +188,19 @@ export const introscope = function (_scope = {}) {
 };"
 `;
 
+exports[`plugin flow 2`] = `
+"export const introscope = function (_scope = {}) {
+    _scope.typedFuntion = typedFuntion;
+
+    type SomeType = number;
+    type SomeOtherType = SomeType;
+    function typedFuntion(x: SomeType): SomeOtherType {
+        let typedVar: SomeType | SomeOtherType = 123;
+    }
+    return _scope;
+};"
+`;
+
 exports[`plugin globals 1`] = `
 "export const introscope = function (_scope = {}) {
             var global2, global1, globalFunction, nestedGlobal1;

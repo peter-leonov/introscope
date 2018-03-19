@@ -109,6 +109,14 @@ describe('plugin', () => {
             import { type ImportedTypeShouldBeIgnored } from 'y'
             type LocalTypeShouldBeIgnored = ImportedTypeShouldBeIgnored | TypeImportedTypeShouldBeIgnored;
         `);
+
+        shoot(`
+            type SomeType = number;
+            type SomeOtherType = SomeType;
+            function typedFuntion(x: SomeType): SomeOtherType {
+                let typedVar: SomeType | SomeOtherType = 123
+            }
+        `);
     });
 });
 
