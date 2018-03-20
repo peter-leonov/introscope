@@ -1,9 +1,11 @@
 [ignore]
+.*/node_modules/.*
 .*/.history/.*
 
 [include]
 
 [libs]
+node_modules/introscope/flow-typed
 
 [lints]
 all=error

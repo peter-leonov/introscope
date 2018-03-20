@@ -152,7 +152,7 @@ describe('getTodos', () => {
 });
 ```
 
-### Usage with flow
+### Usage with Flow
 
 If it's ok for you to have `any` type in tests, then just export `introscope` from the tested module like this:
 
@@ -160,7 +160,7 @@ If it's ok for you to have `any` type in tests, then just export `introscope` fr
 export { introscope } from 'introscope';
 ```
 
-The function `introscope` has type `{[string]: any} => {[string]: any}`, so a scope created from this function will have type `any` for any property.
+The function `introscope` has type `{[string]: any} => {[string]: any}`, so a scope created from this function will give type `any` for any property.
 
 And in case you prefer strict type checking, here is an example on how to make flow getting the correct type for the `introscope` export:
 
@@ -171,6 +171,31 @@ export const introscope = scope({
     functionB
     // other identifiers of your module
 });
+```
+
+If your project ignores `node_modules` with this config line:
+
+`flow check` will error out with message like this:
+
+```
+Error--------------example.js:15:23
+Cannot resolve module introscope.
+```
+
+there are two solutions:
+
+1.  use [flow-typed](https://github.com/flowtype/flow-typed)
+
+```sh
+yarn add -D flow-typed
+yarn flow-typed install introscope
+```
+
+2.  just add this line to `.flowconfig` `[libs]` section:
+
+```ini
+[libs]
+node_modules/introscope/flow-typed
 ```
 
 ## TODOs
