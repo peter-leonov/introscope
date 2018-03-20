@@ -2,10 +2,10 @@
 
 /*::
 // $FlowFixMe
-type AnyScope = {[string]: any}
-declare function introscope(scope: AnyScope): AnyScope => AnyScope
+type AnyScope = { [string]: any };
+declare function introscope(scope: AnyScope): AnyScope => AnyScope;
 
-declare function scope<Scope>(scope: Scope): $Shape<Scope> => Scope
+declare function scope<Scope: {}>(scope: Scope): ($Shape<Scope>) => Scope;
 */
 
 function introscope(scope) {
