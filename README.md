@@ -60,7 +60,7 @@ const { introscope } = require('./tested-module?introscope');
 
 For safety reasons this plugin does anything only when `NODE_ENV` equals to `'test'`, in production or development it's a no-op.
 
-Introscope supports all the new ES features (if not, create an issue 🙏. That means, if Babel supports some new fancy syntax, Introscope should too.
+Introscope supports all the new ES features (if not, [create an issue](https://github.com/peter-leonov/introscope/issues) 🙏). That means, if Babel supports some new fancy syntax, Introscope should too.
 
 ## Example
 
