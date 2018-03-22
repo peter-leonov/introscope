@@ -188,7 +188,7 @@ there are two solutions:
 
 ```sh
 yarn add -D flow-typed
-yarn flow-typed install introscope
+yarn flow-typed install introscope@1.0.10
 ```
 
 2.  just add this line to `.flowconfig` `[libs]` section:
