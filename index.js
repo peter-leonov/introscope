@@ -17,6 +17,6 @@ function scope(scope) {
 }
 
 module.exports = {
-    introscope,
-    scope
+    introscope: introscope,
+    scope: scope
 };
