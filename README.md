@@ -3,22 +3,27 @@
 A reflection / introspection babel plugin for delightful ES modules testing.
 
 ```js
-// Babel plugin creates `introscope` export on the fly for tests
-import { introscope } from './cool-es-module';
+// increment.js
+const INCREMENT_BY = 1;
+const increment = v => v + INCREMENT_BY;
 
-test('privateFunction', () => {
-    const scope = introscope({
-        PRIVATE_CONSTANT: 123
-    });
-    expect(scope.privateFunction()).toBe(scope.ANOTHER_PRIVATE_CONSTANT);
+// increment.spec.js
+import { introscope } from './increment.js';
+
+test('increment', () => {
+    const scope = introscope();
+    expect(increment(1)).toBe(2);
+
+    scope.INCREMENT_BY = 1000;
+    expect(increment(1)).toBe(1001);
 });
 ```
 
 ## Description
 
-**TL;DR;** no need to export all the functions/variables of your module just to make it testable, Introscope does it automatically.
+**TL;DR;** no need to export all the functions/variables of your module just to make it testable, Introscope does it automatically by changing the module source on the fly in testing environment.
 
-Introscope is (mostly) a babel plugin which allows a unit test code look inside an ES module without rewriting the code of the module. Introscope does it by transpiling the module source to a function which exposes the full internal scope of a module on the fly. This helps separate how the actual application consumes the module via it's exported API and how it gets tested using Introscope with all functions/variables visible, mockable and spy-able.
+Introscope is (mostly) a babel plugin which allows a unit test code look inside an ES module without rewriting the code of the module. Introscope does it by transpiling the module source to a (factory) function which exposes the full internal scope of a module on the fly. This helps separate how the actual application consumes the module via it's exported API and how it gets tested using Introscope with all functions/variables visible, mockable and spy-able.
 
 It has Handy [integration with Jest](#usage). Support for more popular unit testing tools and nice tricks like `Proxy` based wrappers/spies to come soon.
 
