@@ -12,10 +12,10 @@ import { introscope } from './increment.js';
 
 test('increment', () => {
     const scope = introscope();
-    expect(increment(1)).toBe(2);
+    expect(scope.increment(1)).toBe(2);
 
     scope.INCREMENT_BY = 1000;
-    expect(increment(1)).toBe(1001);
+    expect(scope.increment(1)).toBe(1001);
 });
 ```
 
