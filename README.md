@@ -302,3 +302,7 @@ const _module = {};
 new Function('module', transform(readFileSync('./module')))(_module);
 const moduleScopeFactory = _module.exports;
 ```
+
+## License
+
+MIT
