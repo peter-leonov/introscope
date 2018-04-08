@@ -253,4 +253,8 @@ describe('test', () => {
     it('in test code does transpile only introscope import', () => {
         shoot(code, { enable: false });
     });
+
+    it('in test code does transpile only introscope import', () => {
+        shoot(code, { enable: false, instrumentImports: false });
+    });
 });

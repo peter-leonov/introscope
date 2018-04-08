@@ -29,6 +29,8 @@ It has Handy [integration with Jest](#usage). Support for more popular unit test
 
 ## Usage
 
+Introscope works best with Jest as it can be monkey patched to support resource queries. Other frameworks can utilise Introscope with magic comments.
+
 Install:
 
 ```sh
@@ -208,11 +210,12 @@ yarn flow-typed install introscope@1.0.10
 node_modules/introscope/flow-typed
 ```
 
-## TODOs
+## Usage with other frameworks
+
+To disable appending `?introscope` to introscope imports add this babel plugin option: `instrumentImports: false`.
 
 ### Usage without Jest
 
-Add option to ignore `import { introscope } …` and rely only on magic comments.
 
 ### Imported values in curried functions
 

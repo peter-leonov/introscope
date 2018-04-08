@@ -13,6 +13,7 @@ function processProgram({ types: t }, programPath, programOpts) {
     const defaultOptions = {
         enable: false,
         ignore: [],
+        instrumentImports: 'query',
         removeImports: false
     };
 
@@ -269,6 +270,9 @@ function processProgram({ types: t }, programPath, programOpts) {
     };
 
     function test(path, statepath) {
+        if (options.instrumentImports != 'query')
+            return;
+
         const imports = path.node.body.filter(byType('ImportDeclaration'));
         imports
             .filter(node => node.specifiers.length == 1)
