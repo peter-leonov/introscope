@@ -29,7 +29,7 @@ It has Handy [integration with Jest](#usage). Support for more popular unit test
 
 ## Usage
 
-Introscope works best with Jest as it can be monkey patched to support resource queries. Other frameworks can utilise Introscope with magic comments.
+Introscope works best with Jest as it can be monkey patched to support resource queries. Other frameworks can utilise Introscope with [magic comments](#magic-comments).
 
 Install:
 
@@ -214,8 +214,27 @@ node_modules/introscope/flow-typed
 
 To disable appending `?introscope` to introscope imports add this babel plugin option: `instrumentImports: false`.
 
-### Usage without Jest
+## Magic comments
 
+It's a very familiar concept from Flow, ESLint, etc.
+
+Introscope can be configured using babel plugin config and / or magic comments. Here is the example of a magic comment:
+
+```js
+// @introscope "enable": true, "removeImports": true
+```
+
+It's just a comment with leading `@introscope` substring followed by a JSON object body (without wrapping curly braces). Here is a list of avalable configuration options:
+
+*   `enable = true | false`: per file enable / disable transpilation; if `enable` equals `false` Introscope will only parse magic comments and stop, so it's quite a good tool for performance optimisation on super large files;
+*   `removeImports = true | false`: instucts introscope to remove all import diretives though keeping the local scope variables for the imports so a test can mock them;
+*   `ignore = [id1, id2, id3...]`: a list of IDs (functions, variables, imports) introscope should not touch; this means if there was a local constant variable with name `foo` and the magic comment has `ignore: ['foo']` than Introscope will not transform this variable to a scope property and the test could not change or mock the value; this is useful for such globals like `Date`, `Math`, `Array` as testers normally do not care of those.
+
+## Babel plugin options
+
+*   `disable = true | false`: disables plugin completely, useful in complex `.babelrc.js` configurations to make sure Introscope does not alter a build for some very specific environment;
+
+## TODOs
 
 ### Imported values in curried functions
 
