@@ -178,9 +178,14 @@ export const introscope = scope({
 });
 ```
 
-If your project ignores `node_modules` with this config line:
+If your project ignores `node_modules` with config like this:
 
-`flow check` will error out with message like this:
+```ini
+[ignore]
+.*/node_modules/.*
+```
+
+`flow check` will error out with such message:
 
 ```
 Error--------------example.js:15:23
