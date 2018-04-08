@@ -6,7 +6,9 @@
     "author": "Peter Leonov",
     "license": "MIT",
     "scripts": {
-        "test": "jest && flow check"
+        "test": "jest && flow check",
+        "deploy":
+            "npm version patch && npm publish && git push && git push --tags"
     },
     "peerDependencies": {
         "babel-core": "^6.26.0"
