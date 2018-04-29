@@ -1,3 +1,3 @@
-# Test Plan for Snapshots
+# Anti-Plan
 
-It's a snapshot friendly variant of saga-test-plan.
+It's a snapshot powered variant of saga-test-plan.
