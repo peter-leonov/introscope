@@ -17,9 +17,7 @@ const spyOn = (story, id, v) =>
 const KEEP = {};
 const SPY = {};
 
-const testPlan = scopeFactory => plan => {
-    const story = [];
-
+const testPlan = scopeFactory => (plan, { logName = 'log', log = [] } = {}) => {
     const scope = scopeFactory();
 
     for (const id in scope) {
@@ -40,7 +38,7 @@ const testPlan = scopeFactory => plan => {
                     ]}"`,
                 );
             }
-            scope[id] = spyOn(story, id, plan[id] || function() {});
+            scope[id] = spyOn(log, id, plan[id] || function() {});
             continue;
         }
 
@@ -52,14 +50,14 @@ const testPlan = scopeFactory => plan => {
                     ]}"`,
                 );
             }
-            scope[id] = spyOn(story, id, plan[id] || function() {});
+            scope[id] = spyOn(log, id, plan[id] || function() {});
             continue;
         }
 
         // all primitive values stay as they were
     }
 
-    scope.story = () => story;
+    if (logName) scope[logName] = () => log;
     return scope;
 };
 
@@ -82,12 +80,12 @@ const plan = testPlan(introscope);
 
 describe('foo', () => {
     it('testee', () => {
-        const { story, testee } = plan({
+        const { log, testee } = plan({
             testee: KEEP,
         });
 
         testee(2);
 
-        expect(story()).toMatchSnapshot();
+        expect(log()).toMatchSnapshot();
     });
 });
