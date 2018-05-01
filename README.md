@@ -1,6 +1,6 @@
 # Introscope
 
-A reflection / introspection babel plugin for delightful ES modules testing.
+A reflection (aka, monkey-patching) babel plugin for delightful unit testing of modern ES modules. It allows you to owerride imports, locals, globals and built-ins (like `Date` or `Math`) independently for each unit test.
 
 ```js
 // increment.js
@@ -29,7 +29,7 @@ It has Handy [integration with Jest](#usage). Support for more popular unit test
 
 ## Usage
 
-Introscope works best with Jest as it can be monkey patched to support resource queries. Other frameworks can utilise Introscope with [magic comments](#magic-comments).
+Introscope works best with Jest but other frameworks can utilise Introscope with [magic comments](#magic-comments).
 
 Install:
 
@@ -65,13 +65,13 @@ import { introscope } from './tested-module';
 const { introscope } = require('./tested-module?introscope');
 ```
 
-For safety reasons this plugin does anything only when `NODE_ENV` equals to `'test'`, in production or development it's a no-op.
+For safety reasons this plugin does anything only when `NODE_ENV` equals to `'test'`. In production or development it's a no-op.
 
-Introscope supports all the new ES features (if not, [create an issue](https://github.com/peter-leonov/introscope/issues) 🙏). That means, if Babel supports some new fancy syntax, Introscope should too.
+Introscope supports all the new ES features including type annotations (if not, [create an issue](https://github.com/peter-leonov/introscope/issues) 🙏). That means, if Babel supports some new fancy syntax, Introscope should do too.
 
 ## Example
 
-What Introscope does is it just wraps a whole module code in a function that accepts one object argument `scope` and returns it with all module internals (variables, functions, classes and imports) exposed as properties. Here is a little example, a module like this one:
+What Introscope does is just wraping a whole module code in a function that accepts one object argument `scope` and returns it with all module internals (variables, functions, classes and imports) exposed as properties. Here is a little example, a module like this one:
 
 ```js
 // api.js
