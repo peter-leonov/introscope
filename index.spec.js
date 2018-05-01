@@ -44,7 +44,7 @@ const introPlan = scopeFactory => (
         }
 
         if (plan[id] === SPY) {
-            scope[id] = proxySpy(scope[id]);
+            scope[id] = proxySpy(log, id, scope[id]);
             continue;
         }
 
@@ -85,9 +85,10 @@ const introscope = () => {
     const scope = {};
 
     scope.var1 = 1;
+    scope.func1 = () => scope.var1;
     scope.func2 = sum => sum;
     scope.testee = num => {
-        const a = scope.var1;
+        const a = (0, scope.func1)();
         (0, scope.func2)(a + num);
     };
 
@@ -99,6 +100,7 @@ const plan = introPlan(introscope);
 describe('foo', () => {
     it('testee', () => {
         const { log, testee } = plan({
+            func1: SPY,
             testee: KEEP,
         });
 
