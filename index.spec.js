@@ -1,22 +1,34 @@
-const spyOnFunction = (story, id, fn) =>
-    new Proxy(fn, {
+const spyOn = (story, id, v) =>
+    new Proxy(v, {
         apply(_, that, args) {
             story.push(['call', id, that, args]);
             return Reflect.apply(...arguments);
         },
+        get(_, prop) {
+            story.push(['get', id, prop]);
+            return Reflect.get(...arguments);
+        },
+        set(_, prop, value) {
+            story.push(['set', id, prop, value]);
+            return Reflect.set(...arguments);
+        },
     });
 
 const KEEP = {};
+const SPY = {};
 
 const testPlan = scopeFactory => plan => {
     const story = [];
 
     const scope = scopeFactory();
 
-    const res = {};
     for (const id in scope) {
         if (plan[id] === KEEP) {
-            res[id] = scope[id];
+            continue;
+        }
+
+        if (plan[id] === SPY) {
+            scope[id] = spyOn(scope[id]);
             continue;
         }
 
@@ -28,8 +40,23 @@ const testPlan = scopeFactory => plan => {
                     ]}"`,
                 );
             }
-            scope[id] = spyOnFunction(story, id, plan[id] || function() {});
+            scope[id] = spyOn(story, id, plan[id] || function() {});
+            continue;
         }
+
+        if (typeof scope[id] == 'object' && scope[id] !== null) {
+            if (id in plan && typeof plan[id] != 'object') {
+                console.warn(
+                    `TestPlan: Spying on an object "${id}" with a non-object mock "${typeof plan[
+                        id
+                    ]}"`,
+                );
+            }
+            scope[id] = spyOn(story, id, plan[id] || function() {});
+            continue;
+        }
+
+        // all primitive values stay as they were
     }
 
     scope.story = () => story;
@@ -42,10 +69,9 @@ const introscope = () => {
     const scope = {};
 
     scope.var1 = 1;
-    scope.func1 = () => scope.var1;
-    scope.func2 = sum => global.dropDatabase(sum);
+    scope.func2 = sum => sum;
     scope.testee = num => {
-        const a = (0, scope.func1)();
+        const a = scope.var1;
         (0, scope.func2)(a + num);
     };
 
@@ -57,7 +83,6 @@ const plan = testPlan(introscope);
 describe('foo', () => {
     it('testee', () => {
         const { story, testee } = plan({
-            func1: () => 1,
             testee: KEEP,
         });
 
