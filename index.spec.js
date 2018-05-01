@@ -1,4 +1,4 @@
-const spyOn = (story, id, v) =>
+const proxySpy = (story, id, v) =>
     new Proxy(v, {
         apply(_, that, args) {
             story.push(['call', id, that, args]);
@@ -14,10 +14,28 @@ const spyOn = (story, id, v) =>
         },
     });
 
+const testPlan = (log = []) =>
+    new Proxy(
+        {},
+        {
+            get(_, prop) {
+                if (prop == 'calls') {
+                    return log;
+                }
+                return v => proxySpy(log, prop, v || function() {});
+            },
+        },
+    );
+
+// ------------------------------------------------------
+
 const KEEP = {};
 const SPY = {};
 
-const testPlan = scopeFactory => (plan, { logName = 'log', log = [] } = {}) => {
+const introPlan = scopeFactory => (
+    plan,
+    { logName = 'log', log = [] } = {},
+) => {
     const scope = scopeFactory();
 
     for (const id in scope) {
@@ -26,7 +44,7 @@ const testPlan = scopeFactory => (plan, { logName = 'log', log = [] } = {}) => {
         }
 
         if (plan[id] === SPY) {
-            scope[id] = spyOn(scope[id]);
+            scope[id] = proxySpy(scope[id]);
             continue;
         }
 
@@ -38,7 +56,7 @@ const testPlan = scopeFactory => (plan, { logName = 'log', log = [] } = {}) => {
                     ]}"`,
                 );
             }
-            scope[id] = spyOn(log, id, plan[id] || function() {});
+            scope[id] = proxySpy(log, id, plan[id] || function() {});
             continue;
         }
 
@@ -50,7 +68,7 @@ const testPlan = scopeFactory => (plan, { logName = 'log', log = [] } = {}) => {
                     ]}"`,
                 );
             }
-            scope[id] = spyOn(log, id, plan[id] || function() {});
+            scope[id] = proxySpy(log, id, plan[id] || function() {});
             continue;
         }
 
@@ -76,7 +94,7 @@ const introscope = () => {
     return scope;
 };
 
-const plan = testPlan(introscope);
+const plan = introPlan(introscope);
 
 describe('foo', () => {
     it('testee', () => {
