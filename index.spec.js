@@ -1,15 +1,19 @@
-const proxySpy = (story, id, v) =>
+const proxySpy = (log, id, v) =>
     new Proxy(v, {
         apply(_, that, args) {
-            story.push(['call', id, that, args]);
+            if (that === undefined) {
+                log.push(['call', id, args]);
+            } else {
+                log.push(['method', id, that, args]);
+            }
             return Reflect.apply(...arguments);
         },
         get(_, prop) {
-            story.push(['get', id, prop]);
+            log.push(['get', id, prop]);
             return Reflect.get(...arguments);
         },
         set(_, prop, value) {
-            story.push(['set', id, prop, value]);
+            log.push(['set', id, prop, value]);
             return Reflect.set(...arguments);
         },
     });
@@ -76,6 +80,7 @@ const introPlan = scopeFactory => (
     }
 
     if (logName) scope[logName] = () => log;
+
     return scope;
 };
 

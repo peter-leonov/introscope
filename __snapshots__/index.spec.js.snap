@@ -5,13 +5,11 @@ Array [
   Array [
     "call",
     "func1",
-    undefined,
     Array [],
   ],
   Array [
     "call",
     "func2",
-    undefined,
     Array [
       3,
     ],
