@@ -1,6 +1,6 @@
 # Introscope
 
-A reflection (aka, monkey-patching) babel plugin for delightful unit testing of modern ES modules. It allows you to owerride imports, locals, globals and built-ins (like `Date` or `Math`) independently for each unit test.
+A reflection (aka, monkey-patching) babel plugin for delightful unit testing of modern ES modules. It allows you to override imports, locals, globals and built-ins (like `Date` or `Math`) independently for each unit test.
 
 ```js
 // increment.js
