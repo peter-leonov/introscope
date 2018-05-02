@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`foo testee 1`] = `
+Array [
+  Array [
+    "call",
+    "func1",
+    Array [],
+  ],
+  Array [
+    "call",
+    "func2",
+    Array [
+      3,
+    ],
+  ],
+]
+`;
