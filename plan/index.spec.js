@@ -1,30 +1,29 @@
-// abusing Dependency Injection to make side effects explicit
-function incrementComments(fetch, log, save, postId) {
-    const post = fetch(`/posts/${postId}`);
-    if (!post) return;
-    log('comment.inc', postId);
-    post.comments++;
-    save(post);
-}
+const introscope = () => {
+    const scope = {};
 
-const { plan } = require('.');
-describe('incrementComments', () => {
-    it('increments existing posts', () => {
-        const p = plan();
-        incrementComments(
-            p.fetch(() => ({
-                comments: 1,
-            })),
-            p.log(),
-            p.save(),
-            123,
-        );
-        expect(p()).toMatchSnapshot();
-    });
+    scope.var1 = 1;
+    scope.func1 = () => scope.var1;
+    scope.func2 = sum => sum;
+    scope.testee = num => {
+        const a = (0, scope.func1)();
+        (0, scope.func2)(a + num);
+    };
 
-    it('ignores non existing posts', () => {
-        const p = plan();
-        incrementComments(p.fetch(() => null), p.log(), p.save(), 123);
-        expect(p()).toMatchSnapshot();
+    return scope;
+};
+
+const { introPlan, SPY, KEEP } = require('.');
+const plan = introPlan(introscope);
+
+describe('foo', () => {
+    it('testee', () => {
+        const { log, testee } = plan({
+            func1: SPY,
+            testee: KEEP
+        });
+
+        testee(2);
+
+        expect(log()).toMatchSnapshot();
     });
 });

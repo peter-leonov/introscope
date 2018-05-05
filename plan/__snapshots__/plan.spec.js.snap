@@ -1,0 +1,42 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`incrementComments ignores non existing posts 1`] = `
+Array [
+  Array [
+    "call",
+    "fetch",
+    Array [
+      "/posts/123",
+    ],
+  ],
+]
+`;
+
+exports[`incrementComments increments existing posts 1`] = `
+Array [
+  Array [
+    "call",
+    "fetch",
+    Array [
+      "/posts/123",
+    ],
+  ],
+  Array [
+    "call",
+    "log",
+    Array [
+      "comment.inc",
+      123,
+    ],
+  ],
+  Array [
+    "call",
+    "save",
+    Array [
+      Object {
+        "comments": 2,
+      },
+    ],
+  ],
+]
+`;
