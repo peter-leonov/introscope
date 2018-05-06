@@ -65,5 +65,5 @@ const effectsShooter = scopeFactory => (
 module.exports = {
     SPY,
     KEEP,
-    introPlan
+    effectsShooter
 };
