@@ -3,7 +3,7 @@ const { proxySpy } = require('./plan');
 const KEEP = {};
 const SPY = {};
 
-const introPlan = scopeFactory => (
+const effectsShooter = scopeFactory => (
     plan,
     { logName = 'log', log = [], serialize = v => v } = {}
 ) => {

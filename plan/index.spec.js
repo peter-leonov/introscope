@@ -12,12 +12,12 @@ const introscope = () => {
     return scope;
 };
 
-const { introPlan, SPY, KEEP } = require('.');
-const plan = introPlan(introscope);
+const { effectsShooter, SPY, KEEP } = require('.');
+const scope = effectsShooter(introscope);
 
 describe('foo', () => {
     it('testee', () => {
-        const { log, testee } = plan({
+        const { log, testee } = scope({
             func1: SPY,
             testee: KEEP
         });
