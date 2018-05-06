@@ -159,7 +159,11 @@ describe('getTodos', () => {
 });
 ```
 
-### Usage with Flow
+## EffectsShooter
+
+A good helping tool which ustilises the power of module scope introspection is a side effects logger and DI mocker [EffectsShooter](./shooter). It reduces the repetitive code in tests by auto mocking simple side effects and logging inputs and outputs of the tested function.
+
+## Usage with Flow
 
 If it's ok for you to have `any` type in tests, then just export `introscope` from the tested module like this:
 
