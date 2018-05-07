@@ -9,13 +9,20 @@ const putToRegistry = (id, spy) => {
 
 const getSpyName = spy => spiesRegistry.get(spy);
 
+const isSerializedSpy = Symbol('isSerializedSpy');
+
 const serializeWithSpies = v =>
     cloneDeepWith(v, function(value) {
         const spyName = getSpyName(value);
         if (spyName !== undefined) {
-            return `[Spy ${spyName}]`;
+            return { [isSerializedSpy]: true, spyName };
         }
     });
+
+const spySnapshotSerializer = {
+    test: val => val[isSerializedSpy],
+    print: val => `[Spy ${val.spyName}]`
+};
 
 const proxySpyFactory = ({ serialize }) => (log, id, v) =>
     putToRegistry(
@@ -44,6 +51,7 @@ const proxySpy = proxySpyFactory({ serialize: serializeWithSpies });
 
 module.exports = {
     serializeWithSpies,
+    spySnapshotSerializer,
     proxySpyFactory,
     proxySpy,
     getSpyName

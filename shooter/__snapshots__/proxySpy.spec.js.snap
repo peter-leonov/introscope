@@ -20,7 +20,7 @@ Array [
     "method",
     "mockName",
     Object {
-      "method1": "[Spy mockName]",
+      "method1": [Spy mockName],
     },
     Array [
       1,
@@ -28,5 +28,32 @@ Array [
       3,
     ],
   ],
+]
+`;
+
+exports[`serializeWithSpies is ok with circular structures 1`] = `
+Object {
+  "obj1": [Circular],
+  "obj2": [Circular],
+}
+`;
+
+exports[`serializeWithSpies is ok with circular structures 2`] = `
+Object {
+  "obj1": Object {
+    "obj1": [Circular],
+  },
+  "obj2": Object {
+    "obj2": [Circular],
+  },
+}
+`;
+
+exports[`serializeWithSpies stringifies spies 1`] = `[Spy A]`;
+
+exports[`serializeWithSpies stringifies spies 2`] = `
+Array [
+  [Spy B],
+  [Spy C],
 ]
 `;
