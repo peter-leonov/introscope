@@ -22,5 +22,8 @@
         "flow-bin": "^0.68.0",
         "jest": "^22.4.2",
         "regenerator-runtime": "^0.11.1"
+    },
+    "dependencies": {
+        "lodash": "^4.17.10"
     }
 }

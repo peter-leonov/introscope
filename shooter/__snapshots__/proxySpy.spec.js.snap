@@ -1,0 +1,32 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`proxySpy apply/call 1`] = `
+Array [
+  Array [
+    "call",
+    "mockName",
+    Array [
+      1,
+      2,
+      3,
+    ],
+  ],
+]
+`;
+
+exports[`proxySpy apply/method 1`] = `
+Array [
+  Array [
+    "method",
+    "mockName",
+    Object {
+      "method1": "[Spy mockName]",
+    },
+    Array [
+      1,
+      2,
+      3,
+    ],
+  ],
+]
+`;
