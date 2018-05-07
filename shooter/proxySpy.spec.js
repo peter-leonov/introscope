@@ -57,4 +57,16 @@ describe('proxySpy', () => {
         obj.method1(1, 2, 3);
         expect(log).toMatchSnapshot();
     });
+
+    it('get', () => {
+        const [log, mock] = newMock();
+        mock.property1;
+        expect(log).toMatchSnapshot();
+    });
+
+    it('set', () => {
+        const [log, mock] = newMock();
+        mock.property1 = 1;
+        expect(log).toMatchSnapshot();
+    });
 });

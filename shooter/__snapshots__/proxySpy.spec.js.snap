@@ -31,6 +31,27 @@ Array [
 ]
 `;
 
+exports[`proxySpy get 1`] = `
+Array [
+  Array [
+    "get",
+    "mockName",
+    "property1",
+  ],
+]
+`;
+
+exports[`proxySpy set 1`] = `
+Array [
+  Array [
+    "set",
+    "mockName",
+    "property1",
+    1,
+  ],
+]
+`;
+
 exports[`serializeWithSpies is ok with circular structures 1`] = `
 Object {
   "obj1": [Circular],
