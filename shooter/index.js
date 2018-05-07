@@ -5,7 +5,7 @@ const SPY = {};
 
 const effectsShooter = scopeFactory => (
     plan,
-    { logName = 'log', log = [], serialize = v => v } = {}
+    { logName = 'log', log = [], serialize = v => v } = {},
 ) => {
     const logger = (...args) => log.push(...args);
     const scope = scopeFactory();
@@ -25,14 +25,14 @@ const effectsShooter = scopeFactory => (
                 console.warn(
                     `TestPlan: Spying on a function "${id}" with a non-function mock "${typeof plan[
                         id
-                    ]}"`
+                    ]}"`,
                 );
             }
             scope[id] = proxySpy(
                 logger,
                 serialize,
                 id,
-                plan[id] || function() {}
+                plan[id] || function() {},
             );
             continue;
         }
@@ -42,14 +42,14 @@ const effectsShooter = scopeFactory => (
                 console.warn(
                     `TestPlan: Spying on an object "${id}" with a non-object mock "${typeof plan[
                         id
-                    ]}"`
+                    ]}"`,
                 );
             }
             scope[id] = proxySpy(
                 logger,
                 serialize,
                 id,
-                plan[id] || function() {}
+                plan[id] || function() {},
             );
             continue;
         }

@@ -6,7 +6,7 @@ describe('serializeWithSpies', () => {
     it('stringifies spies', () => {
         expect(serializeWithSpies(newSpy('A'))).toMatchSnapshot();
         expect(
-            serializeWithSpies([newSpy('B'), newSpy('C')])
+            serializeWithSpies([newSpy('B'), newSpy('C')]),
         ).toMatchSnapshot();
     });
 
@@ -22,7 +22,7 @@ describe('serializeWithSpies', () => {
         obj2.obj2 = obj2;
         let multiple = {
             obj1,
-            obj2
+            obj2,
         };
         expect(serializeWithSpies(multiple)).toMatchSnapshot();
     });
@@ -34,8 +34,8 @@ describe('proxySpy', () => {
         proxySpy(
             (...args) => log.push(...args),
             'mockName',
-            v || function() {} // function has all the Proxy methods available
-        )
+            v || function() {}, // function has all the Proxy methods available
+        ),
     ];
 
     it('apply/call', () => {
