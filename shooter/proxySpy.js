@@ -20,7 +20,7 @@ const serializeWithSpies = v =>
     });
 
 const spySnapshotSerializer = {
-    test: val => val[isSerializedSpy],
+    test: val => val && val[isSerializedSpy],
     print: val => `[Spy ${val.spyName}]`,
 };
 

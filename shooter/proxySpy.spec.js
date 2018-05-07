@@ -1,4 +1,5 @@
 const { proxySpy, getSpyName, serializeWithSpies } = require('./proxySpy');
+const { newShooterLog } = require('.');
 
 describe('serializeWithSpies', () => {
     const newSpy = name => proxySpy(() => {}, name, {});
@@ -29,7 +30,7 @@ describe('serializeWithSpies', () => {
 });
 
 describe('proxySpy', () => {
-    const newMock = (v, log = []) => [
+    const newMock = (v, log = newShooterLog()) => [
         log,
         proxySpy(
             (...args) => log.push(...args),
