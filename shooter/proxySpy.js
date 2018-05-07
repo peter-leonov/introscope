@@ -24,6 +24,10 @@ const spySnapshotSerializer = {
     print: val => `[Spy ${val.spyName}]`
 };
 
+if (global.expect && global.expect.addSnapshotSerializer) {
+    global.expect.addSnapshotSerializer(spySnapshotSerializer);
+}
+
 const proxySpyFactory = ({ serialize }) => (log, id, v) =>
     putToRegistry(
         id,
