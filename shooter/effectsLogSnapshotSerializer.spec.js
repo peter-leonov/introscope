@@ -18,21 +18,17 @@ describe('spySnapshotSerializer', () => {
         expect(log).toMatchSnapshot();
     });
 
-    // it('list of lists', () => {
-    //     expect([
-    //         newSerializedSpy('A'),
-    //         newSerializedSpy('B'),
-    //         newSerializedSpy('C'),
-    //     ]).toMatchSnapshot();
-    // });
+    it('list of logs', () => {
+        expect([log, log, log]).toMatchSnapshot();
+    });
 
-    // it('object of lists', () => {
-    //     expect({
-    //         a: newSerializedSpy('A'),
-    //         b: newSerializedSpy('B'),
-    //         c: newSerializedSpy('C'),
-    //     }).toMatchSnapshot();
-    // });
+    it('object of logs', () => {
+        expect({
+            a: log,
+            b: log,
+            c: log,
+        }).toMatchSnapshot();
+    });
 
     it('keeps other objects', () => {
         expect(['str', 5, [1, 2, 3], [{ a: 1 }]]).toMatchSnapshot();

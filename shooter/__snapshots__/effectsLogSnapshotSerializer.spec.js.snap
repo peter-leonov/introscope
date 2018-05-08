@@ -17,6 +17,83 @@ Array [
 ]
 `;
 
+exports[`spySnapshotSerializer list of logs 1`] = `
+Array [
+  EffectsLog [
+    function1(
+      1,
+      2,
+      3,
+    ),
+    function2.apply(
+      Object {
+        "a": 1,
+      },
+      [
+        1,
+        2,
+        3,
+      ]
+    ),
+    object1.property1,
+    object2.property2 =
+      Array [
+        1,
+        2,
+        3,
+      ],
+  ],
+  EffectsLog [
+    function1(
+      1,
+      2,
+      3,
+    ),
+    function2.apply(
+      Object {
+        "a": 1,
+      },
+      [
+        1,
+        2,
+        3,
+      ]
+    ),
+    object1.property1,
+    object2.property2 =
+      Array [
+        1,
+        2,
+        3,
+      ],
+  ],
+  EffectsLog [
+    function1(
+      1,
+      2,
+      3,
+    ),
+    function2.apply(
+      Object {
+        "a": 1,
+      },
+      [
+        1,
+        2,
+        3,
+      ]
+    ),
+    object1.property1,
+    object2.property2 =
+      Array [
+        1,
+        2,
+        3,
+      ],
+  ],
+]
+`;
+
 exports[`spySnapshotSerializer naked log 1`] = `
 EffectsLog [
   function1(
@@ -42,4 +119,81 @@ EffectsLog [
       3,
     ],
 ]
+`;
+
+exports[`spySnapshotSerializer object of logs 1`] = `
+Object {
+  "a": EffectsLog [
+    function1(
+      1,
+      2,
+      3,
+    ),
+    function2.apply(
+      Object {
+        "a": 1,
+      },
+      [
+        1,
+        2,
+        3,
+      ]
+    ),
+    object1.property1,
+    object2.property2 =
+      Array [
+        1,
+        2,
+        3,
+      ],
+  ],
+  "b": EffectsLog [
+    function1(
+      1,
+      2,
+      3,
+    ),
+    function2.apply(
+      Object {
+        "a": 1,
+      },
+      [
+        1,
+        2,
+        3,
+      ]
+    ),
+    object1.property1,
+    object2.property2 =
+      Array [
+        1,
+        2,
+        3,
+      ],
+  ],
+  "c": EffectsLog [
+    function1(
+      1,
+      2,
+      3,
+    ),
+    function2.apply(
+      Object {
+        "a": 1,
+      },
+      [
+        1,
+        2,
+        3,
+      ]
+    ),
+    object1.property1,
+    object2.property2 =
+      Array [
+        1,
+        2,
+        3,
+      ],
+  ],
+}
 `;
