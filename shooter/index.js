@@ -1,13 +1,15 @@
 const { proxySpy } = require('./proxySpy');
 const { serialize } = require('jest-serializer');
 
-const isEffectsShooterLog = Symbol('isEffectsShooterLog');
+const effectsShooterLogSymbol = Symbol('isEffectsShooterLog');
 
 const newShooterLog = () => {
     const log = [];
-    log[isEffectsShooterLog] = true;
+    log[effectsShooterLogSymbol] = true;
     return log;
 };
+
+const isEffectsShooterLog = val => val && val[effectsShooterLogSymbol];
 
 const KEEP = {};
 const SPY = {};

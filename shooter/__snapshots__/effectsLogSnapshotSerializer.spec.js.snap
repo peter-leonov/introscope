@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`spySnapshotSerializer keeps other objects 1`] = `
+Array [
+  "str",
+  5,
+  Array [
+    1,
+    2,
+    3,
+  ],
+  Array [
+    Object {
+      "a": 1,
+    },
+  ],
+]
+`;
+
+exports[`spySnapshotSerializer naked list 1`] = `
+EffectsLog [
+  function1(
+      1,
+      2,
+      3,
+  )
+]
+`;

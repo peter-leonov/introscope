@@ -2,15 +2,18 @@ const { isEffectsShooterLog } = require('.');
 
 const effectsLogSnapshotSerializer = {
     test(val) {
-        return val && val[isEffectsShooterLog];
+        return isEffectsShooterLog(val);
     },
     serialize(val, config, indentation, depth, refs, printer) {
         if (++depth > config.maxDepth) {
             return `EffectsLog [${val.length}]`;
         }
 
-        const comma = ',' + config.spacingInner;
-        const nl = config.spacingOuter + indentation + config.indent;
+        const nl = config.spacingOuter;
+        const i0 = indentation;
+        const i1 = i0 + config.indent;
+        const i2 = i1 + config.indent;
+        const i3 = i2 + config.indent;
 
         const print = v =>
             printer(
@@ -21,11 +24,12 @@ const effectsLogSnapshotSerializer = {
                 refs,
             );
 
-        // const ARGS_SEPARATOR = ',' + config.spacingInner;
-        // const printArgs = args =>
-        //     args
-        //         .map(print)
-        //         .join(ARGS_SEPARATOR);
+        const ARGS_SEPARATOR = ',';
+        const printArgs = args =>
+            args
+                .map(print)
+                .map(line => i3 + line + ARGS_SEPARATOR + config.spacingOuter)
+                .join('');
 
         const printLine = line => {
             const [type] = line;
@@ -33,13 +37,13 @@ const effectsLogSnapshotSerializer = {
                 case 'call':
                     {
                         const [, id, args] = line;
-                        return `${id}(${nl}${print(args)})`;
+                        return `${id}(${nl}${printArgs(args)}${i1})`;
                     }
                     break;
                 case 'method':
                     {
                         const [, id, that, args] = line;
-                        return `${id}.apply(${nl}${print(that)}${comma}${print(
+                        return `${id}.apply(${nl}${i1}${print(that)}${print(
                             args,
                         )})`;
                     }
@@ -59,7 +63,11 @@ const effectsLogSnapshotSerializer = {
             }
         };
 
-        return 'EffectsLog [' + nl + val.map(printLine).join(nl) + nl + ']';
+        return (
+            ['EffectsLog [' + nl] +
+            [i1 + val.map(printLine).join(nl + i1) + nl] +
+            [i0 + ']']
+        );
     },
 };
 
