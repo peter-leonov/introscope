@@ -17,13 +17,13 @@ Array [
 ]
 `;
 
-exports[`spySnapshotSerializer naked list 1`] = `
+exports[`spySnapshotSerializer naked log 1`] = `
 EffectsLog [
   function1(
     1,
     2,
     3,
-  )
+  ),
   function2.apply(
     Object {
       "a": 1,
@@ -33,13 +33,13 @@ EffectsLog [
       2,
       3,
     ]
-  )
-  object1.property1
+  ),
+  object1.property1,
   object2.property2 =
     Array [
       1,
       2,
       3,
-    ]
+    ],
 ]
 `;

@@ -14,7 +14,7 @@ describe('spySnapshotSerializer', () => {
         ['set', 'object2', 'property2', [1, 2, 3]],
     );
 
-    it('naked list', () => {
+    it('naked log', () => {
         expect(log).toMatchSnapshot();
     });
 

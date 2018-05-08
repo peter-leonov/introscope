@@ -24,11 +24,10 @@ const effectsLogSnapshotSerializer = {
                 refs,
             );
 
-        const ARGS_SEPARATOR = ',';
         const printArgs = (i, args) =>
             args
                 .map(print)
-                .map(line => i + line + ARGS_SEPARATOR + config.spacingOuter)
+                .map(line => i + line + ',' + config.spacingOuter)
                 .join('');
 
         const printLine = line => {
@@ -40,7 +39,7 @@ const effectsLogSnapshotSerializer = {
                         return (
                             [i1 + id + '(' + nl] +
                             printArgs(i2, args) +
-                            [i1 + ')' + nl]
+                            [i1 + '),' + nl]
                         );
                     }
                     break;
@@ -53,14 +52,14 @@ const effectsLogSnapshotSerializer = {
                             [i2 + '[' + nl] +
                             printArgs(i3, args) +
                             [i2 + ']' + nl] +
-                            [i1 + ')' + nl]
+                            [i1 + '),' + nl]
                         );
                     }
                     break;
                 case 'get':
                     {
                         const [, id, prop] = line;
-                        return String([i1 + id + '.' + prop + nl]);
+                        return String([i1 + id + '.' + prop + ',' + nl]);
                     }
                     break;
                 case 'set':
@@ -68,7 +67,7 @@ const effectsLogSnapshotSerializer = {
                         const [, id, prop, v] = line;
                         return (
                             [i1 + id + '.' + prop + ' =' + nl] +
-                            [i2 + print(v) + nl]
+                            [i2 + print(v) + ',' + nl]
                         );
                     }
                     break;
