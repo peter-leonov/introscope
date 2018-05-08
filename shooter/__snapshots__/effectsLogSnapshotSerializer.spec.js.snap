@@ -56,6 +56,9 @@ Array [
       ]
     ),
     object1.property1,
+    object1["non keyword property"],
+    object1["101_dalmatians"],
+    object1[Symbol(foo)],
     object2.property2 =
       Array [
         1,
@@ -63,7 +66,7 @@ Array [
         3,
       ],
     object2.property2 =
-      Symbol(foo),
+      Symbol(bar),
   ],
   EffectsLog [
     function1(
@@ -102,6 +105,9 @@ Array [
       ]
     ),
     object1.property1,
+    object1["non keyword property"],
+    object1["101_dalmatians"],
+    object1[Symbol(foo)],
     object2.property2 =
       Array [
         1,
@@ -109,7 +115,7 @@ Array [
         3,
       ],
     object2.property2 =
-      Symbol(foo),
+      Symbol(bar),
   ],
   EffectsLog [
     function1(
@@ -148,6 +154,9 @@ Array [
       ]
     ),
     object1.property1,
+    object1["non keyword property"],
+    object1["101_dalmatians"],
+    object1[Symbol(foo)],
     object2.property2 =
       Array [
         1,
@@ -155,7 +164,7 @@ Array [
         3,
       ],
     object2.property2 =
-      Symbol(foo),
+      Symbol(bar),
   ],
 ]
 `;
@@ -198,6 +207,9 @@ EffectsLog [
     ]
   ),
   object1.property1,
+  object1["non keyword property"],
+  object1["101_dalmatians"],
+  object1[Symbol(foo)],
   object2.property2 =
     Array [
       1,
@@ -205,7 +217,7 @@ EffectsLog [
       3,
     ],
   object2.property2 =
-    Symbol(foo),
+    Symbol(bar),
 ]
 `;
 
@@ -248,6 +260,9 @@ Object {
       ]
     ),
     object1.property1,
+    object1["non keyword property"],
+    object1["101_dalmatians"],
+    object1[Symbol(foo)],
     object2.property2 =
       Array [
         1,
@@ -255,7 +270,7 @@ Object {
         3,
       ],
     object2.property2 =
-      Symbol(foo),
+      Symbol(bar),
   ],
   "b": EffectsLog [
     function1(
@@ -294,6 +309,9 @@ Object {
       ]
     ),
     object1.property1,
+    object1["non keyword property"],
+    object1["101_dalmatians"],
+    object1[Symbol(foo)],
     object2.property2 =
       Array [
         1,
@@ -301,7 +319,7 @@ Object {
         3,
       ],
     object2.property2 =
-      Symbol(foo),
+      Symbol(bar),
   ],
   "c": EffectsLog [
     function1(
@@ -340,6 +358,9 @@ Object {
       ]
     ),
     object1.property1,
+    object1["non keyword property"],
+    object1["101_dalmatians"],
+    object1[Symbol(foo)],
     object2.property2 =
       Array [
         1,
@@ -347,7 +368,7 @@ Object {
         3,
       ],
     object2.property2 =
-      Symbol(foo),
+      Symbol(bar),
   ],
 }
 `;

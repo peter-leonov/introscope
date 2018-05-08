@@ -30,6 +30,13 @@ const effectsLogSnapshotSerializer = {
                 .map(line => i + line + ',' + config.spacingOuter)
                 .join('');
 
+        const propertyAccess = prop =>
+            typeof prop == 'symbol'
+                ? `[${String(prop)}]`
+                : /^[a-zA-Z_]\w*$/.test(String(prop))
+                    ? '.' + String(prop)
+                    : `[${JSON.stringify(prop)}]`;
+
         const printLine = line => {
             const [type] = line;
             switch (type) {
@@ -59,14 +66,16 @@ const effectsLogSnapshotSerializer = {
                 case 'get':
                     {
                         const [, id, prop] = line;
-                        return String([i1 + id + '.' + prop + ',' + nl]);
+                        return String([
+                            i1 + id + propertyAccess(prop) + ',' + nl,
+                        ]);
                     }
                     break;
                 case 'set':
                     {
                         const [, id, prop, v] = line;
                         return (
-                            [i1 + id + '.' + prop + ' =' + nl] +
+                            [i1 + id + propertyAccess(prop) + ' =' + nl] +
                             [i2 + print(v) + ',' + nl]
                         );
                     }

@@ -15,8 +15,11 @@ describe('spySnapshotSerializer', () => {
         ['apply', 'function2', null, []],
         ['apply', 'function2', [1, 2, 3], ['str']],
         ['get', 'object1', 'property1'],
+        ['get', 'object1', 'non keyword property'],
+        ['get', 'object1', '101_dalmatians'],
+        ['get', 'object1', Symbol('foo')],
         ['set', 'object2', 'property2', [1, 2, 3]],
-        ['set', 'object2', 'property2', Symbol('foo')],
+        ['set', 'object2', 'property2', Symbol('bar')],
     );
 
     it('naked log', () => {
