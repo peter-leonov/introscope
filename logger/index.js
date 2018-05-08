@@ -14,13 +14,19 @@ const isEffectsLoggerLog = val => val && val[EffectsLoggerLogSymbol];
 const KEEP = {};
 const SPY = {};
 
-const EffectsLogger = scopeFactory => (
+const effectsLogger = scopeFactory => (
     plan,
     { logName = 'log', log = [] } = {},
 ) => {
-    const logger = (...args) => log.push(...args);
-    const scope = scopeFactory();
+    // to not polute the log with scope creation
+    let moduleLoggerEnabled = false;
+    const moduleLogger = ([type, ...args]) =>
+        moduleLoggerEnabled && type != 'get' && log.push([type, ...args]);
+    const scope = scopeFactory(
+        proxySpy(moduleLogger, 'module', Object.create(null)),
+    );
 
+    const logger = (...args) => log.push(...args);
     for (const id in scope) {
         if (plan[id] === KEEP) {
             continue;
@@ -60,13 +66,14 @@ const EffectsLogger = scopeFactory => (
 
     if (logName) scope[logName] = () => log;
 
+    moduleLoggerEnabled = true;
     return scope;
 };
 
 module.exports = {
     SPY,
     KEEP,
-    EffectsLogger,
+    effectsLogger,
     isEffectsLoggerLog,
     newLog,
 };

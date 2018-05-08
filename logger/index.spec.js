@@ -1,8 +1,6 @@
-const introscope = () => {
-    const scope = {};
-
+const introscope = (scope = {}) => {
     scope.var1 = 1;
-    scope.func1 = () => scope.var1;
+    scope.func1 = () => ++scope.var1;
     scope.func2 = sum => sum;
     scope.testee = num => {
         const a = (0, scope.func1)();
@@ -12,8 +10,8 @@ const introscope = () => {
     return scope;
 };
 
-const { EffectsLogger, SPY, KEEP } = require('.');
-const scope = EffectsLogger(introscope);
+import { effectsLogger, SPY, KEEP } from '.';
+const scope = effectsLogger(introscope);
 
 describe('foo', () => {
     it('testee', () => {

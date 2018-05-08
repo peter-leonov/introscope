@@ -8,10 +8,16 @@ Array [
     Array [],
   ],
   Array [
+    "set",
+    "module",
+    "var1",
+    2,
+  ],
+  Array [
     "call",
     "func2",
     Array [
-      3,
+      4,
     ],
   ],
 ]
