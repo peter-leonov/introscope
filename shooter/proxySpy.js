@@ -19,15 +19,6 @@ const serializeWithSpies = v =>
         }
     });
 
-const spySnapshotSerializer = {
-    test: val => val && val[isSerializedSpy],
-    print: val => `[Spy ${val.spyName}]`,
-};
-
-if (global.expect && global.expect.addSnapshotSerializer) {
-    global.expect.addSnapshotSerializer(spySnapshotSerializer);
-}
-
 const proxySpyFactory = ({ serialize }) => (log, id, v) =>
     putToRegistry(
         id,
@@ -55,7 +46,7 @@ const proxySpy = proxySpyFactory({ serialize: serializeWithSpies });
 
 module.exports = {
     serializeWithSpies,
-    spySnapshotSerializer,
+    isSerializedSpy,
     proxySpyFactory,
     proxySpy,
     getSpyName,
