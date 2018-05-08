@@ -11,11 +11,13 @@ const getSpyName = spy => spiesRegistry.get(spy);
 
 const isSerializedSpy = Symbol('isSerializedSpy');
 
+const newSerializedSpy = spyName => ({ [isSerializedSpy]: true, spyName });
+
 const serializeWithSpies = v =>
     cloneDeepWith(v, function(value) {
         const spyName = getSpyName(value);
         if (spyName !== undefined) {
-            return { [isSerializedSpy]: true, spyName };
+            return newSerializedSpy(spyName);
         }
     });
 
@@ -50,4 +52,5 @@ module.exports = {
     proxySpyFactory,
     proxySpy,
     getSpyName,
+    newSerializedSpy,
 };

@@ -1,0 +1,34 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`spySnapshotSerializer keeps other objects 1`] = `
+Array [
+  "str",
+  5,
+  Array [
+    1,
+    2,
+    3,
+  ],
+  Object {
+    "spyName": "NotASpy",
+  },
+]
+`;
+
+exports[`spySnapshotSerializer list of spies 1`] = `
+Array [
+  [Spy A],
+  [Spy B],
+  [Spy C],
+]
+`;
+
+exports[`spySnapshotSerializer naked spy 1`] = `[Spy A]`;
+
+exports[`spySnapshotSerializer object of spies 1`] = `
+Object {
+  "a": [Spy A],
+  "b": [Spy B],
+  "c": [Spy C],
+}
+`;
