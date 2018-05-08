@@ -25,10 +25,10 @@ const effectsLogSnapshotSerializer = {
             );
 
         const ARGS_SEPARATOR = ',';
-        const printArgs = args =>
+        const printArgs = (i, args) =>
             args
                 .map(print)
-                .map(line => i3 + line + ARGS_SEPARATOR + config.spacingOuter)
+                .map(line => i + line + ARGS_SEPARATOR + config.spacingOuter)
                 .join('');
 
         const printLine = line => {
@@ -39,17 +39,22 @@ const effectsLogSnapshotSerializer = {
                         const [, id, args] = line;
                         return (
                             [i1 + id + '(' + nl] +
-                            printArgs(args) +
+                            printArgs(i2, args) +
                             [i1 + ')' + nl]
                         );
                     }
                     break;
-                case 'method':
+                case 'apply':
                     {
                         const [, id, that, args] = line;
-                        return `${id}.apply(${nl}${i1}${print(that)}${print(
-                            args,
-                        )})`;
+                        return (
+                            [i1 + id + '.apply(' + nl] +
+                            [i2 + print(that) + ',' + nl] +
+                            [i2 + '[' + nl] +
+                            printArgs(i3, args) +
+                            [i2 + ']' + nl] +
+                            [i1 + ')' + nl]
+                        );
                     }
                     break;
                 case 'get':

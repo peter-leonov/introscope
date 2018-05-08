@@ -20,9 +20,19 @@ Array [
 exports[`spySnapshotSerializer naked list 1`] = `
 EffectsLog [
   function1(
+    1,
+    2,
+    3,
+  )
+  function2.apply(
+    Object {
+      "a": 1,
+    },
+    [
       1,
       2,
       3,
+    ]
   )
 ]
 `;

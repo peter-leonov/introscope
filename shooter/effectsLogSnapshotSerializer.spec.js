@@ -7,7 +7,10 @@ global.expect.addSnapshotSerializer(effectsLogSnapshotSerializer);
 
 describe('spySnapshotSerializer', () => {
     const log = newShooterLog();
-    log.push(['call', 'function1', [1, 2, 3]]);
+    log.push(
+        ['call', 'function1', [1, 2, 3]],
+        ['apply', 'function2', { a: 1 }, [1, 2, 3]],
+    );
 
     it('naked list', () => {
         expect(log).toMatchSnapshot();
