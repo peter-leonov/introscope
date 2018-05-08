@@ -9,7 +9,7 @@ const effectsLogSnapshotSerializer = {
             return `EffectsLog [${lines.length}]`;
         }
 
-        const nl = config.spacingOuter;
+        const nl = config.spacingInner;
         const i0 = indentation;
         const i1 = i0 + config.indent;
         const i2 = i1 + config.indent;
@@ -60,13 +60,16 @@ const effectsLogSnapshotSerializer = {
                 case 'get':
                     {
                         const [, id, prop] = line;
-                        return `${id}[${print(prop)}]`;
+                        return String([i1 + id + '.' + prop + nl]);
                     }
                     break;
                 case 'set':
                     {
-                        const [, id, prop, arg] = line;
-                        return `${id}[${print(prop)}] = ${print(arg)}`;
+                        const [, id, prop, v] = line;
+                        return (
+                            [i1 + id + '.' + prop + ' =' + nl] +
+                            [i2 + print(v) + nl]
+                        );
                     }
                     break;
             }

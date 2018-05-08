@@ -10,6 +10,8 @@ describe('spySnapshotSerializer', () => {
     log.push(
         ['call', 'function1', [1, 2, 3]],
         ['apply', 'function2', { a: 1 }, [1, 2, 3]],
+        ['get', 'object1', 'property1'],
+        ['set', 'object2', 'property2', [1, 2, 3]],
     );
 
     it('naked list', () => {

@@ -34,5 +34,12 @@ EffectsLog [
       3,
     ]
   )
+  object1.property1
+  object2.property2 =
+    Array [
+      1,
+      2,
+      3,
+    ]
 ]
 `;
