@@ -1,23 +1,27 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`foo testee 1`] = `
+exports[`todos addTodo 1`] = `
 Array [
-  Array [
-    "call",
-    "func1",
-    Array [],
-  ],
   Array [
     "set",
     "module",
-    "var1",
-    2,
+    "count",
+    1,
   ],
   Array [
     "call",
-    "func2",
+    "newTodo",
     Array [
-      4,
+      1,
+      "start using Introscope :)",
+    ],
+  ],
+  Array [
+    "call",
+    "log",
+    Array [
+      "new todo created",
+      1,
     ],
   ],
 ]

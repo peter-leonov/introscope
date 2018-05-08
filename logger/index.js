@@ -13,10 +13,11 @@ const isEffectsLoggerLog = val => val && val[EffectsLoggerLogSymbol];
 
 const KEEP = {};
 const SPY = {};
+const WRAP = {};
 
 const effectsLogger = scopeFactory => (
     plan,
-    { logName = 'log', log = [] } = {},
+    { logName = 'effects', log = [] } = {},
 ) => {
     // to not polute the log with scope creation
     let moduleLoggerEnabled = false;
@@ -64,7 +65,13 @@ const effectsLogger = scopeFactory => (
         // all primitive values stay as they were
     }
 
-    if (logName) scope[logName] = () => log;
+    if (logName) {
+        if (logName in scope)
+            throw new Error(
+                `EffectsLogger: effects symbol "${logName}" is already defined in the scope. Please, provide another effects log name in the effectsLogger() config parameter.`,
+            );
+        scope[logName] = () => log;
+    }
 
     moduleLoggerEnabled = true;
     return scope;

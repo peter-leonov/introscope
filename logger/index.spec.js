@@ -1,11 +1,14 @@
 const introscope = (scope = {}) => {
-    scope.var1 = 1;
-    scope.func1 = () => ++scope.var1;
-    scope.func2 = sum => sum;
-    scope.testee = num => {
-        const a = (0, scope.func1)();
-        (0, scope.func2)(a + num);
+    scope.log = (...args) => console.log(...args);
+    scope.count = 0;
+    scope.newTodo = (id, title) => {
+        (0, scope.log)('new todo created', id);
+        return {
+            id,
+            title,
+        };
     };
+    scope.addTodo = title => (0, scope.newTodo)(++scope.count, title);
 
     return scope;
 };
@@ -13,15 +16,15 @@ const introscope = (scope = {}) => {
 import { effectsLogger, SPY, KEEP } from '.';
 const scope = effectsLogger(introscope);
 
-describe('foo', () => {
-    it('testee', () => {
-        const { log, testee } = scope({
-            func1: SPY,
-            testee: KEEP,
+describe('todos', () => {
+    it('addTodo', () => {
+        const { effects, addTodo } = scope({
+            newTodo: SPY,
+            addTodo: KEEP,
         });
 
-        testee(2);
+        addTodo('start using Introscope :)');
 
-        expect(log()).toMatchSnapshot();
+        expect(effects()).toMatchSnapshot();
     });
 });
