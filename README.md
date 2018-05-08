@@ -161,7 +161,61 @@ describe('getTodos', () => {
 
 ## EffectsLogger
 
-A nice helping tool which ustilises the power of module scope introspection is a side effects logger and DI mocker [EffectsLogger](./logger). It reduces the repetitive code in tests by auto mocking simple side effects and logging inputs and outputs of the tested function.
+_This module is the main reason Introscope was made for._
+
+EffectsLogger is a nice helping tool which utilises the power of module scope introspection for side effects logging and DI mocking. It reduces the repetitive code in tests by auto mocking simple side effects and logging inputs and outputs of the tested function with support of a nicely looking custom Jest Snapshot serializer.
+
+Example:
+
+```js
+// todo.js
+const log = (...args) => console.log(...args);
+let count = 0;
+const newTodo = (id, title) => {
+    log('new todo created', id);
+    return {
+        id,
+        title,
+    };
+};
+const addTodo = title => newTodo(++count, title);
+
+// todo.spec.js
+import { introscope } from './increment.js';
+import { effectsLogger, SPY, KEEP } from 'introscope/logger';
+
+// decorate introscope with effectsLogger
+const effectsScope = effectsLogger(introscope);
+
+describe('todos', () => {
+    it('addTodo', () => {
+        const { effects, addTodo } = effectsScope({
+            newTodo: SPY,
+            addTodo: KEEP,
+        });
+
+        addTodo('start using Introscope :)');
+
+        expect(effects()).toMatchSnapshot();
+        /*
+        EffectsLog [
+          module.count =
+            1,
+          newTodo(
+            1,
+            "start using Introscope :)",
+          ),
+          log(
+            "new todo created",
+            1,
+          ),
+        ]
+        */
+    });
+});
+```
+
+How it works? It iterates over all the symbols (functions, locals, globals) in the scope returned by `introscope()` and for each function creates an empty mock. With symbols marked with `KEEP` it does nothing and for symbols marked as `SPY` it wraps them. All the mocks write to the same side effects log (plain array, btw) wchi then can be inspected manually or, better, sent to Jest's `expect().matchSnaphot()`. There is a custom serializer available to make log snapshots more readable.
 
 ## Usage with Flow
 
