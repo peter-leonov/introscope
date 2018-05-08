@@ -4,9 +4,9 @@ const effectsLogSnapshotSerializer = {
     test(val) {
         return isEffectsShooterLog(val);
     },
-    serialize(val, config, indentation, depth, refs, printer) {
+    serialize(lines, config, indentation, depth, refs, printer) {
         if (++depth > config.maxDepth) {
-            return `EffectsLog [${val.length}]`;
+            return `EffectsLog [${lines.length}]`;
         }
 
         const nl = config.spacingOuter;
@@ -37,7 +37,11 @@ const effectsLogSnapshotSerializer = {
                 case 'call':
                     {
                         const [, id, args] = line;
-                        return `${id}(${nl}${printArgs(args)}${i1})`;
+                        return (
+                            [i1 + id + '(' + nl] +
+                            printArgs(args) +
+                            [i1 + ')' + nl]
+                        );
                     }
                     break;
                 case 'method':
@@ -64,9 +68,7 @@ const effectsLogSnapshotSerializer = {
         };
 
         return (
-            ['EffectsLog [' + nl] +
-            [i1 + val.map(printLine).join(nl + i1) + nl] +
-            [i0 + ']']
+            ['EffectsLog [' + nl] + lines.map(printLine).join('') + [i0 + ']']
         );
     },
 };
