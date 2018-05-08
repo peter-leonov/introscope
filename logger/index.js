@@ -17,7 +17,7 @@ const WRAP = {};
 
 const effectsLogger = scopeFactory => (
     plan,
-    { logName = 'effects', log = [] } = {},
+    { logName = 'effects', log = newLog() } = {},
 ) => {
     // to not polute the log with scope creation
     let moduleLoggerEnabled = false;

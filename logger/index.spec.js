@@ -1,3 +1,9 @@
+const {
+    effectsLogSnapshotSerializer,
+} = require('./effectsLogSnapshotSerializer');
+
+global.expect.addSnapshotSerializer(effectsLogSnapshotSerializer);
+
 const introscope = (scope = {}) => {
     scope.log = (...args) => console.log(...args);
     scope.count = 0;
@@ -14,11 +20,11 @@ const introscope = (scope = {}) => {
 };
 
 import { effectsLogger, SPY, KEEP } from '.';
-const scope = effectsLogger(introscope);
+const effectsScope = effectsLogger(introscope);
 
 describe('todos', () => {
     it('addTodo', () => {
-        const { effects, addTodo } = scope({
+        const { effects, addTodo } = effectsScope({
             newTodo: SPY,
             addTodo: KEEP,
         });
