@@ -29,7 +29,7 @@ const proxySpyFactory = ({ serialize }) => (log, id, v) =>
                 if (that === undefined) {
                     log(['call', id, serialize(args)]);
                 } else {
-                    log(['method', id, serialize(that), serialize(args)]);
+                    log(['apply', id, serialize(that), serialize(args)]);
                 }
                 return Reflect.apply(...arguments);
             },

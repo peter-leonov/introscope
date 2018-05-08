@@ -17,7 +17,7 @@ Array [
 exports[`proxySpy apply/method 1`] = `
 Array [
   Array [
-    "method",
+    "apply",
     "mockName",
     Object {
       "method1": [Spy mockName],
