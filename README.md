@@ -52,7 +52,7 @@ and for easy integration with Jest modify it's configuration (most likely `jest.
 ```js
 module.exports = {
     // this makes the `?introscope` suffix work
-    testRunner: 'introscope/testRunner'
+    testRunner: 'introscope/testRunner',
 };
 ```
 
@@ -105,7 +105,7 @@ export const introscope = function(_scope = {}) {
     });
 
     const getTodos = (_scope.getTodos = (0, _scope.httpGet)('/todos').then(
-        (0, _scope.ensureOkStatus)
+        (0, _scope.ensureOkStatus),
     ));
     return _scope;
 };
@@ -159,9 +159,9 @@ describe('getTodos', () => {
 });
 ```
 
-## EffectsShooter
+## EffectsLogger
 
-A good helping tool which ustilises the power of module scope introspection is a side effects logger and DI mocker [EffectsShooter](./shooter). It reduces the repetitive code in tests by auto mocking simple side effects and logging inputs and outputs of the tested function.
+A nice helping tool which ustilises the power of module scope introspection is a side effects logger and DI mocker [EffectsLogger](./logger). It reduces the repetitive code in tests by auto mocking simple side effects and logging inputs and outputs of the tested function.
 
 ## Usage with Flow
 
@@ -179,7 +179,7 @@ And in case you prefer strict type checking, here is an example on how to make f
 import { scope } from 'introscope';
 export const introscope = scope({
     constantA,
-    functionB
+    functionB,
     // other identifiers of your module
 });
 ```

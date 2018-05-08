@@ -1,20 +1,20 @@
 const { proxySpy } = require('./proxySpy');
 const { serialize } = require('jest-serializer');
 
-const effectsShooterLogSymbol = Symbol('isEffectsShooterLog');
+const EffectsLoggerLogSymbol = Symbol('isEffectsLoggerLog');
 
-const newShooterLog = () => {
+const newLog = () => {
     const log = [];
-    log[effectsShooterLogSymbol] = true;
+    log[EffectsLoggerLogSymbol] = true;
     return log;
 };
 
-const isEffectsShooterLog = val => val && val[effectsShooterLogSymbol];
+const isEffectsLoggerLog = val => val && val[EffectsLoggerLogSymbol];
 
 const KEEP = {};
 const SPY = {};
 
-const effectsShooter = scopeFactory => (
+const EffectsLogger = scopeFactory => (
     plan,
     { logName = 'log', log = [] } = {},
 ) => {
@@ -66,7 +66,7 @@ const effectsShooter = scopeFactory => (
 module.exports = {
     SPY,
     KEEP,
-    effectsShooter,
-    isEffectsShooterLog,
-    newShooterLog,
+    EffectsLogger,
+    isEffectsLoggerLog,
+    newLog,
 };

@@ -1,5 +1,5 @@
 const { proxySpy, getSpyName, serializeWithSpies } = require('./proxySpy');
-const { newShooterLog } = require('.');
+const { newLog } = require('.');
 const { spySnapshotSerializer } = require('./spySnapshotSerializer');
 
 global.expect.addSnapshotSerializer(spySnapshotSerializer);
@@ -33,7 +33,7 @@ describe('serializeWithSpies', () => {
 });
 
 describe('proxySpy', () => {
-    const newMock = (v, log = newShooterLog()) => [
+    const newMock = (v, log = newLog()) => [
         log,
         proxySpy(
             (...args) => log.push(...args),

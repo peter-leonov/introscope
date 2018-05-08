@@ -1,8 +1,8 @@
-const { isEffectsShooterLog } = require('.');
+const { isEffectsLoggerLog } = require('.');
 
 const effectsLogSnapshotSerializer = {
     test(val) {
-        return isEffectsShooterLog(val);
+        return isEffectsLoggerLog(val);
     },
     serialize(lines, config, indentation, depth, refs, printer) {
         if (++depth > config.maxDepth) {

@@ -1,4 +1,4 @@
-const { newShooterLog } = require('.');
+const { newLog } = require('.');
 const {
     effectsLogSnapshotSerializer,
 } = require('./effectsLogSnapshotSerializer');
@@ -6,7 +6,7 @@ const {
 global.expect.addSnapshotSerializer(effectsLogSnapshotSerializer);
 
 describe('spySnapshotSerializer', () => {
-    const log = newShooterLog();
+    const log = newLog();
     log.push(
         ['call', 'function1', [1, 2, 3]],
         ['call', 'function1', []],
