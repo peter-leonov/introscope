@@ -180,13 +180,31 @@ describe('options', () => {
     describe('ignore', () => {
         it('adds', () => {
             shoot(`
-            // @introscope "ignore": ["localIgnored", "Error", "deepGlobalIgnored"]
+            // @introscope "ignore": ["localIgnored", "deepGlobalIgnored"]
             const x = { deep: { global: { variable: deepGlobal, variableIgnored: deepGlobalIgnored }}}
             const localIgnored = 1;
             localIgnored++;
             function throwError (message) {
-                throw new Error(message)
+                throw message
             }
+            `);
+        });
+
+        it('removes', () => {
+            shoot(`
+            // @introscope "ignore": ["-Error", "-Date"]
+            [
+                Error, Date
+            ]
+            `);
+        });
+
+        it('id', () => {
+            shoot(`
+            // @introscope "ignore": []
+            [
+                Error, Date
+            ]
             `);
         });
 

@@ -75,16 +75,32 @@ const STANDARD_BUILTINS = [
     'Buffer',
 ];
 
+const mergeIntoOptions = (options, opts) => {
+    opts = Object.assign({}, opts);
+    const ignore = opts.ignore;
+    if (ignore) {
+        delete opts.ignore;
+        ignore.forEach(v => {
+            if (v[0] == '-') {
+                options.ignore.delete(v.substr(1));
+            } else {
+                options.ignore.add(v);
+            }
+        });
+    }
+    Object.assign(options, opts);
+};
+
 function processProgram({ types: t }, programPath, programOpts) {
-    const defaultOptions = {
+    const options = {
         enable: false,
-        ignore: STANDARD_BUILTINS,
+        ignore: new Set(STANDARD_BUILTINS),
         instrumentImports: 'query',
         removeImports: false,
         exportName: 'introscope',
     };
 
-    let options = Object.assign({}, defaultOptions, programOpts);
+    mergeIntoOptions(options, programOpts);
 
     const scopeId = programPath.scope.generateUidIdentifier('scope');
 
@@ -258,7 +274,7 @@ function processProgram({ types: t }, programPath, programOpts) {
 
     const bindingsToScope = bindings =>
         toPairs(bindings)
-            .filter(([name, _]) => !options.ignore.includes(name))
+            .filter(([name, _]) => !options.ignore.has(name))
             .map(([_, binding]) => binding)
             .map(bindingToScope)
             .filter(Boolean);
@@ -267,12 +283,13 @@ function processProgram({ types: t }, programPath, programOpts) {
         path.parent.comments.map(node => node.value).forEach(comment => {
             const [_, configJSON] = comment.split(/^\s*@introscope\s+/);
             if (configJSON) {
+                let config = {};
                 try {
-                    const config = JSON.parse(`{${configJSON}}`);
-                    Object.assign(options, config);
+                    config = JSON.parse(`{${configJSON}}`);
                 } catch (ex) {
                     console.error('Error parsing Introscope config:', comment);
                 }
+                mergeIntoOptions(options, config);
             }
         });
     };
@@ -284,7 +301,7 @@ function processProgram({ types: t }, programPath, programOpts) {
         }
 
         const globalIds = toPairs(path.scope.globals)
-            .filter(([name, _]) => !options.ignore.includes(name))
+            .filter(([name, _]) => !options.ignore.has(name))
             .map(([_, identifier]) => identifier);
         const programGlobalNames = Object.keys(path.scope.globals);
 

@@ -285,7 +285,7 @@ It's just a comment with leading `@introscope` substring followed by a JSON obje
 
 *   `enable = true | false`: per file enable / disable transpilation; if `enable` equals `false` Introscope will only parse magic comments and stop, so it's quite a good tool for performance optimisation on super large files;
 *   `removeImports = true | false`: instucts introscope to remove all import diretives though keeping the local scope variables for the imports so a test can mock them;
-*   `ignore = [id1, id2, id3...]`: a list of IDs (functions, variables, imports) introscope should not touch; this means if there was a local constant variable with name `foo` and the magic comment has `ignore: ['foo']` than Introscope will not transform this variable to a scope property and the test could not change or mock the value; this is useful for such globals like `Date`, `Math`, `Array` as testers normally do not care of those.
+*   `ignore = [id1, id2, id3...]`: a list of IDs (functions, variables, imports) introscope should not touch; this means if there was a local constant variable with name `foo` and the magic comment has `ignore: ['foo']` than Introscope will not transform this variable to a scope property and the test could not change or mock the value; this is default for such globals like `Date`, `Math`, `Array` as testers normally do not care of those, but can be overritten with `-` prefix: `// @introscope "ignore": ["-Date"]`, this will remove `Date` from ignore list and make it avalable for mocking/spying.
 
 ## Babel plugin options
 
