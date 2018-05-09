@@ -267,6 +267,7 @@ function processProgram({ types: t }, programPath, programOpts) {
     };
 
     const bindingToScope = binding => {
+        if (!binding) return;
         binding.referencePaths.forEach(replaceReferenceWithScope);
         binding.constantViolations.forEach(replaceMutationWithScope);
         return declarationToScope(binding.path, binding.identifier);
