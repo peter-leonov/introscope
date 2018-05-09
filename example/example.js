@@ -1,5 +1,4 @@
 // @flow
-// @introscope "ignore": ["Error"]
 
 import { httpGet } from './some-http-library';
 
@@ -16,5 +15,5 @@ import { scope } from 'introscope';
 export const introscope = scope({
     httpGet,
     ensureOkStatus,
-    getTodos
+    getTodos,
 });

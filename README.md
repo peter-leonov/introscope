@@ -85,7 +85,7 @@ const ensureOkStatus = response => {
 };
 
 export const getTodos = httpGet('/todos').then(ensureOkStatus);
-// @introscope "enable": true, "ignore": ["Error"]
+// @introscope "enable": true
 ```
 
 gets transpiled on the fly to a module like this:
