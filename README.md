@@ -1,6 +1,6 @@
 # Introscope
 
-A reflection (aka, monkey-patching) babel plugin for delightful unit testing of modern ES modules. It allows you to override imports, locals, globals and built-ins (like `Date` or `Math`) independently for each unit test.
+A reflection (aka, monkey-patching) babel plugin for delightful unit testing of modern ES6 modules. It allows you to override imports, locals, globals and built-ins (like `Date` or `Math`) independently for each unit test by turning your nice ES6 module in a factory function on the fly.
 
 ```js
 // increment.js
@@ -126,28 +126,27 @@ import { introscope as apiScope } from './api.js';
 
 describe('ensureOkStatus', () => {
     it('throws on non 200 status', () => {
-        // creates a new unaltered scope
-        const scope = apiScope();
+        // apiScope() creates a new unaltered scope
+        const { ensureOkStatus } = apiScope();
 
-        const errorResponse = { status: 500 };
         expect(() => {
-            scope.ensureOkStatus(errorResponse);
+            ensureOkStatus({ status: 500 });
         }).toThrowError('Non OK status');
     });
     it('passes response 200 status', () => {
-        // creates a new unaltered scope
-        const scope = apiScope();
+        // apiScope() creates a new unaltered scope
+        const { ensureOkStatus } = apiScope();
 
-        const okResponse = { status: 200 };
-        expect(scope.ensureOkStatus(okResponse)).toBe(okResponse);
+        expect(ensureOkStatus({ status: 200 })).toBe(okResponse);
     });
 });
 
 describe('getTodos', () => {
     it('calls httpGet() and ensureOkStatus()', async () => {
-        // creates a new unaltered scope
+        // here we save scope to a variable to tweak it
         const scope = apiScope();
         // mock the local module functions
+        // this part can be vastly automated, see EffectsLogger below
         scope.httpGet = jest.fn(() => Promise.resolve());
         scope.ensureOkStatus = jest.fn();
 
@@ -161,7 +160,7 @@ describe('getTodos', () => {
 
 ## EffectsLogger
 
-_This module is the main reason Introscope was made for._
+_This module saves 90% of time you spend writing boiler plate code in tests._
 
 EffectsLogger is a nice helping tool which utilises the power of module scope introspection for side effects logging and DI mocking. It reduces the repetitive code in tests by auto mocking simple side effects and logging inputs and outputs of the tested function with support of a nicely looking custom Jest Snapshot serializer.
 
