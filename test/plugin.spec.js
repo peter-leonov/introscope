@@ -177,16 +177,87 @@ describe('options', () => {
         `);
     });
 
-    it('ignore', () => {
-        shoot(`
-        // @introscope "ignore": ["localIgnored", "Error", "deepGlobalIgnored"]
-        const x = { deep: { global: { variable: deepGlobal, variableIgnored: deepGlobalIgnored }}}
-        const localIgnored = 1;
-        localIgnored++;
-        function throwError (message) {
-            throw new Error(message)
-        }
-        `);
+    describe('ignore', () => {
+        it('adds', () => {
+            shoot(`
+            // @introscope "ignore": ["localIgnored", "Error", "deepGlobalIgnored"]
+            const x = { deep: { global: { variable: deepGlobal, variableIgnored: deepGlobalIgnored }}}
+            const localIgnored = 1;
+            localIgnored++;
+            function throwError (message) {
+                throw new Error(message)
+            }
+            `);
+        });
+
+        it('ignores builtins', () => {
+            shoot(`
+            [
+                Infinity,
+                NaN,
+                undefined,
+                null,
+                eval,
+                isFinite,
+                isNaN,
+                parseFloat,
+                parseInt,
+                decodeURI,
+                decodeURIComponent,
+                encodeURI,
+                encodeURIComponent,
+                escape,
+                unescape,
+                Object,
+                Function,
+                Boolean,
+                Symbol,
+                Error,
+                EvalError,
+                InternalError,
+                RangeError,
+                ReferenceError,
+                SyntaxError,
+                TypeError,
+                URIError,
+                Number,
+                Math,
+                Date,
+                String,
+                RegExp,
+                Array,
+                Int8Array,
+                Uint8Array,
+                Uint8ClampedArray,
+                Int16Array,
+                Uint16Array,
+                Int32Array,
+                Uint32Array,
+                Float32Array,
+                Float64Array,
+                Map,
+                Set,
+                WeakMap,
+                WeakSet,
+                SIMD,
+                ArrayBuffer,
+                SharedArrayBuffer, 
+                Atomics, 
+                DataView,
+                JSON,
+                Promise,
+                Generator,
+                GeneratorFunction,
+                AsyncFunction,
+                Reflect,
+                Proxy,
+                Intl,
+                WebAssembly,
+                arguments,
+                Buffer,
+            ]
+            `);
+        });
     });
 
     it('enable', () => {
