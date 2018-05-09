@@ -285,10 +285,7 @@ module.exports = function(babel) {
         visitor: {
             Program(path, state) {
                 if (state.opts.disable) return;
-                // filename:
-                // filenameRelative:
-                // log.filename
-                // console.log(state.file);
+
                 if (
                     typeof process == 'object' &&
                     process.env.NODE_ENV != 'test'
