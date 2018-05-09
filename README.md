@@ -25,7 +25,7 @@ test('increment', () => {
 
 Introscope is (mostly) a babel plugin which allows a unit test code look inside an ES module without rewriting the code of the module. Introscope does it by transpiling the module source to a (factory) function which exposes the full internal scope of a module on the fly. This helps separate how the actual application consumes the module via it's exported API and how it gets tested using Introscope with all functions/variables visible, mockable and spy-able.
 
-It has Handy [integration with Jest](#usage). Support for more popular unit testing tools and nice tricks like `Proxy` based wrappers/spies to come soon.
+It has handy [integration with Jest](#usage) and [Proxy based robust spies](#effectslogger). Support for more popular unit testing tools to come soon.
 
 ## Usage
 
