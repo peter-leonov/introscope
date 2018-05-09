@@ -191,24 +191,16 @@ function processProgram({ types: t }, programPath, programOpts) {
             .filter(Boolean);
 
     const parseConfig = path => {
-        const firstStatement = path.get('body').forEach(statement => {
-            const leading = statement.node.leadingComments || [];
-            const trailing = statement.node.trailingComments || [];
-            const comments = [].concat(leading).concat(trailing);
-            comments.map(node => node.value).forEach(comment => {
-                const [_, configJSON] = comment.split(/^\s*@introscope/);
-                if (configJSON) {
-                    try {
-                        const config = JSON.parse(`{${configJSON}}`);
-                        options = Object.assign({}, options, config);
-                    } catch (ex) {
-                        console.error(
-                            'Error parsing Introscope config:',
-                            comment,
-                        );
-                    }
+        path.parent.comments.map(node => node.value).forEach(comment => {
+            const [_, configJSON] = comment.split(/^\s*@introscope\s+/);
+            if (configJSON) {
+                try {
+                    const config = JSON.parse(`{${configJSON}}`);
+                    Object.assign(options, config);
+                } catch (ex) {
+                    console.error('Error parsing Introscope config:', comment);
                 }
-            });
+            }
         });
     };
 
