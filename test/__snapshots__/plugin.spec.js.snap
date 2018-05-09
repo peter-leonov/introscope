@@ -1,5 +1,20 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`introscope import should stay 1`] = `
+"
+import { scope } from 'introscope';
+export const introscope = function (_scope = {}) {
+    var constantA, functionB;
+    _scope.scope = scope;
+    const introscope = _scope.introscope = (0, _scope.scope)({
+        constantA: _scope.constantA,
+        functionB: _scope.functionB
+        // other identifiers of your module
+    });
+    return _scope;
+};"
+`;
+
 exports[`options disable 1`] = `
 "
 let shouldBeUntouched = true;"

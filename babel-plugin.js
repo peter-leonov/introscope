@@ -124,19 +124,25 @@ function processProgram({ types: t }, programPath, programOpts) {
         } else if (path.isNodeType('FunctionDeclaration')) {
             functionDeclarationToScope(path);
         } else if (
-            path.isNodeType('ImportDefaultSpecifier') ||
-            path.isNodeType('ImportSpecifier') ||
-            path.isNodeType('ImportNamespaceSpecifier')
+            (path.isNodeType('ImportDefaultSpecifier') ||
+                path.isNodeType('ImportSpecifier') ||
+                path.isNodeType('ImportNamespaceSpecifier')) &&
+            path.parentPath.isImportDeclaration()
         ) {
+            if (
+                path.node.importKind == 'type' ||
+                path.parentPath.node.importKind == 'type'
+            ) {
+                return;
+            }
+
             if (options.removeImports === true) {
-                // ignore
-            } else if (path.parentPath.isImportDeclaration()) {
-                if (
-                    path.node.importKind == 'type' ||
-                    path.parentPath.node.importKind == 'type'
-                ) {
-                    return;
+                if (path.parentPath.node.source.value == 'introscope') {
+                    return path.get('local').node;
+                } else {
+                    // ignore other than introscope imports
                 }
+            } else {
                 return path.get('local').node;
             }
         } else if (path.isFlow()) {
@@ -232,7 +238,10 @@ function processProgram({ types: t }, programPath, programOpts) {
 
         const programBody = path.node.body;
         if (options.removeImports === true) {
-            path.node.body = [];
+            const introscopeOnly = programBody
+                .filter(byType('ImportDeclaration'))
+                .filter(node => node.source.value == 'introscope');
+            path.node.body = introscopeOnly;
         } else {
             const importsOnly = programBody.filter(byType('ImportDeclaration'));
             path.node.body = importsOnly;

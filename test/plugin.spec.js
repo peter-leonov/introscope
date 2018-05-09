@@ -263,6 +263,23 @@ describe('options', () => {
     });
 });
 
+describe('introscope import', () => {
+    it('should stay', () => {
+        shoot(
+            `
+            import { foo } from 'foo';
+            import { scope } from 'introscope';
+            export const introscope = scope({
+                constantA,
+                functionB,
+                // other identifiers of your module
+            });
+        `,
+            { removeImports: true },
+        );
+    });
+});
+
 describe('test', () => {
     const code = `
     import { introscope } from 'directModule';
