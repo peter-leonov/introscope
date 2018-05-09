@@ -20,7 +20,7 @@
         "babel-plugin-syntax-object-rest-spread": "^6.13.0",
         "babel-preset-env": "^1.6.1",
         "flow-bin": "^0.68.0",
-        "jest": "^22.4.2",
+        "jest": "^22.4.3",
         "regenerator-runtime": "^0.11.1"
     },
     "dependencies": {
