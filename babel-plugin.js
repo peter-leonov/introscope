@@ -139,7 +139,7 @@ function processProgram({ types: t }, programPath, programOpts) {
                 }
                 return path.get('local').node;
             }
-        } else if (path.isNodeType('TypeAlias')) {
+        } else if (path.isFlow()) {
             // ignore types
         } else {
             console.warn(

@@ -117,6 +117,11 @@ describe('plugin', () => {
                 let typedVar: SomeType | SomeOtherType = 123
             }
         `);
+
+        shoot(`
+            opaque type OpaqueType = string;
+            let foo: OpaqueType = "foo"
+        `);
     });
 });
 

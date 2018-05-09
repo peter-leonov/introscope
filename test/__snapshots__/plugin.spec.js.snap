@@ -225,6 +225,14 @@ exports[`plugin flow 2`] = `
 };"
 `;
 
+exports[`plugin flow 3`] = `
+"export const introscope = function (_scope = {}) {
+            opaque type OpaqueType = string;
+            let foo: OpaqueType = _scope.foo = \\"foo\\";
+            return _scope;
+};"
+`;
+
 exports[`plugin globals 1`] = `
 "export const introscope = function (_scope = {}) {
             var global2, global1, globalFunction, nestedGlobal1;
