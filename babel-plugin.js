@@ -15,6 +15,7 @@ function processProgram({ types: t }, programPath, programOpts) {
         ignore: [],
         instrumentImports: 'query',
         removeImports: false,
+        exportName: 'introscope',
     };
 
     let options = Object.assign({}, defaultOptions, programOpts);
@@ -72,7 +73,7 @@ function processProgram({ types: t }, programPath, programOpts) {
     const moduleExports = right =>
         t.exportNamedDeclaration(
             t.variableDeclaration('const', [
-                t.variableDeclarator(t.identifier('introscope'), right),
+                t.variableDeclarator(t.identifier(options.exportName), right),
             ]),
             [],
         );

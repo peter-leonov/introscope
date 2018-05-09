@@ -228,8 +228,33 @@ describe('options', () => {
         shoot(
             `
             let shouldBeTransformed = true;
-        `
+        `,
         );
+    });
+
+    describe('exportName', () => {
+        it('uses default', () => {
+            shoot(`
+                // no exportName
+                `);
+        });
+
+        it('works with magic comment', () => {
+            shoot(
+                `
+                // @introscope "exportName": "microscope1"
+                `,
+            );
+        });
+
+        it('works with plugin options', () => {
+            shoot(
+                `
+                // code
+                `,
+                { exportName: 'microscope' },
+            );
+        });
     });
 });
 

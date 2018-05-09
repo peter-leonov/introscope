@@ -57,6 +57,30 @@ exports[`options enable 3`] = `
 };"
 `;
 
+exports[`options exportName uses default 1`] = `
+"
+// no exportName
+export const introscope = function (_scope = {}) {
+                return _scope;
+};"
+`;
+
+exports[`options exportName works with magic comment 1`] = `
+"
+// @introscope \\"exportName\\": \\"microscope1\\"
+export const microscope1 = function (_scope = {}) {
+                return _scope;
+};"
+`;
+
+exports[`options exportName works with plugin options 1`] = `
+"
+// code
+export const microscope = function (_scope = {}) {
+                return _scope;
+};"
+`;
+
 exports[`options ignore 1`] = `
 "export const introscope = function (_scope = {}) {
     var deepGlobal;
