@@ -8,9 +8,9 @@ const shoot = (code, opts = {}) =>
             plugins: [
                 'syntax-flow',
                 'syntax-object-rest-spread',
-                [plugin, { enable: true, ...opts }]
-            ]
-        }).code
+                [plugin, { enable: true, ...opts }],
+            ],
+        }).code,
     ).toMatchSnapshot();
 
 describe('plugin', () => {
@@ -157,7 +157,7 @@ describe('options', () => {
             import sholdNotBeRemoved from 'some-module1'
             sholdNotBeRemoved++
         `,
-            { removeImports: true }
+            { removeImports: true },
         );
         shoot(`
             // @introscope "removeImports": true
@@ -189,7 +189,7 @@ describe('options', () => {
             `
             let shouldBeUntouched = true;
         `,
-            { enable: false }
+            { enable: false },
         );
 
         shoot(
@@ -197,7 +197,7 @@ describe('options', () => {
             // @introscope "enable": false
             let shouldBeUntouched = true;
         `,
-            { enable: true }
+            { enable: true },
         );
 
         shoot(
@@ -205,7 +205,7 @@ describe('options', () => {
             // @introscope "enable": true
             let shouldBeTransformed = true;
         `,
-            { enable: false }
+            { enable: false },
         );
     });
 
@@ -214,7 +214,7 @@ describe('options', () => {
             `
             let shouldBeUntouched = true;
         `,
-            { disable: true }
+            { disable: true },
         );
 
         shoot(
@@ -222,7 +222,7 @@ describe('options', () => {
             // inline "disable" is ignored, use "enable": false
             // @introscope "disable": true
             let shouldBeTransformed = true;
-        `
+        `,
         );
 
         shoot(
@@ -246,7 +246,7 @@ describe('test', () => {
 
     it('does normal transpilation if enabled in code', () => {
         shoot(code + '\n// @introscope "enable": true', {
-            enable: false
+            enable: false,
         });
     });
 

@@ -14,7 +14,7 @@ function processProgram({ types: t }, programPath, programOpts) {
         enable: false,
         ignore: [],
         instrumentImports: 'query',
-        removeImports: false
+        removeImports: false,
     };
 
     let options = Object.assign({}, defaultOptions, programOpts);
@@ -31,9 +31,9 @@ function processProgram({ types: t }, programPath, programOpts) {
                     t.expressionStatement(
                         scopeSet(
                             t.identifier('default'),
-                            path.get('declaration').node
-                        )
-                    )
+                            path.get('declaration').node,
+                        ),
+                    ),
                 );
             } else if (path.isExportNamedDeclaration()) {
                 path.node.declaration
@@ -47,7 +47,7 @@ function processProgram({ types: t }, programPath, programOpts) {
 
     const identifiersToObjectProperties = identifiers =>
         identifiers.map(identifier =>
-            t.objectProperty(identifier, identifier, undefined, true)
+            t.objectProperty(identifier, identifier, undefined, true),
         );
 
     const wrapInFunction = (globalIds, body) =>
@@ -60,21 +60,21 @@ function processProgram({ types: t }, programPath, programOpts) {
                         globalIds.length
                             ? t.variableDeclaration(
                                   'var',
-                                  globalIds.map(id => t.variableDeclarator(id))
+                                  globalIds.map(id => t.variableDeclarator(id)),
                               )
-                            : []
+                            : [],
                     )
                     .concat(body)
-                    .concat([t.returnStatement(scopeId)])
-            )
+                    .concat([t.returnStatement(scopeId)]),
+            ),
         );
 
     const moduleExports = right =>
         t.exportNamedDeclaration(
             t.variableDeclaration('const', [
-                t.variableDeclarator(t.identifier('introscope'), right)
+                t.variableDeclarator(t.identifier('introscope'), right),
             ]),
-            []
+            [],
         );
 
     const variableDeclaratorToScope = (path, identifier) => {
@@ -83,8 +83,8 @@ function processProgram({ types: t }, programPath, programOpts) {
             path.insertAfter(
                 t.variableDeclarator(
                     path.scope.generateUidIdentifier('temp'),
-                    scopeSet(t.clone(identifier), t.clone(identifier))
-                )
+                    scopeSet(t.clone(identifier), t.clone(identifier)),
+                ),
             );
         } else {
             const init = path.get('init');
@@ -100,8 +100,8 @@ function processProgram({ types: t }, programPath, programOpts) {
         classExpression.type = 'ClassExpression';
         path.replaceWith(
             t.expressionStatement(
-                scopeSet(path.get('id').node, classExpression)
-            )
+                scopeSet(path.get('id').node, classExpression),
+            ),
         );
     };
 
@@ -110,8 +110,8 @@ function processProgram({ types: t }, programPath, programOpts) {
         program.unshiftContainer(
             'body',
             t.expressionStatement(
-                scopeSet(path.get('id').node, path.get('id').node)
-            )
+                scopeSet(path.get('id').node, path.get('id').node),
+            ),
         );
     };
 
@@ -144,8 +144,8 @@ function processProgram({ types: t }, programPath, programOpts) {
             console.warn(
                 path.buildCodeFrameError(
                     'Cannot apply declarationToScope() to an anknown node.type: ' +
-                        path.node.type
-                )
+                        path.node.type,
+                ),
             );
         }
     };
@@ -163,7 +163,7 @@ function processProgram({ types: t }, programPath, programOpts) {
         const scoped = t.memberExpression(scopeId, path.node);
         if (path.parent && path.parent.type == 'CallExpression') {
             path.replaceWith(
-                t.sequenceExpression([t.numericLiteral(0), scoped])
+                t.sequenceExpression([t.numericLiteral(0), scoped]),
             );
         } else {
             path.replaceWith(scoped);
@@ -204,7 +204,7 @@ function processProgram({ types: t }, programPath, programOpts) {
                     } catch (ex) {
                         console.error(
                             'Error parsing Introscope config:',
-                            comment
+                            comment,
                         );
                     }
                 }
@@ -233,8 +233,8 @@ function processProgram({ types: t }, programPath, programOpts) {
             .reverse()
             .forEach(localId =>
                 path.node.body.unshift(
-                    t.expressionStatement(scopeSet(localId, localId))
-                )
+                    t.expressionStatement(scopeSet(localId, localId)),
+                ),
             );
 
         const programBody = path.node.body;
@@ -245,12 +245,12 @@ function processProgram({ types: t }, programPath, programOpts) {
             path.node.body = importsOnly;
         }
         const bodyWithoutImports = programBody.filter(
-            not(byType('ImportDeclaration'))
+            not(byType('ImportDeclaration')),
         );
 
         path.pushContainer(
             'body',
-            moduleExports(wrapInFunction(globalIds, bodyWithoutImports))
+            moduleExports(wrapInFunction(globalIds, bodyWithoutImports)),
         );
 
         // globals become locals after wrapInFunction()
@@ -262,7 +262,7 @@ function processProgram({ types: t }, programPath, programOpts) {
                     const binding = path.scope.getBinding(globalName);
                     globalBindings[globalName] = binding;
                 });
-            }
+            },
         });
         bindingsToScope(globalBindings);
 
@@ -270,8 +270,7 @@ function processProgram({ types: t }, programPath, programOpts) {
     };
 
     function test(path, statepath) {
-        if (options.instrumentImports != 'query')
-            return;
+        if (options.instrumentImports != 'query') return;
 
         const imports = path.node.body.filter(byType('ImportDeclaration'));
         imports
@@ -279,7 +278,7 @@ function processProgram({ types: t }, programPath, programOpts) {
             .filter(
                 node =>
                     node.specifiers[0].imported &&
-                    node.specifiers[0].imported.name == 'introscope'
+                    node.specifiers[0].imported.name == 'introscope',
             )
             .forEach(node => {
                 node.source.value += '?introscope';
@@ -308,7 +307,7 @@ module.exports = function(babel) {
                 const opts = Object.assign({}, state.opts);
 
                 processProgram(babel, path, opts);
-            }
-        }
+            },
+        },
     };
 };
