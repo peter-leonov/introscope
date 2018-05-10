@@ -1,13 +1,14 @@
 {
     "name": "introscope",
     "version": "1.2.0",
-    "description": "Babel plugin which helps with ES modules testing",
+    "description": "Babel plugin for delightful ES6 modules testing",
     "repository": "github:peter-leonov/introscope",
     "author": "Peter Leonov",
     "license": "MIT",
     "scripts": {
         "test": "jest && flow check",
-        "deploy": "yarn test && npm version minor && npm publish && git push && git push --tags"
+        "deploy":
+            "yarn test && npm version minor && git push && git push --tags && npm publish"
     },
     "peerDependencies": {
         "babel-core": "^6.26.0"
