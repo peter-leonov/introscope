@@ -85,7 +85,6 @@ const ensureOkStatus = response => {
 };
 
 export const getTodos = httpGet('/todos').then(ensureOkStatus);
-// @introscope "enable": true
 ```
 
 and transpiles it's code on the fly to this (comments added manually):
