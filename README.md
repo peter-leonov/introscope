@@ -51,7 +51,7 @@ and for easy integration with Jest modify it's configuration (most likely `jest.
 
 ```js
 module.exports = {
-    // this makes the `?introscope` suffix work
+    // this makes babel plugin know which file to transform
     testRunner: 'introscope/testRunner',
 };
 ```
@@ -65,13 +65,13 @@ import { introscope } from './tested-module';
 const { introscope } = require('./tested-module?introscope');
 ```
 
-For safety reasons this plugin does anything only when `NODE_ENV` equals to `'test'`. In production or development it's a no-op.
+For safety reasons this plugin does nothing in non test environments, e.g. in production or development environment it's a no-op. Jest sets `NODE_ENV` to `'test'` automatically. Please, see your favirite test runner docs for more.
 
-Introscope supports all the new ES features including type annotations (if not, [create an issue](https://github.com/peter-leonov/introscope/issues) 🙏). That means, if Babel supports some new fancy syntax, Introscope should do too.
+Introscope supports all the new ES features including type annotations (if not, [create an issue](https://github.com/peter-leonov/introscope/issues/new) 🙏). That means, if Babel supports some new fancy syntax, Introscope should do too.
 
-## Example
+## Detailed example
 
-What Introscope does is just wraping a whole module code in a function that accepts one object argument `scope` and returns it with all module internals (variables, functions, classes and imports) exposed as properties. Here is a little example, a module like this one:
+What Introscope does is just wraping a whole module code in a function that accepts one object argument `scope` and returns it with all module internals (variables, functions, classes and imports) exposed as properties. Here is a little example. Introscope takes module like this:
 
 ```js
 // api.js
@@ -88,30 +88,39 @@ export const getTodos = httpGet('/todos').then(ensureOkStatus);
 // @introscope "enable": true
 ```
 
-gets transpiled on the fly to a module like this:
+and transpiles it's code on the fly to this (comments added manually):
 
 ```js
 // api.js
 import httpGet from 'some-http-library';
 
+// wrapps all the module source in a single "factory" function
 export const introscope = function(_scope = {}) {
+    // assigns all imports to a `scope` object
     _scope.httpGet = httpGet;
 
+    // also assigns all locals to the `scope` object
     const ensureOkStatus = (_scope.ensureOkStatus = response => {
         if (response.status !== 200) {
+            // built-ins are ignored by default (as `Error` here),
+            // but can be configured to be also transpiled
             throw new Error('Non OK status');
         }
         return response;
     });
 
+    // all the accesses to locals get transpiled
+    // to property accesses on the `scope` object
     const getTodos = (_scope.getTodos = (0, _scope.httpGet)('/todos').then(
         (0, _scope.ensureOkStatus),
     ));
+
+    // return the new frehly created module scope
     return _scope;
 };
 ```
 
-You can play with the transpilation in this [AST explorer example](https://astexplorer.net/#/gist/eae4a1db26c203390763fd5d1b6ed67a/5afa750c98ca6f775d2b4562f1c837f959f7108a).
+You can play with the transpilation in this [AST explorer example](https://astexplorer.net/#/gist/eae4a1db26c203390763fd5d1b6ed67a/1871cd4a95586981142e4463e9092999014b9f38).
 
 The resulting code you can then import in your Babel powered test environment and examine like this:
 
