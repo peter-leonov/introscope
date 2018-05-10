@@ -1,5 +1,25 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`example works 1`] = `
+"// api.js
+import httpGet from 'some-http-library';
+
+export const introscope = function (_scope = {}) {
+    _scope.httpGet = httpGet;
+    const ensureOkStatus = _scope.ensureOkStatus = response => {
+        if (response.status !== 200) {
+            throw new Error('Non OK status');
+        }
+        return response;
+    };
+
+    const getTodos = _scope.getTodos = (0, _scope.httpGet)('/todos').then((0, _scope.ensureOkStatus));
+    // @introscope \\"enable\\": true
+
+    return _scope;
+};"
+`;
+
 exports[`introscope import should stay 1`] = `
 "
 import { scope } from 'introscope';

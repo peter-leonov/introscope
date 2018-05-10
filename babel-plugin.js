@@ -281,7 +281,10 @@ function processProgram({ types: t }, programPath, programOpts) {
             .filter(Boolean);
 
     const parseConfig = path => {
-        path.parent.comments.map(node => node.value).forEach(comment => {
+        const comments =
+            path.parent.comments ||
+            path.parent.tokens.filter(byType('CommentLine'));
+        comments.map(node => node.value).forEach(comment => {
             const [_, configJSON] = comment.split(/^\s*@introscope\s+/);
             if (configJSON) {
                 let config = {};

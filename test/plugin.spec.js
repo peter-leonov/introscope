@@ -394,3 +394,23 @@ describe('test', () => {
         shoot(code, { enable: false, instrumentImports: false });
     });
 });
+
+describe('example', () => {
+    it('works', () => {
+        shoot(
+            `// api.js
+import httpGet from 'some-http-library';
+
+const ensureOkStatus = response => {
+    if (response.status !== 200) {
+        throw new Error('Non OK status');
+    }
+    return response;
+};
+
+export const getTodos = httpGet('/todos').then(ensureOkStatus);
+// @introscope "enable": true`,
+            { enable: false },
+        );
+    });
+});
