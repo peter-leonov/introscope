@@ -34,9 +34,9 @@ Introscope works best with Jest but other frameworks can utilise Introscope with
 Install:
 
 ```sh
-yarn add --dev introscope
+yarn add -D introscope
 # or
-npm install --save-dev introscope
+npm install -D introscope
 ```
 
 Add the babel plugin to the project's babel configuration (most likely `.babelrc`):
