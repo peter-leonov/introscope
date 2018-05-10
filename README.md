@@ -299,6 +299,23 @@ It's just a comment with leading `@introscope` substring followed by a JSON obje
 
 *   `disable = true | false`: disables plugin completely, useful in complex `.babelrc.js` configurations to make sure Introscope does not alter a build for some very specific environment;
 
+## FAQ
+
+### Is ferformance good?
+
+Yes. The babel plugin does use only one additional traverse. All the variables look up logic is done by Babel parser for free at compile time.
+
+### Why adding [jest runner](https://github.com/peter-leonov/introscope/blob/master/testRunner.js)?
+
+Because by manual transpiling code in a unit test we break a lot of things:
+
+1.  Jest will not add the introscoped file to watch mode
+2.  Jest automatically instruments code for coverage report
+3.  Jest can be configured to look for modules in non standard way
+4.  Jest can be configured with additional Babel plugins
+5.  Flow will not know where to get types from
+6.  Jump to file will not work in editors
+
 ## TODOs
 
 ### Imported values in curried functions
