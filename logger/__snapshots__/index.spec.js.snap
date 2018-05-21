@@ -29,6 +29,8 @@ Object {
 }
 `;
 
+exports[`effectsLogger has working functionMocker as effects.fn 1`] = `[Function]`;
+
 exports[`todos addTodo 1`] = `
 EffectsLog [
   module.count =

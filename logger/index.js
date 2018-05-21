@@ -2,11 +2,24 @@ const { proxySpy } = require('./proxySpy');
 
 const EffectsLoggerLogSymbol = Symbol('isEffectsLoggerLog');
 
-const newLog = () => {
+export const newLog = () => {
     const log = [];
     log[EffectsLoggerLogSymbol] = true;
     return log;
 };
+
+// from https://github.com/peter-leonov/test-plan
+export const functionMocker = (log = newLog()) =>
+    new Proxy(() => log, {
+        get(_, prop) {
+            return v =>
+                proxySpy(
+                    (...args) => log.push(...args),
+                    prop,
+                    v || function() {},
+                );
+        },
+    });
 
 const isEffectsLoggerLog = val => val && val[EffectsLoggerLogSymbol];
 
@@ -16,7 +29,7 @@ const WRAP = {};
 
 const effectsLogger = scopeFactory => (
     plan,
-    { logName = 'effects', log = newLog() } = {},
+    { effectsName = 'effects', log = newLog() } = {},
 ) => {
     // to not polute the log with scope creation
     let moduleLoggerEnabled = false;
@@ -82,12 +95,14 @@ const effectsLogger = scopeFactory => (
         }
     }
 
-    if (logName) {
-        if (logName in scope)
+    if (effectsName) {
+        if (effectsName in scope)
             throw new Error(
-                `EffectsLogger: effects symbol "${logName}" is already defined in the scope. Please, provide another effects log name in the effectsLogger() config parameter.`,
+                `EffectsLogger: effects id "${effectsName}" is already defined in the scope. Please, provide another effects log name in the effectsLogger() config parameter.`,
             );
-        scope[logName] = () => log;
+        const effects = () => log;
+        effects.fn = functionMocker(log);
+        scope[effectsName] = effects;
     }
 
     moduleLoggerEnabled = true;

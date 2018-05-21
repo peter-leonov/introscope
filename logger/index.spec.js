@@ -64,4 +64,10 @@ describe('effectsLogger', () => {
 
         expect(scope).toMatchSnapshot();
     });
+
+    it('has working functionMocker as effects.fn', () => {
+        const scope = effectsLogger(() => ({}))({});
+
+        expect(scope.effects.fn.foo()).toMatchSnapshot();
+    });
 });
