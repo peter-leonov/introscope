@@ -34,3 +34,15 @@ describe('todos', () => {
         expect(effects()).toMatchSnapshot();
     });
 });
+
+describe('effectsLogger', () => {
+    it('adds new props to scope', () => {
+        const scope = effectsLogger(() => ({
+            a: 0,
+        }))({
+            b: 2,
+        });
+
+        expect(scope).toMatchSnapshot();
+    });
+});

@@ -1,5 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`effectsLogger adds new props to scope 1`] = `
+Object {
+  "a": 0,
+  "b": 2,
+  "effects": [Function],
+}
+`;
+
 exports[`todos addTodo 1`] = `
 EffectsLog [
   module.count =

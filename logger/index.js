@@ -64,6 +64,20 @@ const effectsLogger = scopeFactory => (
         // all primitive values stay as they were
     }
 
+    for (const id in plan) {
+        if (typeof scope[id] == 'undefined') {
+            if (
+                typeof plan[id] == 'function' ||
+                (typeof plan[id] == 'object' && plan[id] !== null)
+            ) {
+                scope[id] = proxySpy(logger, id, plan[id] || function() {});
+            } else {
+                // all primitive values stay as they are
+                scope[id] = plan[id];
+            }
+        }
+    }
+
     if (logName) {
         if (logName in scope)
             throw new Error(
