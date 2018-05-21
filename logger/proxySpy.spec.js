@@ -1,10 +1,6 @@
-process.env.__EFFECTS_LOGGER__NO_JEST_INTERGATION = true;
-
 const { proxySpy, getSpyName, serializeWithSpies } = require('./proxySpy');
 const { newLog } = require('.');
-const { spySnapshotSerializer } = require('./spySnapshotSerializer');
-
-global.expect.addSnapshotSerializer(spySnapshotSerializer);
+require('./jest');
 
 describe('serializeWithSpies', () => {
     const newSpy = name => proxySpy(() => {}, name, {});

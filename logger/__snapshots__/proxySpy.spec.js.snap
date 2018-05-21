@@ -1,84 +1,55 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`proxySpy deep returns spied values 1`] = `
-Array [
-  Array [
-    "get",
-    "mockName",
-    "foo",
-  ],
-  Array [
-    "call",
-    "mockName.foo",
-    Array [],
-  ],
+EffectsLog [
+  mockName.foo,
+  mockName.foo(
+  ),
 ]
 `;
 
 exports[`proxySpy deep supports Symbols 1`] = `
-Array [
-  Array [
-    "get",
-    "mockName",
-    Symbol(foo),
-  ],
-  Array [
-    "get",
-    "mockName.Symbol(foo)",
-    Symbol(bar),
-  ],
+EffectsLog [
+  mockName[Symbol(foo)],
+  mockName.Symbol(foo)[Symbol(bar)],
 ]
 `;
 
 exports[`proxySpy methods apply/call 1`] = `
-Array [
-  Array [
-    "call",
-    "mockName",
-    Array [
-      1,
-      2,
-      3,
-    ],
-  ],
+EffectsLog [
+  mockName(
+    1,
+    2,
+    3,
+  ),
 ]
 `;
 
 exports[`proxySpy methods apply/method 1`] = `
-Array [
-  Array [
-    "apply",
-    "mockName",
+EffectsLog [
+  mockName.apply(
     Object {
       "method1": [Function],
     },
-    Array [
+    [
       1,
       2,
       3,
-    ],
-  ],
+    ]
+  ),
 ]
 `;
 
 exports[`proxySpy methods get 1`] = `
-Array [
-  Array [
-    "get",
-    "mockName",
-    "property1",
-  ],
+EffectsLog [
+  mockName.property1,
 ]
 `;
 
 exports[`proxySpy methods set 1`] = `
-Array [
-  Array [
-    "set",
-    "mockName",
-    "property1",
+EffectsLog [
+  mockName.property1 =
     1,
-  ],
 ]
 `;
 
