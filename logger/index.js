@@ -1,10 +1,11 @@
 const { proxySpy } = require('./proxySpy');
 
-const EffectsLoggerLogSymbol = Symbol('isEffectsLoggerLog');
+const effectsLoggerLogRegistry = new WeakMap();
+const isEffectsLoggerLog = log => effectsLoggerLogRegistry.has(log);
 
 const newLog = () => {
     const log = [];
-    log[EffectsLoggerLogSymbol] = true;
+    effectsLoggerLogRegistry.set(log, true);
     return log;
 };
 
@@ -20,8 +21,6 @@ const functionMocker = (log = newLog()) =>
                 );
         },
     });
-
-const isEffectsLoggerLog = val => val && val[EffectsLoggerLogSymbol];
 
 const KEEP = {};
 const SPY = {};

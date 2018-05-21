@@ -7,11 +7,17 @@ const putToRegistry = (id, spy) => {
     return spy;
 };
 
-export const getSpyName = spy => spiesRegistry.get(spy);
+const getSpyName = spy => spiesRegistry.get(spy);
 
-const isSerializedSpy = Symbol('isSerializedSpy');
+const serializedSpiesRegistry = new WeakMap();
 
-const newSerializedSpy = spyName => ({ [isSerializedSpy]: true, spyName });
+const isSerializedSpy = sspy => serializedSpiesRegistry.has(sspy);
+
+const newSerializedSpy = spyName => {
+    const sspy = { spyName };
+    serializedSpiesRegistry.set(sspy, spyName);
+    return sspy;
+};
 
 const serializeWithSpies = v =>
     cloneDeepWith(v, function(value) {
