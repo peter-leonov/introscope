@@ -2,14 +2,14 @@ const { proxySpy } = require('./proxySpy');
 
 const EffectsLoggerLogSymbol = Symbol('isEffectsLoggerLog');
 
-export const newLog = () => {
+const newLog = () => {
     const log = [];
     log[EffectsLoggerLogSymbol] = true;
     return log;
 };
 
 // from https://github.com/peter-leonov/test-plan
-export const functionMocker = (log = newLog()) =>
+const functionMocker = (log = newLog()) =>
     new Proxy(() => log, {
         get(_, prop) {
             return v =>
