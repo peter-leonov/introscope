@@ -6,8 +6,10 @@
     "author": "Peter Leonov",
     "license": "MIT",
     "scripts": {
-        "test": "jest && flow check",
-        "deploy": "yarn run test && git push && git push --tags && yarn publish"
+        "test": "jest",
+        "check": "jest && flow check",
+        "deploy":
+            "yarn run check && git push && git push --tags && yarn publish"
     },
     "peerDependencies": {
         "babel-core": "^6.26.0"
