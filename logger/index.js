@@ -1,5 +1,4 @@
 const { proxySpy } = require('./proxySpy');
-const { serialize } = require('jest-serializer');
 
 const EffectsLoggerLogSymbol = Symbol('isEffectsLoggerLog');
 
@@ -84,3 +83,6 @@ module.exports = {
     isEffectsLoggerLog,
     newLog,
 };
+
+// auto enable serializers in Jest
+require('./jest');
