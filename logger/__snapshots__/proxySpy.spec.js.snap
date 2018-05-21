@@ -1,6 +1,21 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`proxySpy apply/call 1`] = `
+exports[`proxySpy deep returns spied values 1`] = `
+Array [
+  Array [
+    "get",
+    "mockName",
+    "foo",
+  ],
+  Array [
+    "call",
+    "mockName.foo",
+    Array [],
+  ],
+]
+`;
+
+exports[`proxySpy methods apply/call 1`] = `
 Array [
   Array [
     "call",
@@ -14,7 +29,7 @@ Array [
 ]
 `;
 
-exports[`proxySpy apply/method 1`] = `
+exports[`proxySpy methods apply/method 1`] = `
 Array [
   Array [
     "apply",
@@ -31,7 +46,7 @@ Array [
 ]
 `;
 
-exports[`proxySpy get 1`] = `
+exports[`proxySpy methods get 1`] = `
 Array [
   Array [
     "get",
@@ -41,7 +56,7 @@ Array [
 ]
 `;
 
-exports[`proxySpy set 1`] = `
+exports[`proxySpy methods set 1`] = `
 Array [
   Array [
     "set",

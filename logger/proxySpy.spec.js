@@ -35,37 +35,78 @@ describe('serializeWithSpies', () => {
 });
 
 describe('proxySpy', () => {
-    const newMock = (v, log = newLog()) => [
-        log,
-        proxySpy(
-            (...args) => log.push(...args),
-            'mockName',
-            v || function() {}, // function has all the Proxy methods available
-        ),
-    ];
+    const newMock = (v, conf) => {
+        // object oriented programming? have never heard of it :D
+        const log = newLog();
+        let enabled = true;
+        log.disable = () => (enabled = false);
+        const logger = (...args) => enabled && log.push(...args);
 
-    it('apply/call', () => {
-        const [log, mock] = newMock();
-        mock(1, 2, 3);
-        expect(log).toMatchSnapshot();
+        return {
+            log,
+            mock: proxySpy(
+                logger,
+                'mockName',
+                v || function() {}, // function has all the Proxy methods available
+                conf,
+            ),
+        };
+    };
+    describe('methods', () => {
+        it('apply/call', () => {
+            const { log, mock } = newMock();
+            mock(1, 2, 3);
+            log.disable();
+            expect(log).toMatchSnapshot();
+        });
+
+        it('apply/method', () => {
+            const { log, mock } = newMock();
+            const obj = { method1: mock };
+            obj.method1(1, 2, 3);
+            log.disable();
+            expect(log).toMatchSnapshot();
+        });
+
+        it('get', () => {
+            const { log, mock } = newMock();
+            mock.property1;
+            log.disable();
+            expect(log).toMatchSnapshot();
+        });
+
+        it('set', () => {
+            const { log, mock } = newMock();
+            mock.property1 = 1;
+            log.disable();
+            expect(log).toMatchSnapshot();
+        });
     });
 
-    it('apply/method', () => {
-        const [log, mock] = newMock();
-        const obj = { method1: mock };
-        obj.method1(1, 2, 3);
-        expect(log).toMatchSnapshot();
+    describe('etc', () => {
+        it('returns same spies for same object + id', () => {
+            const obj = {};
+
+            const same1 = proxySpy(() => {}, 'same', obj);
+            const same2 = proxySpy(() => {}, 'same', obj);
+            const other1 = proxySpy(() => {}, 'other', obj);
+            const other2 = proxySpy(() => {}, 'same', {});
+
+            expect(same1).toBe(same2);
+            expect(same1).not.toBe(other1);
+            expect(other1).not.toBe(other2);
+        });
     });
 
-    it('get', () => {
-        const [log, mock] = newMock();
-        mock.property1;
-        expect(log).toMatchSnapshot();
-    });
-
-    it('set', () => {
-        const [log, mock] = newMock();
-        mock.property1 = 1;
-        expect(log).toMatchSnapshot();
+    describe('deep', () => {
+        it('returns spied values', () => {
+            const { log, mock } = newMock({ foo: () => {} }, { deep: true });
+            // gets loged as property get
+            const foo = mock.foo;
+            // gets logged as call
+            foo();
+            // same spies for the same objects / keys
+            expect(log).toMatchSnapshot();
+        });
     });
 });

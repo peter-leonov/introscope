@@ -1,9 +1,30 @@
 const { cloneDeepWith } = require('lodash');
 
+const spiesCache = new WeakMap();
+const addToCache = (v, id, spy) => {
+    const spiesById = spiesCache.get(v);
+    if (spiesById) {
+        spiesById.set(id, spy);
+    } else {
+        const spiesById = new Map();
+        spiesById.set(id, spy);
+        spiesCache.set(v, spiesById);
+    }
+};
+const getFromCache = (v, id) => {
+    const spiesById = spiesCache.get(v);
+    if (spiesById) {
+        return spiesById.get(id);
+    }
+
+    return undefined;
+};
+
 const spiesRegistry = new WeakMap();
 
-const putToRegistry = (spy, target) => {
-    spiesRegistry.set(spy, target);
+const putToRegistry = (v, id, spy) => {
+    addToCache(v, id, spy);
+    spiesRegistry.set(spy, v);
     return spy;
 };
 
@@ -13,33 +34,52 @@ const getSpyTarget = spy => spiesRegistry.get(spy);
 const serializeWithSpies = v =>
     cloneDeepWith(v, value => (isSpy(value) ? getSpyTarget(value) : value));
 
-const isSpialbe = v =>
+const isSpyable = v =>
     typeof v == 'function' || (typeof v == 'object' && v !== null);
 
-const proxySpyFactory = ({ serialize }) => (log, id, v) =>
-    isSpialbe(v)
-        ? putToRegistry(
-              new Proxy(v, {
-                  apply(_, that, args) {
-                      if (that === undefined) {
-                          log(['call', id, serialize(args)]);
-                      } else {
-                          log(['apply', id, serialize(that), serialize(args)]);
-                      }
-                      return Reflect.apply(...arguments);
-                  },
-                  get(_, prop) {
-                      log(['get', id, prop]);
-                      return Reflect.get(...arguments);
-                  },
-                  set(_, prop, value) {
-                      log(['set', id, prop, serialize(value)]);
-                      return Reflect.set(...arguments);
-                  },
-              }),
-              v,
-          )
-        : v;
+const proxySpyFactory = ({ serialize }) => {
+    const proxySpy = (log, id, v, conf = { deep: false }) => {
+        if (!isSpyable(v)) return v;
+
+        const cached = getFromCache(v, id);
+        if (cached) return cached;
+
+        // wrap in a new proxy with the same log
+        const deep = conf.deep
+            ? (id2, v) => proxySpy(log, `${id}.${String(id2)}`, v)
+            : (_, v) => v;
+
+        return putToRegistry(
+            v,
+            id,
+            new Proxy(v, {
+                apply(_, that, args) {
+                    if (that === undefined) {
+                        log(['call', String(id), serialize(args)]);
+                        return deep('call', Reflect.apply(...arguments));
+                    } else {
+                        log([
+                            'apply',
+                            String(id),
+                            serialize(that),
+                            serialize(args),
+                        ]);
+                        return deep('apply', Reflect.apply(...arguments));
+                    }
+                },
+                get(_, prop) {
+                    log(['get', String(id), prop]);
+                    return deep(prop, Reflect.get(...arguments));
+                },
+                set(_, prop, value) {
+                    log(['set', String(id), prop, serialize(value)]);
+                    return Reflect.set(...arguments);
+                },
+            }),
+        );
+    };
+    return proxySpy;
+};
 
 const proxySpy = proxySpyFactory({ serialize: serializeWithSpies });
 
