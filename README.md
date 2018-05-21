@@ -185,7 +185,9 @@ const newTodo = (id, title) => {
         title,
     };
 };
-const addTodo = title => newTodo(++count, title);
+const addTodo = (title, cb) => {
+    cb(newTodo(++count, title));
+};
 
 // todo.spec.js
 import { introscope } from './increment.js';
@@ -196,12 +198,17 @@ const effectsScope = effectsLogger(introscope);
 
 describe('todos', () => {
     it('addTodo', () => {
-        const { effects, addTodo } = effectsScope({
+        const {
+            scope: { addTodo },
+            effects,
+            m,
+        } = effectsScope({
             newTodo: SPY,
             addTodo: KEEP,
         });
 
-        addTodo('start using Introscope :)');
+        // `m.cb()` creates and spies on a mock function with name `cb`
+        addTodo('start use Introscope :)', m.cb());
 
         expect(effects()).toMatchSnapshot();
         /*
@@ -210,11 +217,18 @@ describe('todos', () => {
             1,
           newTodo(
             1,
-            "start using Introscope :)",
+            "start use Introscope :)",
           ),
           log(
             "new todo created",
             1,
+          ),
+          cb(
+            "new todo created",
+            {
+                id: 1,
+                title: "start use Introscope :)",
+            },
           ),
         ]
         */
