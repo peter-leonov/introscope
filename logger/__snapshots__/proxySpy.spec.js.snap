@@ -20,7 +20,7 @@ Array [
     "apply",
     "mockName",
     Object {
-      "method1": [Spy mockName],
+      "method1": [Function],
     },
     Array [
       1,
@@ -70,11 +70,11 @@ Object {
 }
 `;
 
-exports[`serializeWithSpies stringifies spies 1`] = `[Spy A]`;
+exports[`serializeWithSpies stringifies spies 1`] = `Object {}`;
 
 exports[`serializeWithSpies stringifies spies 2`] = `
 Array [
-  [Spy B],
-  [Spy C],
+  Object {},
+  Object {},
 ]
 `;

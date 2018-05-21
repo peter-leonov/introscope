@@ -10,10 +10,10 @@ Object {
 
 exports[`effectsLogger auto mocks objects, arrays and functions 1`] = `
 Object {
-  "array": [Spy array],
+  "array": Array [],
   "effects": [Function],
-  "function": [Spy function],
-  "object": [Spy object],
+  "function": [Function],
+  "object": Object {},
 }
 `;
 
@@ -29,7 +29,7 @@ Object {
 }
 `;
 
-exports[`effectsLogger has working functionMocker as effects.fn 1`] = `[Spy foo]`;
+exports[`effectsLogger has working functionMocker as effects.fn 1`] = `[Function]`;
 
 exports[`functionMocker calls and passes args 1`] = `
 EffectsLog [
@@ -74,9 +74,9 @@ EffectsLog [
 ]
 `;
 
-exports[`functionMocker mocks 1`] = `[Spy foo]`;
+exports[`functionMocker mocks 1`] = `[Function]`;
 
-exports[`functionMocker mocks 2`] = `[Spy bar]`;
+exports[`functionMocker mocks 2`] = `[Function]`;
 
 exports[`functionMocker returns value 1`] = `"returned value"`;
 

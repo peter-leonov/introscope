@@ -1,12 +1,19 @@
-const { isSerializedSpy, getSpyName } = require('./proxySpy');
+const { isSpy, getSpyTarget } = require('./proxySpy');
 
 const spySnapshotSerializer = {
-    test: val => {
-        if (val == null) return false;
-        if (isSerializedSpy(val)) return true;
-        if (getSpyName(val)) return true;
+    test(val) {
+        return isSpy(val);
     },
-    print: val => `[Spy ${getSpyName(val) || val.spyName}]`,
+    serialize(val, config, indentation, depth, refs, printer) {
+        return printer(
+            getSpyTarget(val),
+            config,
+            indentation,
+            depth,
+            refs,
+            printer,
+        );
+    },
 };
 module.exports = {
     spySnapshotSerializer,

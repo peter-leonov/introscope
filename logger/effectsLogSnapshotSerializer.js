@@ -4,9 +4,9 @@ const effectsLogSnapshotSerializer = {
     test(val) {
         return isEffectsLoggerLog(val);
     },
-    serialize(lines, config, indentation, depth, refs, printer) {
+    serialize(val, config, indentation, depth, refs, printer) {
         if (++depth > config.maxDepth) {
-            return `EffectsLog [${lines.length}]`;
+            return `EffectsLog [${val.length}]`;
         }
 
         const nl = config.spacingInner;
@@ -83,9 +83,7 @@ const effectsLogSnapshotSerializer = {
             }
         };
 
-        return (
-            ['EffectsLog [' + nl] + lines.map(printLine).join('') + [i0 + ']']
-        );
+        return ['EffectsLog [' + nl] + val.map(printLine).join('') + [i0 + ']'];
     },
 };
 

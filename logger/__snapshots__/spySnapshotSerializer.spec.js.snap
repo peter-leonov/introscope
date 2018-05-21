@@ -9,26 +9,57 @@ Array [
     2,
     3,
   ],
-  Object {
-    "spyName": "NotASpy",
-  },
+  [Function],
 ]
 `;
 
-exports[`spySnapshotSerializer list of spies 1`] = `
+exports[`spySnapshotSerializer naked spy 1`] = `Array []`;
+
+exports[`spySnapshotSerializer spied arrays 1`] = `
 Array [
-  [Spy A],
-  [Spy B],
-  [Spy C],
+  Array [
+    1,
+    2,
+    3,
+  ],
+  Array [
+    4,
+    5,
+    6,
+  ],
+  Array [
+    7,
+    8,
+    9,
+  ],
 ]
 `;
 
-exports[`spySnapshotSerializer naked spy 1`] = `[Spy A]`;
-
-exports[`spySnapshotSerializer object of spies 1`] = `
+exports[`spySnapshotSerializer spied function 1`] = `
 Object {
-  "a": [Spy A],
-  "b": [Spy B],
-  "c": [Spy C],
+  "fun": [Function],
 }
+`;
+
+exports[`spySnapshotSerializer spied objects 1`] = `
+Object {
+  "a": Object {
+    "a": "a",
+  },
+  "b": Object {
+    "b": "b",
+  },
+  "c": Object {
+    "c": "c",
+  },
+}
+`;
+
+exports[`spySnapshotSerializer spied primitives 1`] = `
+Array [
+  true,
+  1,
+  "foo",
+  Symbol(bar),
+]
 `;
