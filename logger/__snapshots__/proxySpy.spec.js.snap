@@ -15,6 +15,21 @@ Array [
 ]
 `;
 
+exports[`proxySpy deep supports Symbols 1`] = `
+Array [
+  Array [
+    "get",
+    "mockName",
+    Symbol(foo),
+  ],
+  Array [
+    "get",
+    "mockName.Symbol(foo)",
+    Symbol(bar),
+  ],
+]
+`;
+
 exports[`proxySpy methods apply/call 1`] = `
 Array [
   Array [

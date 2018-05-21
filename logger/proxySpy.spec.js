@@ -108,5 +108,12 @@ describe('proxySpy', () => {
             // same spies for the same objects / keys
             expect(log).toMatchSnapshot();
         });
+
+        it('supports Symbols', () => {
+            const foo = Symbol('foo');
+            const { log, mock } = newMock({ [foo]: {} }, { deep: true });
+            mock[foo][Symbol('bar')];
+            expect(log).toMatchSnapshot();
+        });
     });
 });

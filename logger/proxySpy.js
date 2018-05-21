@@ -55,20 +55,15 @@ const proxySpyFactory = ({ serialize }) => {
             new Proxy(v, {
                 apply(_, that, args) {
                     if (that === undefined) {
-                        log(['call', String(id), serialize(args)]);
+                        log(['call', id, serialize(args)]);
                         return deep('call', Reflect.apply(...arguments));
                     } else {
-                        log([
-                            'apply',
-                            String(id),
-                            serialize(that),
-                            serialize(args),
-                        ]);
+                        log(['apply', id, serialize(that), serialize(args)]);
                         return deep('apply', Reflect.apply(...arguments));
                     }
                 },
                 get(_, prop) {
-                    log(['get', String(id), prop]);
+                    log(['get', id, prop]);
                     return deep(prop, Reflect.get(...arguments));
                 },
                 set(_, prop, value) {
