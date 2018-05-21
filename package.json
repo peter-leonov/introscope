@@ -7,8 +7,7 @@
     "license": "MIT",
     "scripts": {
         "test": "jest",
-        "check": "jest && flow check",
-        "deploy": "yarn run check && git push && git push --tags && yarn publish"
+        "check": "jest && flow check"
     },
     "peerDependencies": {
         "babel-core": "^6.26.0"
