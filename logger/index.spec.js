@@ -71,3 +71,46 @@ describe('effectsLogger', () => {
         expect(scope.effects.fn.foo()).toMatchSnapshot();
     });
 });
+
+import { functionMocker } from '.';
+
+describe('functionMocker', () => {
+    it('mocks', () => {
+        const m = functionMocker();
+        expect(m.foo()).toMatchSnapshot();
+        expect(m.bar()).toMatchSnapshot();
+    });
+
+    it('logs', () => {
+        const m = functionMocker();
+        m.baz()(123);
+        expect(m()).toMatchSnapshot();
+    });
+
+    it('calls and passes args', () => {
+        const m = functionMocker();
+        m.baz(m.forBaz())(1, 2, 3);
+        expect(m()).toMatchSnapshot();
+    });
+
+    it('returns value', () => {
+        const m = functionMocker();
+        expect(m.baz(() => 'returned value')()).toMatchSnapshot();
+    });
+
+    it('keeps order', () => {
+        const m = functionMocker();
+        m.fn1()();
+        m.fn2()();
+        m.fn3()();
+        expect(m()).toMatchSnapshot();
+    });
+
+    it('ignores never called mocks', () => {
+        const m = functionMocker();
+        m.fn1()();
+        m.fn2();
+        m.fn3()();
+        expect(m()).toMatchSnapshot();
+    });
+});

@@ -114,6 +114,7 @@ module.exports = {
     effectsLogger,
     isEffectsLoggerLog,
     newLog,
+    functionMocker,
 };
 
 // auto enable serializers in Jest

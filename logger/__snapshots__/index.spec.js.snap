@@ -31,6 +31,55 @@ Object {
 
 exports[`effectsLogger has working functionMocker as effects.fn 1`] = `[Spy foo]`;
 
+exports[`functionMocker calls and passes args 1`] = `
+EffectsLog [
+  baz(
+    1,
+    2,
+    3,
+  ),
+  forBaz(
+    1,
+    2,
+    3,
+  ),
+]
+`;
+
+exports[`functionMocker ignores never called mocks 1`] = `
+EffectsLog [
+  fn1(
+  ),
+  fn3(
+  ),
+]
+`;
+
+exports[`functionMocker keeps order 1`] = `
+EffectsLog [
+  fn1(
+  ),
+  fn2(
+  ),
+  fn3(
+  ),
+]
+`;
+
+exports[`functionMocker logs 1`] = `
+EffectsLog [
+  baz(
+    123,
+  ),
+]
+`;
+
+exports[`functionMocker mocks 1`] = `[Spy foo]`;
+
+exports[`functionMocker mocks 2`] = `[Spy bar]`;
+
+exports[`functionMocker returns value 1`] = `"returned value"`;
+
 exports[`todos addTodo 1`] = `
 EffectsLog [
   module.count =
