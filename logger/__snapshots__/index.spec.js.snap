@@ -10,10 +10,10 @@ Object {
 
 exports[`effectsLogger auto mocks objects, arrays and functions 1`] = `
 Object {
-  "array": Array [],
+  "array": [Spy array],
   "effects": [Function],
-  "function": [Function],
-  "object": Object {},
+  "function": [Spy function],
+  "object": [Spy object],
 }
 `;
 
@@ -29,7 +29,7 @@ Object {
 }
 `;
 
-exports[`effectsLogger has working functionMocker as effects.fn 1`] = `[Function]`;
+exports[`effectsLogger has working functionMocker as effects.fn 1`] = `[Spy foo]`;
 
 exports[`todos addTodo 1`] = `
 EffectsLog [

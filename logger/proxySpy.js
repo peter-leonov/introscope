@@ -7,7 +7,7 @@ const putToRegistry = (id, spy) => {
     return spy;
 };
 
-const getSpyName = spy => spiesRegistry.get(spy);
+export const getSpyName = spy => spiesRegistry.get(spy);
 
 const isSerializedSpy = Symbol('isSerializedSpy');
 
