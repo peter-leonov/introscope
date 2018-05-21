@@ -1,8 +1,4 @@
-const {
-    effectsLogSnapshotSerializer,
-} = require('./effectsLogSnapshotSerializer');
-
-global.expect.addSnapshotSerializer(effectsLogSnapshotSerializer);
+require('./jest');
 
 const introscope = (scope = {}) => {
     scope.log = (...args) => console.log(...args);
@@ -42,6 +38,29 @@ describe('effectsLogger', () => {
         }))({
             b: 2,
         });
+
+        expect(scope).toMatchSnapshot();
+    });
+
+    it('does not mock primitives', () => {
+        const scope = effectsLogger(() => ({
+            undefined: undefined,
+            null: null,
+            boolean: true,
+            number: 1,
+            string: 'foo',
+            symbol: Symbol('bar'),
+        }))({});
+
+        expect(scope).toMatchSnapshot();
+    });
+
+    it('auto mocks objects, arrays and functions', () => {
+        const scope = effectsLogger(() => ({
+            function: function foo() {},
+            object: { bar: true },
+            array: [1, 2, 3],
+        }))({});
 
         expect(scope).toMatchSnapshot();
     });

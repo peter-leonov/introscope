@@ -57,7 +57,11 @@ const effectsLogger = scopeFactory => (
                     ]}"`,
                 );
             }
-            scope[id] = proxySpy(logger, id, plan[id] || function() {});
+            scope[id] = proxySpy(
+                logger,
+                id,
+                plan[id] || (Array.isArray(scope[id]) ? [] : {}),
+            );
             continue;
         }
 
