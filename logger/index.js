@@ -26,10 +26,7 @@ const KEEP = {};
 const SPY = {};
 const WRAP = {};
 
-const effectsLogger = scopeFactory => (
-    plan,
-    { effectsName = 'effects', log = newLog() } = {},
-) => {
+const effectsLogger = scopeFactory => (plan, { log = newLog() } = {}) => {
     // to not polute the log with scope creation
     let moduleLoggerEnabled = false;
     let loggerEnabled = false;
@@ -97,27 +94,18 @@ const effectsLogger = scopeFactory => (
         }
     }
 
-    if (effectsName) {
-        if (effectsName in scope)
-            throw new Error(
-                `EffectsLogger: effects id "${effectsName}" is already defined in the scope. Please, provide another effects log name in the effectsLogger() config parameter.`,
-            );
+    const effects = () => {
+        // to stop loggin after call to effects()
+        // to prevent noise from Jest serializer iteration
+        loggerEnabled = false;
+        moduleLoggerEnabled = false;
 
-        const effects = () => {
-            // to stop loggin after call to effects()
-            // to prevent noise from Jest serializer iteration
-            loggerEnabled = false;
-            moduleLoggerEnabled = false;
-
-            return log;
-        };
-        effects.fn = functionMocker(log);
-        scope[effectsName] = effects;
-    }
+        return log;
+    };
 
     loggerEnabled = true;
     moduleLoggerEnabled = true;
-    return scope;
+    return { scope, effects, m: functionMocker(log) };
 };
 
 module.exports = {

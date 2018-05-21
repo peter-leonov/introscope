@@ -20,7 +20,10 @@ const effectsScope = effectsLogger(introscope);
 
 describe('todos', () => {
     it('addTodo', () => {
-        const { effects, addTodo } = effectsScope({
+        const {
+            scope: { addTodo },
+            effects,
+        } = effectsScope({
             newTodo: SPY,
             addTodo: KEEP,
         });
@@ -33,7 +36,7 @@ describe('todos', () => {
 
 describe('effectsLogger', () => {
     it('adds new props to scope', () => {
-        const scope = effectsLogger(() => ({
+        const { scope } = effectsLogger(() => ({
             a: 0,
         }))({
             b: 2,
@@ -43,7 +46,7 @@ describe('effectsLogger', () => {
     });
 
     it('does not mock primitives', () => {
-        const scope = effectsLogger(() => ({
+        const { scope } = effectsLogger(() => ({
             undefined: undefined,
             null: null,
             boolean: true,
@@ -56,7 +59,7 @@ describe('effectsLogger', () => {
     });
 
     it('auto mocks objects, arrays and functions', () => {
-        const scope = effectsLogger(() => ({
+        const { scope } = effectsLogger(() => ({
             function: function foo() {},
             object: { bar: true },
             array: [1, 2, 3],
@@ -66,9 +69,9 @@ describe('effectsLogger', () => {
     });
 
     it('has working functionMocker as effects.fn', () => {
-        const scope = effectsLogger(() => ({}))({});
+        const { m } = effectsLogger(() => ({}))({});
 
-        expect(scope.effects.fn.foo()).toMatchSnapshot();
+        expect(m.foo()).toMatchSnapshot();
     });
 });
 
