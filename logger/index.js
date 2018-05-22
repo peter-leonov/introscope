@@ -23,10 +23,13 @@ const functionMocker = (log = newLog()) =>
     });
 
 const KEEP = {};
+const MOCK = {};
 const SPY = {};
-const WRAP = {};
 
-const effectsLogger = scopeFactory => (plan, { log = newLog() } = {}) => {
+const effectsLogger = scopeFactory => (
+    plan,
+    { log = newLog(), defaultAction = MOCK } = {},
+) => {
     // to not polute the log with scope creation
     let moduleLoggerEnabled = false;
     let loggerEnabled = false;
@@ -40,19 +43,25 @@ const effectsLogger = scopeFactory => (plan, { log = newLog() } = {}) => {
     );
 
     for (const id in scope) {
-        if (plan[id] === KEEP) {
+        const action = id in plan ? plan[id] : defaultAction;
+
+        if (action === KEEP) {
             continue;
         }
 
-        if (plan[id] === SPY) {
+        if (action === SPY) {
             scope[id] = proxySpy(logger, id, scope[id]);
             continue;
+        }
+
+        if (action === MOCK) {
+            delete plan[id];
         }
 
         if (typeof scope[id] == 'function') {
             if (id in plan && typeof plan[id] != 'function') {
                 console.warn(
-                    `TestPlan: Spying on a function "${id}" with a non-function mock "${typeof plan[
+                    `TestPlan: Mocking a function "${id}" with a non-function mock "${typeof plan[
                         id
                     ]}"`,
                 );
@@ -64,7 +73,7 @@ const effectsLogger = scopeFactory => (plan, { log = newLog() } = {}) => {
         if (typeof scope[id] == 'object' && scope[id] !== null) {
             if (id in plan && typeof plan[id] != 'object') {
                 console.warn(
-                    `TestPlan: Spying on an object "${id}" with a non-object mock "${typeof plan[
+                    `TestPlan: Mocking an object "${id}" with a non-object mock "${typeof plan[
                         id
                     ]}"`,
                 );
@@ -111,6 +120,7 @@ const effectsLogger = scopeFactory => (plan, { log = newLog() } = {}) => {
 module.exports = {
     SPY,
     KEEP,
+    MOCK,
     effectsLogger,
     isEffectsLoggerLog,
     newLog,
