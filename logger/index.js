@@ -28,7 +28,7 @@ const SPY = {};
 
 const effectsLogger = scopeFactory => (
     plan,
-    { log = newLog(), defaultAction = MOCK } = {},
+    { log = newLog(), defaultAction = KEEP } = {},
 ) => {
     // to not polute the log with scope creation
     let moduleLoggerEnabled = false;

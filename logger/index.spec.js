@@ -26,6 +26,7 @@ describe('todos', () => {
             scope: { addTodo },
             effects,
         } = effectsScope({
+            log: MOCK,
             newTodo: SPY,
             addTodo: KEEP,
         });
@@ -55,16 +56,6 @@ describe('effectsLogger', () => {
             number: 1,
             string: 'foo',
             symbol: Symbol('bar'),
-        }))({});
-
-        expect(scope).toMatchSnapshot();
-    });
-
-    it('auto mocks objects, arrays and functions', () => {
-        const { scope } = effectsLogger(() => ({
-            function: function foo() {},
-            object: { bar: true },
-            array: [1, 2, 3],
         }))({});
 
         expect(scope).toMatchSnapshot();
@@ -145,6 +136,17 @@ describe('effectsLogger', () => {
 
             expect(typeof scope.foo).toBe('object');
             expect(getSpyTarget(scope.foo)).toBe(mock);
+        });
+
+        it('default action is KEEP', () => {
+            const foo = [];
+            const { scope } = effectsLogger(() => ({
+                foo,
+            }))({
+                // nothing
+            });
+
+            expect(scope.foo).toBe(foo);
         });
     });
 });

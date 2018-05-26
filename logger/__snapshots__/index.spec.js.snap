@@ -7,14 +7,6 @@ Object {
 }
 `;
 
-exports[`effectsLogger auto mocks objects, arrays and functions 1`] = `
-Object {
-  "array": Array [],
-  "function": [Function],
-  "object": Object {},
-}
-`;
-
 exports[`effectsLogger does not mock primitives 1`] = `
 Object {
   "boolean": true,
