@@ -232,11 +232,11 @@ function processProgram({ types: t }, programPath, programOpts) {
             // ignore types
         } else {
             console.warn(
-                path.buildCodeFrameError(
-                    'Cannot apply declarationToScope() to an anknown node.type: ' +
-                        path.node.type,
-                ),
+                'Cannot apply declarationToScope() to an anknown node.type: ' +
+                    path.node.type +
+                    '. Please, report to https://github.com/peter-leonov/introscope/issues/new',
             );
+            // console.error(path.buildCodeFrameError());
         }
     };
 
