@@ -9,6 +9,9 @@ const toPairs = obj => {
 const byType = type => node => node.type == type;
 const not = fn => (...args) => !fn(...args);
 
+const isInFlow = path =>
+    path && (path.isFlow() || !!path.findParent(path => path.isFlow()));
+
 // from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects
 const STANDARD_BUILTINS = [
     'Infinity',
@@ -200,7 +203,9 @@ function processProgram({ types: t }, programPath, programOpts) {
     };
 
     const declarationToScope = (path, identifier) => {
-        if (path.isNodeType('VariableDeclarator')) {
+        if (isInFlow(path)) {
+            // ignore types
+        } else if (path.isNodeType('VariableDeclarator')) {
             variableDeclaratorToScope(path, identifier);
         } else if (path.isNodeType('ClassDeclaration')) {
             classDeclarationToScope(path);
@@ -228,8 +233,6 @@ function processProgram({ types: t }, programPath, programOpts) {
             } else {
                 return path.get('local').node;
             }
-        } else if (path.isFlow()) {
-            // ignore types
         } else {
             console.warn(
                 'Cannot apply declarationToScope() to an anknown node.type: ' +
@@ -241,11 +244,10 @@ function processProgram({ types: t }, programPath, programOpts) {
     };
 
     const replaceReferenceWithScope = path => {
+        // do not touch flow types at all
+        if (isInFlow(path)) return;
         // ExportNamedDeclaration gets properly processed by replaceMutationWithScope()
         if (path.node.type == 'ExportNamedDeclaration') return;
-        // do not touch flow types at all
-        if (path.isNodeType('Flow') || path.parentPath.isNodeType('Flow'))
-            return;
         // ExportSpecifier gets removed by unwrapOrRemoveExports()
         if (path.parent.type == 'ExportSpecifier') return;
         if (path.findParent(path => path.isObjectPattern())) return;
@@ -261,6 +263,7 @@ function processProgram({ types: t }, programPath, programOpts) {
     };
 
     const replaceMutationWithScope = path => {
+        if (isInFlow(path)) return;
         if (path.node.type == 'AssignmentExpression') {
             const left = path.get('left');
             left.replaceWith(t.memberExpression(scopeId, left.node));
@@ -269,6 +272,7 @@ function processProgram({ types: t }, programPath, programOpts) {
 
     const bindingToScope = binding => {
         if (!binding) return;
+        if (isInFlow(binding.path)) return;
         binding.referencePaths.forEach(replaceReferenceWithScope);
         binding.constantViolations.forEach(replaceMutationWithScope);
         return declarationToScope(binding.path, binding.identifier);
