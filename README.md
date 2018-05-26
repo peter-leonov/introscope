@@ -30,6 +30,8 @@ Intoscope is yet another mocking tool, but with much higher level of control, is
 *   easy to use: optimized for Jest and provides well fitting tooling;
 *   simple to hack: just compose the factory function with you plugin.
 
+See what Introscope does in [playground](https://astexplorer.net/#/gist/cddaef7ef9db928352f79ce3612aef77/36aca24079d32d6ebae91e7fc993a400eea1725a).
+
 ## Description
 
 **TL;DR;** no need to export all the functions/variables of your module just to make it testable, Introscope does it automatically by changing the module source on the fly in testing environment.
