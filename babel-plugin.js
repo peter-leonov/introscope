@@ -73,6 +73,7 @@ const STANDARD_BUILTINS = [
     'WebAssembly',
     'arguments',
     'Buffer',
+    'console',
 ];
 
 const mergeIntoOptions = (options, opts) => {
