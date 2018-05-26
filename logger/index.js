@@ -54,7 +54,7 @@ const effectsLogger = scopeFactory => (
             continue;
         }
 
-        if (action === MOCK) {
+        if (plan[id] === MOCK) {
             delete plan[id];
         }
 
@@ -66,7 +66,11 @@ const effectsLogger = scopeFactory => (
                     ]}"`,
                 );
             }
-            scope[id] = proxySpy(logger, id, plan[id] || function() {});
+            scope[id] = proxySpy(
+                logger,
+                id,
+                plan[id] || function autoMock() {},
+            );
             continue;
         }
 

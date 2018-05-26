@@ -15,7 +15,9 @@ const introscope = (scope = {}) => {
     return scope;
 };
 
-import { effectsLogger, SPY, KEEP } from '.';
+import { effectsLogger, SPY, KEEP, MOCK } from '.';
+import { getSpyTarget } from './proxySpy';
+
 const effectsScope = effectsLogger(introscope);
 
 describe('todos', () => {
@@ -72,6 +74,78 @@ describe('effectsLogger', () => {
         const { m } = effectsLogger(() => ({}))({});
 
         expect(m.foo()).toMatchSnapshot();
+    });
+
+    describe('actions', () => {
+        it('KEEP', () => {
+            const foo = {};
+            const { scope } = effectsLogger(() => ({
+                foo,
+            }))({
+                foo: KEEP,
+            });
+
+            expect(scope.foo).toBe(foo);
+        });
+
+        it('MOCK function', () => {
+            const foo = () => {};
+            const { scope } = effectsLogger(() => ({
+                foo,
+            }))({
+                foo: MOCK,
+            });
+
+            expect(typeof scope.foo).toBe('function');
+            expect(scope.foo.name).toBe('autoMock');
+        });
+
+        it('MOCK object', () => {
+            const foo = {};
+            const { scope } = effectsLogger(() => ({
+                foo,
+            }))({
+                foo: MOCK,
+            });
+
+            expect(typeof scope.foo).toBe('object');
+        });
+
+        it('MOCK array', () => {
+            const foo = [];
+            const { scope } = effectsLogger(() => ({
+                foo,
+            }))({
+                foo: MOCK,
+            });
+
+            expect(typeof scope.foo).toBe('object');
+            expect(Array.isArray(scope.foo)).toBe(true);
+        });
+
+        it('SPY on scope value', () => {
+            const foo = () => {};
+            const { scope } = effectsLogger(() => ({
+                foo,
+            }))({
+                foo: SPY,
+            });
+
+            expect(typeof scope.foo).toBe('function');
+            expect(getSpyTarget(scope.foo)).toBe(foo);
+        });
+
+        it('any other value means SPY on that value', () => {
+            const mock = {};
+            const { scope } = effectsLogger(() => ({
+                foo: [],
+            }))({
+                foo: mock,
+            });
+
+            expect(typeof scope.foo).toBe('object');
+            expect(getSpyTarget(scope.foo)).toBe(mock);
+        });
     });
 });
 
