@@ -315,7 +315,7 @@ It's just a comment with leading `@introscope` substring followed by a JSON obje
 
 ## FAQ
 
-### Is ferformance good?
+### Is performance good?
 
 Yes. The babel plugin does use only one additional traverse. All the variables look up logic is done by Babel parser for free at compile time.
 
