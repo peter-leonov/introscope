@@ -143,10 +143,133 @@ describe('effectsLogger', () => {
             const { scope } = effectsLogger(() => ({
                 foo,
             }))({
-                // nothing
+                // no plan
             });
 
             expect(scope.foo).toBe(foo);
+        });
+
+        it('defaultAction = KEEP', () => {
+            const a = { a: 1 },
+                b = [1, 2, 3],
+                c = () => {};
+            const { scope } = effectsLogger(() => ({
+                a,
+                b,
+                c,
+            }))(
+                {
+                    // no plan
+                },
+                { defaultAction: KEEP },
+            );
+
+            expect(scope.a).toBe(a);
+            expect(getSpyTarget(scope.a)).toBe(undefined);
+            expect(scope.b).toBe(b);
+            expect(getSpyTarget(scope.b)).toBe(undefined);
+            expect(scope.c).toBe(c);
+            expect(getSpyTarget(scope.c)).toBe(undefined);
+            expect(scope).toMatchSnapshot();
+        });
+
+        it('defaultAction = MOCK', () => {
+            const a = { a: 1 },
+                b = [1, 2, 3],
+                c = () => {};
+            const { scope } = effectsLogger(() => ({
+                a,
+                b,
+                c,
+            }))(
+                {
+                    // no plan
+                },
+                { defaultAction: MOCK },
+            );
+
+            expect(scope.a).not.toBe(a);
+            expect(getSpyTarget(scope.a)).not.toBe(a);
+            expect(scope.b).not.toBe(b);
+            expect(getSpyTarget(scope.b)).not.toBe(b);
+            expect(scope.c).not.toBe(c);
+            expect(getSpyTarget(scope.c)).not.toBe(c);
+            expect(scope).toMatchSnapshot();
+        });
+
+        it('defaultAction = SPY', () => {
+            const a = { a: 1 },
+                b = [1, 2, 3],
+                c = () => {};
+            const { scope } = effectsLogger(() => ({
+                a,
+                b,
+                c,
+            }))(
+                {
+                    // no plan
+                },
+                { defaultAction: SPY },
+            );
+
+            expect(scope.a).not.toBe(a);
+            expect(getSpyTarget(scope.a)).toBe(a);
+            expect(scope.b).not.toBe(b);
+            expect(getSpyTarget(scope.b)).toBe(b);
+            expect(scope.c).not.toBe(c);
+            expect(getSpyTarget(scope.c)).toBe(c);
+            expect(scope).toMatchSnapshot();
+        });
+
+        it('plan overtakes defaultAction = KEEP', () => {
+            const a = { a: 1 };
+            const mock = [];
+            const { scope } = effectsLogger(() => ({
+                a,
+            }))(
+                {
+                    a: mock,
+                },
+                { defaultAction: KEEP },
+            );
+
+            expect(scope.a).not.toBe(a);
+            expect(scope.a).not.toBe(mock);
+            expect(getSpyTarget(scope.a)).toBe(mock);
+        });
+
+        it('plan overtakes defaultAction = MOCK', () => {
+            const a = { a: 1 };
+            const mock = [];
+            const { scope } = effectsLogger(() => ({
+                a,
+            }))(
+                {
+                    a: mock,
+                },
+                { defaultAction: SPY },
+            );
+
+            expect(scope.a).not.toBe(a);
+            expect(scope.a).not.toBe(mock);
+            expect(getSpyTarget(scope.a)).toBe(mock);
+        });
+
+        it('plan overtakes defaultAction = SPY', () => {
+            const a = { a: 1 };
+            const mock = [];
+            const { scope } = effectsLogger(() => ({
+                a,
+            }))(
+                {
+                    a: mock,
+                },
+                { defaultAction: SPY },
+            );
+
+            expect(scope.a).not.toBe(a);
+            expect(scope.a).not.toBe(mock);
+            expect(getSpyTarget(scope.a)).toBe(mock);
         });
     });
 });

@@ -1,5 +1,41 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`effectsLogger actions defaultAction = KEEP 1`] = `
+Object {
+  "a": Object {
+    "a": 1,
+  },
+  "b": Array [
+    1,
+    2,
+    3,
+  ],
+  "c": [Function],
+}
+`;
+
+exports[`effectsLogger actions defaultAction = MOCK 1`] = `
+Object {
+  "a": Object {},
+  "b": Array [],
+  "c": [Function],
+}
+`;
+
+exports[`effectsLogger actions defaultAction = SPY 1`] = `
+Object {
+  "a": Object {
+    "a": 1,
+  },
+  "b": Array [
+    1,
+    2,
+    3,
+  ],
+  "c": [Function],
+}
+`;
+
 exports[`effectsLogger adds new props to scope 1`] = `
 Object {
   "a": 0,
