@@ -154,7 +154,7 @@ describe('getTodos', () => {
         // here we save scope to a variable to tweak it
         const scope = apiScope();
         // mock the local module functions
-        // this part can be vastly automated, see EffectsLogger below
+        // this part can be vastly automated, see Effects Logger below
         scope.httpGet = jest.fn(() => Promise.resolve());
         scope.ensureOkStatus = jest.fn();
 
@@ -166,11 +166,11 @@ describe('getTodos', () => {
 });
 ```
 
-## EffectsLogger
+## Effects Logger
 
 _This module saves 90% of time you spend writing boiler plate code in tests._
 
-EffectsLogger is a nice helping tool which utilises the power of module scope introspection for side effects logging and DI mocking. It reduces the repetitive code in tests by auto mocking simple side effects and logging inputs and outputs of the tested function with support of a nicely looking custom Jest Snapshot serializer.
+Effects Logger is a nice helping tool which utilises the power of module scope introspection for side effects logging and DI mocking. It reduces the repetitive code in tests by auto mocking simple side effects and logging inputs and outputs of the tested function with support of a nicely looking custom Jest Snapshot serializer.
 
 Example:
 
@@ -398,3 +398,36 @@ const _module = {};
 new Function('module', transform(readFileSync('./module')))(_module);
 const moduleScopeFactory = _module.exports;
 ```
+
+## Prior art
+
+*   Built-in per file mocking in [Jest](https://facebook.github.io/jest/docs/en/manual-mocks.html).
+*   File based per module mocking for node modules: [rewire](https://github.com/jhnns/rewire).
+*   Babel plugin which does closely as Introscope by changing the module variables in-place instead of creating a factory function: [babel-plugin-rewire](https://github.com/speedskater/babel-plugin-rewire).
+*   Mock modules in RequireJS: [requirejs-mock](https://github.com/ValeriiVasin/requirejs-mock).
+
+## Changelog
+
+**1.3.1**
+
+Removed `effects` export with a wrapper object to reduce module namespace pollution.
+
+**1.3.1**
+
+Refactor Spies and auto Mocks in Effects Logger.
+
+**1.2.2**
+
+Add license.
+
+**1.2.1**
+
+Fix the AST Exporer example.
+
+**1.2.0**
+
+Add more default ignores and systax to remove ignores.
+
+**1.1.0**
+
+Added [Effects Logger](#effectslogger) to automate module side effects tracking.
