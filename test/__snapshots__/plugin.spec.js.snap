@@ -262,17 +262,17 @@ exports[`plugin export 1`] = `
 };"
 `;
 
-exports[`plugin flow 1`] = `
+exports[`plugin flow ignores imported types 1`] = `
 "
 import type { TypeImportedTypeShouldBeIgnored } from 'x';
 import { type ImportedTypeShouldBeIgnored } from 'y';
 export const introscope = function (_scope = {}) {
-            type LocalTypeShouldBeIgnored = ImportedTypeShouldBeIgnored | TypeImportedTypeShouldBeIgnored;
-            return _scope;
+                type LocalTypeShouldBeIgnored = ImportedTypeShouldBeIgnored | TypeImportedTypeShouldBeIgnored;
+                return _scope;
 };"
 `;
 
-exports[`plugin flow 2`] = `
+exports[`plugin flow ignores type aliases 1`] = `
 "export const introscope = function (_scope = {}) {
     _scope.typedFuntion = typedFuntion;
 
@@ -285,11 +285,11 @@ exports[`plugin flow 2`] = `
 };"
 `;
 
-exports[`plugin flow 3`] = `
+exports[`plugin flow understands opaque types 1`] = `
 "export const introscope = function (_scope = {}) {
-            opaque type OpaqueType = string;
-            let foo: OpaqueType = _scope.foo = \\"foo\\";
-            return _scope;
+                opaque type OpaqueType = string;
+                let foo: OpaqueType = _scope.foo = \\"foo\\";
+                return _scope;
 };"
 `;
 

@@ -103,25 +103,31 @@ describe('plugin', () => {
         `);
     });
 
-    it('flow', () => {
-        shoot(`
-            import type { TypeImportedTypeShouldBeIgnored } from 'x'
-            import { type ImportedTypeShouldBeIgnored } from 'y'
-            type LocalTypeShouldBeIgnored = ImportedTypeShouldBeIgnored | TypeImportedTypeShouldBeIgnored;
-        `);
+    describe('flow', () => {
+        it('ignores imported types', () => {
+            shoot(`
+                import type { TypeImportedTypeShouldBeIgnored } from 'x'
+                import { type ImportedTypeShouldBeIgnored } from 'y'
+                type LocalTypeShouldBeIgnored = ImportedTypeShouldBeIgnored | TypeImportedTypeShouldBeIgnored;
+            `);
+        });
 
-        shoot(`
-            type SomeType = number;
-            type SomeOtherType = SomeType;
-            function typedFuntion(x: SomeType): SomeOtherType {
-                let typedVar: SomeType | SomeOtherType = 123
-            }
-        `);
+        it('ignores type aliases', () => {
+            shoot(`
+                type SomeType = number;
+                type SomeOtherType = SomeType;
+                function typedFuntion(x: SomeType): SomeOtherType {
+                    let typedVar: SomeType | SomeOtherType = 123
+                }
+            `);
+        });
 
-        shoot(`
-            opaque type OpaqueType = string;
-            let foo: OpaqueType = "foo"
-        `);
+        it('understands opaque types', () => {
+            shoot(`
+                opaque type OpaqueType = string;
+                let foo: OpaqueType = "foo"
+            `);
+        });
     });
 });
 
