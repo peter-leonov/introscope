@@ -419,6 +419,11 @@ new Function('module', transform(readFileSync('./module')))(_module);
 const moduleScopeFactory = _module.exports;
 ```
 
+### Learn from these masters:
+
+https://github.com/babel/babel/blob/6.x/packages/babel-plugin-transform-es2015-modules-commonjs/src/index.js
+https://github.com/speedskater/babel-plugin-rewire/blob/master/src/babel-plugin-rewire.js
+
 ## Prior art
 
 *   Built-in per file mocking in [Jest](https://facebook.github.io/jest/docs/en/manual-mocks.html).
