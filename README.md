@@ -31,7 +31,7 @@ Intoscope is yet another mocking tool, but with much higher level of control, is
 *   type safe: full support for Flow in your tests;
 *   simple to hack: just compose the factory function with you plugin.
 
-See what Introscope does in [playground](https://astexplorer.net/#/gist/cddaef7ef9db928352f79ce3612aef77/36aca24079d32d6ebae91e7fc993a400eea1725a).
+See what Introscope does in [playground](https://astexplorer.net/#/gist/cddaef7ef9db928352f79ce3612aef77/4d6f06a3db399425b3b98bdf2fc142a12e06ba0d).
 
 ## Known issues
 
