@@ -442,6 +442,12 @@ https://github.com/speedskater/babel-plugin-rewire/blob/master/src/babel-plugin-
 
 ## Changelog
 
+**1.4.0**
+
+*   Add default action to Action Logger and set it to `KEEP` by default. This helps to just spy on default functions and values by default, and go crazy with setting default to mock only if needed.
+
+*   Fix Flow object property being treated by Babel as an identifier reference leading to parasite global variables.
+
 **1.3.1**
 
 Removed `effects` export with a wrapper object to reduce module namespace pollution.
