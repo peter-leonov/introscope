@@ -382,7 +382,32 @@ function processProgram({ types: t }, programPath, programOpts) {
     program(programPath) || test(programPath);
 }
 
+// remove once this gets merged: https://github.com/babel/babel/pull/8058
+const maybeMonkeyPatchIsReferenced = t => {
+    const isFixed = () => {
+        const node = t.identifier('a');
+        const parent = t.objectTypeProperty(node, t.numberTypeAnnotation());
+
+        return t.isReferenced(node, parent) === false;
+    };
+
+    if (isFixed()) return;
+
+    const isReferenced = t.isReferenced;
+    function isReferencedWrapper(node, parent) {
+        if (parent.type == 'ObjectTypeProperty') return parent.key !== node;
+
+        return isReferenced.apply(this, arguments);
+    }
+
+    Object.defineProperty(t, 'isReferenced', {
+        value: isReferencedWrapper,
+    });
+};
+
 module.exports = function(babel) {
+    maybeMonkeyPatchIsReferenced(babel.types);
+
     return {
         visitor: {
             Program(path, state) {
