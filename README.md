@@ -28,6 +28,7 @@ Intoscope is yet another mocking tool, but with much higher level of control, is
 *   intercept any top level variable definition: crucial for higher order functions;
 *   spy or mock with any tool: `introscope()` returns a plain JS object;
 *   easy to use: optimized for Jest and provides well fitting tooling;
+*   type safe: full support for Flow in your tests;
 *   simple to hack: just compose the factory function with you plugin.
 
 See what Introscope does in [playground](https://astexplorer.net/#/gist/cddaef7ef9db928352f79ce3612aef77/36aca24079d32d6ebae91e7fc993a400eea1725a).
@@ -253,7 +254,13 @@ How it works? It iterates over all the symbols (functions, locals, globals) in t
 
 ## Usage with Flow
 
-If it's ok for you to have `any` type in tests, then just export `introscope` from the tested module like this:
+### Support
+
+Introscope supports Flow out of the box and should transform a code with any Flow type annotations, but as far as you'd most likely remove type annotations before you run your code in node it's also a little performance and stability win if you put `transform-flow-strip-types` plugin or `babel-preset-flow` preset before `introscope/babel-plugin`.
+
+### Type safe tests
+
+Firstly, if you just want to shut up Flow and it's ok for you to have `any` type in tests, then just export `introscope` from the tested module like this:
 
 ```js
 export { introscope } from 'introscope';
