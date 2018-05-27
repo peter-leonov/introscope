@@ -23,8 +23,9 @@ test('increment', () => {
 
 Intoscope is yet another mocking tool, but with much higher level of control, isolation and performance:
 
-*   faster with a fresh module in each test: no need to reset mocks, spies, state, etc;
-*   faster module loading: remove any heavy import on the fly;
+*   easily test any stateful module: on every run you get a fresh module scope;
+*   test faster with a fresh module in each test: no need to reset mocks, spies, logs, etc;
+*   faster module loading: remove or mock any heavy import on the fly;
 *   intercept any top level variable definition: crucial for higher order functions;
 *   spy or mock with any tool: `introscope()` returns a plain JS object;
 *   easy to use: optimized for Jest and provides well fitting tooling;
