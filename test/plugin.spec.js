@@ -129,10 +129,11 @@ describe('plugin', () => {
             `);
         });
 
-        it('ignores object types', () => {
+        // TODO: enable once merged https://github.com/babel/babel/pull/8058
+        xit('ignores object types', () => {
             shoot(`
                 type A = {
-                    localVar: number,
+                    flowObjectProperty: number,
                 };
             `);
         });

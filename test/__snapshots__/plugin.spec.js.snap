@@ -275,7 +275,7 @@ export const introscope = function (_scope = {}) {
 exports[`plugin flow ignores object types 1`] = `
 "export const introscope = function (_scope = {}) {
     type A = {
-        localVar: number
+        flowObjectProperty: number
     };
     return _scope;
 };"
