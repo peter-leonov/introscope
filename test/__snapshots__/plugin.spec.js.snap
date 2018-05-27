@@ -272,6 +272,15 @@ export const introscope = function (_scope = {}) {
 };"
 `;
 
+exports[`plugin flow ignores object types 1`] = `
+"export const introscope = function (_scope = {}) {
+    type A = {
+        localVar: number
+    };
+    return _scope;
+};"
+`;
+
 exports[`plugin flow ignores type aliases 1`] = `
 "export const introscope = function (_scope = {}) {
     _scope.typedFuntion = typedFuntion;

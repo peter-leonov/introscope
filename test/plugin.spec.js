@@ -128,6 +128,14 @@ describe('plugin', () => {
                 let foo: OpaqueType = "foo"
             `);
         });
+
+        it('ignores object types', () => {
+            shoot(`
+                type A = {
+                    localVar: number,
+                };
+            `);
+        });
     });
 });
 
