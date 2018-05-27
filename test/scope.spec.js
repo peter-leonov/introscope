@@ -94,3 +94,26 @@ describe('scope / globals', () => {
         expect(scope.getGlobal().spiedGlobal).toBe(global);
     });
 });
+
+describe('closure', () => {
+    const { introscope } = r(`
+        const x = 10
+        const wrap = v => () => v
+        const wrapped1 = wrap(x)
+        const wrapped2 = wrap(x)
+    `);
+
+    it('ignores built-ins', () => {
+        const spyScope = {
+            set x(v) {
+                this.v = v;
+            },
+            get x() {
+                return (this.v *= 10);
+            },
+        };
+        const scope = introscope(spyScope);
+        expect(scope.wrapped1()).toBe(100);
+        expect(scope.wrapped2()).toBe(1000);
+    });
+});
