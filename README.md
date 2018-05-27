@@ -445,8 +445,8 @@ https://github.com/speedskater/babel-plugin-rewire/blob/master/src/babel-plugin-
 
 **1.4.1**
 
-*   Fully support spying on globals;
-*   Test dynamic scopes with getters and setters for even more creasy testing superpowers;
+*   Add a full support spying on globals;
+*   Test dynamic scopes with getters and setters for even more crazy testing superpowers;
 *   Add `global` to default ignores for less surprises.
 
 **1.4.0**
