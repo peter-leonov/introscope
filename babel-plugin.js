@@ -84,6 +84,7 @@ const STANDARD_BUILTINS = [
     'arguments',
     'Buffer',
     'console',
+    'global',
 ];
 
 const mergeIntoOptions = (options, opts) => {

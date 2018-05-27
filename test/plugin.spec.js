@@ -94,6 +94,11 @@ describe('plugin', () => {
 
         shoot(`
             function getGlobal () { return global };
+            // @introscope "ignore": ["-global"]
+        `);
+
+        shoot(`
+            function getGlobal () { return global };
         `);
     });
 

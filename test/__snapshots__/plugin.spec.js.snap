@@ -356,6 +356,20 @@ export const introscope = function (_scope = {}) {
             function getGlobal() {
                         return _scope.global;
             };
+            // @introscope \\"ignore\\": [\\"-global\\"]
+
+            return _scope;
+};"
+`;
+
+exports[`plugin globals 3`] = `
+"var _savedGlobal = global;
+export const introscope = function (_scope = {}) {
+            _scope.getGlobal = getGlobal;
+
+            function getGlobal() {
+                        return global;
+            };
             return _scope;
 };"
 `;

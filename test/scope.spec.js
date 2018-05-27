@@ -38,6 +38,8 @@ describe('scope / globals', () => {
         function getGlobal() {
             return global;
         }
+
+        // @introscope "ignore": ["-global"]
     `);
 
     it('ignores built-ins', () => {
