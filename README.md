@@ -61,7 +61,12 @@ Add the babel plugin to the project's babel configuration (most likely `.babelrc
 
 ```json
 {
-    "plugins": ["introscope/babel-plugin"]
+    "plugins": [
+        // here go all other plugins
+        // Please, try to keep Introscope's plugin the last one
+        // so that it's harsh transformations do not affect others.
+        "introscope/babel-plugin"
+    ]
 }
 ```
 
