@@ -12,6 +12,13 @@ const not = fn => (...args) => !fn(...args);
 const isInFlow = path =>
     path && (path.isFlow() || !!path.findParent(path => path.isFlow()));
 
+const getGlobal = () => {
+    if (typeof global != 'undefined') return global;
+    if (typeof window != 'undefined') return window;
+};
+
+const isInASTExpoler = () => /astexplorer[.]net/.test(getGlobal().location);
+
 // from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects
 const STANDARD_BUILTINS = [
     'Infinity',
@@ -97,7 +104,7 @@ const mergeIntoOptions = (options, opts) => {
 
 function processProgram({ types: t }, programPath, programOpts) {
     const options = {
-        enable: false,
+        enable: isInASTExpoler(),
         ignore: new Set(STANDARD_BUILTINS),
         instrumentImports: 'query',
         removeImports: false,
@@ -384,6 +391,10 @@ function processProgram({ types: t }, programPath, programOpts) {
 
 // remove once this gets merged: https://github.com/babel/babel/pull/8058
 const maybeMonkeyPatchIsReferenced = t => {
+    // astexplorer.net injects an infinite loop protection
+    // which uses stale date value: https://github.com/ForbesLindesay/halting-problem/blob/master/lib/runtime.js#L3
+    if (isInASTExpoler()) return;
+
     const isFixed = () => {
         const node = t.identifier('a');
         const parent = t.objectTypeProperty(node, t.numberTypeAnnotation());
