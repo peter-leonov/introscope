@@ -109,6 +109,7 @@ function processProgram({ types: t }, programPath, programOpts) {
         instrumentImports: 'query',
         removeImports: false,
         exportName: 'introscope',
+        es6export: true,
     };
 
     mergeIntoOptions(options, programOpts);
@@ -164,12 +165,29 @@ function processProgram({ types: t }, programPath, programOpts) {
         );
 
     const moduleExports = right =>
-        t.exportNamedDeclaration(
-            t.variableDeclaration('const', [
-                t.variableDeclarator(t.identifier(options.exportName), right),
-            ]),
-            [],
-        );
+        options.es6export
+            ? t.exportNamedDeclaration(
+                  t.variableDeclaration('const', [
+                      t.variableDeclarator(
+                          t.identifier(options.exportName),
+                          right,
+                      ),
+                  ]),
+                  [],
+              )
+            : t.expressionStatement(
+                  t.assignmentExpression(
+                      '=',
+                      t.memberExpression(
+                          t.memberExpression(
+                              t.identifier('module'),
+                              t.identifier('exports'),
+                          ),
+                          t.identifier(options.exportName),
+                      ),
+                      right,
+                  ),
+              );
 
     const variableDeclaratorToScope = (path, identifier) => {
         const idPath = path.get('id');
