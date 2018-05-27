@@ -1,6 +1,6 @@
 # Introscope
 
-A reflection (aka, monkey-patching) babel plugin for delightful unit testing of modern ES6 modules. It allows you to override imports, locals, globals and built-ins (like `Date` or `Math`) independently for each unit test by turning your nice ES6 module in a factory function on the fly.
+A reflection (aka, monkey-patching) babel plugin and a set of tools for delightful unit testing of modern ES6 modules. It allows you to override imports, locals, globals and built-ins (like `Date` or `Math`) independently for each unit test by instrumenting your ES6 modules on the fly.
 
 ```js
 // increment.js
@@ -41,7 +41,7 @@ Please, see a short ☺️ list here: [issues labeled as bug](https://github.com
 
 **TL;DR;** no need to export all the functions/variables of your module just to make it testable, Introscope does it automatically by changing the module source on the fly in testing environment.
 
-Introscope is (mostly) a babel plugin which allows a unit test code look inside an ES module without rewriting the code of the module. Introscope does it by transpiling the module source to a (factory) function which exposes the full internal scope of a module on the fly. This helps separate how the actual application consumes the module via it's exported API and how it gets tested using Introscope with all functions/variables visible, mockable and spy-able.
+Introscope is (mostly) a babel plugin which allows a unit test code look inside an ES module without rewriting the code of the module. Introscope does it by transpiling the module source to a factory function which exposes the full internal scope of a module on the fly. This helps separate how the actual application consumes the module via it's exported API and how it gets tested using Introscope with all functions/variables visible, mockable and spy-able.
 
 It has handy [integration with Jest](#usage) and [Proxy based robust spies](#effectslogger). Support for more popular unit testing tools to come soon.
 
