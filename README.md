@@ -33,6 +33,10 @@ Intoscope is yet another mocking tool, but with much higher level of control, is
 
 See what Introscope does in [playground](https://astexplorer.net/#/gist/cddaef7ef9db928352f79ce3612aef77/36aca24079d32d6ebae91e7fc993a400eea1725a).
 
+## Known issues
+
+Please, see a short ☺️ list here: [issues labeled as bug](https://github.com/peter-leonov/introscope/labels/bug)
+
 ## Description
 
 **TL;DR;** no need to export all the functions/variables of your module just to make it testable, Introscope does it automatically by changing the module source on the fly in testing environment.
