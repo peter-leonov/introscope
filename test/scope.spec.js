@@ -77,4 +77,20 @@ describe('scope / globals', () => {
         scope.global = 444;
         expect(scope.getGlobal()).toBe(444);
     });
+
+    it('is possible to spy on global', () => {
+        let spiedGlobal = null;
+        const spyScope = {
+            set global(v) {
+                spiedGlobal = v;
+            },
+            get global() {
+                return { spiedGlobal };
+            },
+        };
+        const scope = introscope(spyScope);
+        expect(spiedGlobal).toBe(global);
+        expect(scope.global.spiedGlobal).toBe(global);
+        expect(scope.getGlobal().spiedGlobal).toBe(global);
+    });
 });
