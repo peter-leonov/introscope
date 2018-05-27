@@ -109,13 +109,14 @@ function processProgram({ types: t }, programPath, programOpts) {
         instrumentImports: 'query',
         removeImports: false,
         exportName: 'introscope',
+        global: 'global',
         es6export: true,
     };
 
     mergeIntoOptions(options, programOpts);
 
     const scopeId = programPath.scope.generateUidIdentifier('scope');
-    const globalsId = programPath.scope.generateUidIdentifier('globals');
+    const savedGlobal = programPath.scope.generateUidIdentifier('savedGlobal');
 
     const scopeSet = (left, right) =>
         t.assignmentExpression('=', t.memberExpression(scopeId, left), right);
@@ -149,12 +150,8 @@ function processProgram({ types: t }, programPath, programOpts) {
     const saveGlobals = globalIds =>
         t.variableDeclaration('var', [
             t.variableDeclarator(
-                t.clone(globalsId),
-                t.objectExpression(
-                    globalIds.map(id =>
-                        t.objectProperty(t.clone(id), t.clone(id)),
-                    ),
-                ),
+                t.clone(savedGlobal),
+                t.identifier(options.global),
             ),
         ]);
 
@@ -172,7 +169,7 @@ function processProgram({ types: t }, programPath, programOpts) {
                                       t.variableDeclarator(
                                           t.clone(id),
                                           t.memberExpression(
-                                              globalsId,
+                                              t.clone(savedGlobal),
                                               t.clone(id),
                                           ),
                                       ),

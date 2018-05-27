@@ -4,6 +4,7 @@ exports[`example works 1`] = `
 "// api.js
 import httpGet from 'some-http-library';
 
+var _savedGlobal = global;
 export const introscope = function (_scope = {}) {
     _scope.httpGet = httpGet;
     const ensureOkStatus = _scope.ensureOkStatus = response => {
@@ -23,8 +24,10 @@ export const introscope = function (_scope = {}) {
 exports[`introscope import should stay 1`] = `
 "
 import { scope } from 'introscope';
+var _savedGlobal = global;
 export const introscope = function (_scope = {}) {
-    var constantA, functionB;
+    var constantA = _scope.constantA = _savedGlobal.constantA,
+        functionB = _scope.functionB = _savedGlobal.functionB;
     _scope.scope = scope;
     const introscope = _scope.introscope = (0, _scope.scope)({
         constantA: _scope.constantA,
@@ -41,7 +44,8 @@ let shouldBeUntouched = true;"
 `;
 
 exports[`options disable 2`] = `
-"export const introscope = function (_scope = {}) {
+"var _savedGlobal = global;
+export const introscope = function (_scope = {}) {
             // inline \\"disable\\" is ignored, use \\"enable\\": false
             // @introscope \\"disable\\": true
             let shouldBeTransformed = _scope.shouldBeTransformed = true;
@@ -50,7 +54,8 @@ exports[`options disable 2`] = `
 `;
 
 exports[`options disable 3`] = `
-"export const introscope = function (_scope = {}) {
+"var _savedGlobal = global;
+export const introscope = function (_scope = {}) {
             let shouldBeTransformed = _scope.shouldBeTransformed = true;
             return _scope;
 };"
@@ -67,7 +72,8 @@ var shouldBeUntouched = true;"
 `;
 
 exports[`options does nothing if NODE_ENV != "test" 3`] = `
-"export const introscope = function (_scope = {}) {
+"var _savedGlobal = global;
+export const introscope = function (_scope = {}) {
             var shouldBeTransformed = _scope.shouldBeTransformed = true;
             return _scope;
 };"
@@ -85,7 +91,8 @@ let shouldBeUntouched = true;"
 `;
 
 exports[`options enable 3`] = `
-"export const introscope = function (_scope = {}) {
+"var _savedGlobal = global;
+export const introscope = function (_scope = {}) {
             // @introscope \\"enable\\": true
             let shouldBeTransformed = _scope.shouldBeTransformed = true;
             return _scope;
@@ -95,6 +102,7 @@ exports[`options enable 3`] = `
 exports[`options exportName uses default 1`] = `
 "
 // no exportName
+var _savedGlobal = global;
 export const introscope = function (_scope = {}) {
                 return _scope;
 };"
@@ -103,6 +111,7 @@ export const introscope = function (_scope = {}) {
 exports[`options exportName works with magic comment 1`] = `
 "
 // @introscope \\"exportName\\": \\"microscope1\\"
+var _savedGlobal = global;
 export const microscope1 = function (_scope = {}) {
                 return _scope;
 };"
@@ -111,14 +120,16 @@ export const microscope1 = function (_scope = {}) {
 exports[`options exportName works with plugin options 1`] = `
 "
 // code
+var _savedGlobal = global;
 export const microscope = function (_scope = {}) {
                 return _scope;
 };"
 `;
 
 exports[`options ignore adds 1`] = `
-"export const introscope = function (_scope = {}) {
-    var deepGlobal;
+"var _savedGlobal = global;
+export const introscope = function (_scope = {}) {
+    var deepGlobal = _scope.deepGlobal = _savedGlobal.deepGlobal;
     _scope.throwError = throwError;
 
     // @introscope \\"ignore\\": [\\"localIgnored\\", \\"deepGlobalIgnored\\"]
@@ -133,7 +144,8 @@ exports[`options ignore adds 1`] = `
 `;
 
 exports[`options ignore id 1`] = `
-"export const introscope = function (_scope = {}) {
+"var _savedGlobal = global;
+export const introscope = function (_scope = {}) {
     // @introscope \\"ignore\\": []
     [Error, Date];
     return _scope;
@@ -141,15 +153,18 @@ exports[`options ignore id 1`] = `
 `;
 
 exports[`options ignore ignores builtins 1`] = `
-"export const introscope = function (_scope = {}) {
+"var _savedGlobal = global;
+export const introscope = function (_scope = {}) {
     [Infinity, NaN, undefined, null, eval, isFinite, isNaN, parseFloat, parseInt, decodeURI, decodeURIComponent, encodeURI, encodeURIComponent, escape, unescape, Object, Function, Boolean, Symbol, Error, EvalError, InternalError, RangeError, ReferenceError, SyntaxError, TypeError, URIError, Number, Math, Date, String, RegExp, Array, Int8Array, Uint8Array, Uint8ClampedArray, Int16Array, Uint16Array, Int32Array, Uint32Array, Float32Array, Float64Array, Map, Set, WeakMap, WeakSet, SIMD, ArrayBuffer, SharedArrayBuffer, Atomics, DataView, JSON, Promise, Generator, GeneratorFunction, AsyncFunction, Reflect, Proxy, Intl, WebAssembly, arguments, Buffer];
     return _scope;
 };"
 `;
 
 exports[`options ignore removes 1`] = `
-"export const introscope = function (_scope = {}) {
-    var Error, Date;
+"var _savedGlobal = global;
+export const introscope = function (_scope = {}) {
+    var Error = _scope.Error = _savedGlobal.Error,
+        Date = _scope.Date = _savedGlobal.Date;
 
     // @introscope \\"ignore\\": [\\"-Error\\", \\"-Date\\"]
     [_scope.Error, _scope.Date];
@@ -158,15 +173,17 @@ exports[`options ignore removes 1`] = `
 `;
 
 exports[`options removeImports 1`] = `
-"export const introscope = function (_scope = {}) {
-            _scope.sholdBeRemoved++;
+"var _savedGlobal = global;
+export const introscope = function (_scope = {}) {
+            _scope.sholdBeRemoved = 'this should not';
             return _scope;
 };"
 `;
 
 exports[`options removeImports 2`] = `
-"export const introscope = function (_scope = {}) {
-            _scope.sholdBeRemoved++;
+"var _savedGlobal = global;
+export const introscope = function (_scope = {}) {
+            _scope.sholdBeRemoved = 'this should not';
             // @introscope \\"removeImports\\": true
 
             return _scope;
@@ -176,7 +193,8 @@ exports[`options removeImports 2`] = `
 exports[`options removeImports 3`] = `
 "
 // @introscope \\"removeImports\\": false
-import sholdNotBeRemoved from 'some-module1';
+import sholdNotBeRemoved from 'some-module3';
+var _savedGlobal = global;
 export const introscope = function (_scope = {}) {
             _scope.sholdNotBeRemoved = sholdNotBeRemoved;
             _scope.sholdNotBeRemoved++;
@@ -187,7 +205,8 @@ export const introscope = function (_scope = {}) {
 exports[`options removeImports 4`] = `
 "
 // @introscope \\"removeImports\\": true
-import sholdNotBeRemoved from 'some-module1';
+import sholdNotBeRemoved from 'some-module4';
+var _savedGlobal = global;
 export const introscope = function (_scope = {}) {
             _scope.sholdNotBeRemoved = sholdNotBeRemoved;
             _scope.sholdNotBeRemoved++;
@@ -200,17 +219,18 @@ export const introscope = function (_scope = {}) {
 
 exports[`options removeImports 5`] = `
 "
-import sholdNotBeRemoved from 'some-module1';
+import sholdNotBeRemoved from 'some-module5';
+var _savedGlobal = global;
 export const introscope = function (_scope = {}) {
-            var defaultImport1;
             _scope.sholdNotBeRemoved = sholdNotBeRemoved;
-            _scope.defaultImport1++;
+            _scope.sholdNotBeRemoved++;
             return _scope;
 };"
 `;
 
 exports[`plugin assignments 1`] = `
-"export const introscope = function (_scope = {}) {
+"var _savedGlobal = global;
+export const introscope = function (_scope = {}) {
             let x;
             _scope.x++;
             _scope.x = 1;
@@ -219,7 +239,8 @@ exports[`plugin assignments 1`] = `
 `;
 
 exports[`plugin declarations 1`] = `
-"export const introscope = function (_scope = {}) {
+"var _savedGlobal = global;
+export const introscope = function (_scope = {}) {
             _scope.functionName = functionName;
 
             let noInitValue;
@@ -254,7 +275,8 @@ exports[`plugin declarations 1`] = `
 `;
 
 exports[`plugin export 1`] = `
-"export const introscope = function (_scope = {}) {
+"var _savedGlobal = global;
+export const introscope = function (_scope = {}) {
             let defaultExport, toBeNameExport1, toBeNameExport2;
             _scope.default = _scope.defaultExport;
             const namedSingleExport = _scope.namedSingleExport = 'namedSingleExportValue';
@@ -266,6 +288,7 @@ exports[`plugin flow ignores imported types 1`] = `
 "
 import type { TypeImportedTypeShouldBeIgnored } from 'x';
 import { type ImportedTypeShouldBeIgnored } from 'y';
+var _savedGlobal = global;
 export const introscope = function (_scope = {}) {
                 type LocalTypeShouldBeIgnored = ImportedTypeShouldBeIgnored | TypeImportedTypeShouldBeIgnored;
                 return _scope;
@@ -273,7 +296,8 @@ export const introscope = function (_scope = {}) {
 `;
 
 exports[`plugin flow ignores object types 1`] = `
-"export const introscope = function (_scope = {}) {
+"var _savedGlobal = global;
+export const introscope = function (_scope = {}) {
     type A = {
         flowObjectProperty: number
     };
@@ -282,7 +306,8 @@ exports[`plugin flow ignores object types 1`] = `
 `;
 
 exports[`plugin flow ignores type aliases 1`] = `
-"export const introscope = function (_scope = {}) {
+"var _savedGlobal = global;
+export const introscope = function (_scope = {}) {
     _scope.typedFuntion = typedFuntion;
 
     type SomeType = number;
@@ -295,7 +320,8 @@ exports[`plugin flow ignores type aliases 1`] = `
 `;
 
 exports[`plugin flow understands opaque types 1`] = `
-"export const introscope = function (_scope = {}) {
+"var _savedGlobal = global;
+export const introscope = function (_scope = {}) {
                 opaque type OpaqueType = string;
                 let foo: OpaqueType = _scope.foo = \\"foo\\";
                 return _scope;
@@ -303,8 +329,12 @@ exports[`plugin flow understands opaque types 1`] = `
 `;
 
 exports[`plugin globals 1`] = `
-"export const introscope = function (_scope = {}) {
-            var global2, global1, globalFunction, nestedGlobal1;
+"var _savedGlobal = global;
+export const introscope = function (_scope = {}) {
+            var global2 = _scope.global2 = _savedGlobal.global2,
+                global1 = _scope.global1 = _savedGlobal.global1,
+                globalFunction = _scope.globalFunction = _savedGlobal.globalFunction,
+                nestedGlobal1 = _scope.nestedGlobal1 = _savedGlobal.nestedGlobal1;
 
             let x = _scope.x = _scope.global1;
             _scope.global2 = 1;
@@ -313,6 +343,19 @@ exports[`plugin globals 1`] = `
             !function () {
                         return [_scope.nestedGlobal1, _scope.global2];
             }();
+            return _scope;
+};"
+`;
+
+exports[`plugin globals 2`] = `
+"var _savedGlobal = global;
+export const introscope = function (_scope = {}) {
+            var global = _scope.global = _savedGlobal.global;
+            _scope.getGlobal = getGlobal;
+
+            function getGlobal() {
+                        return _scope.global;
+            };
             return _scope;
 };"
 `;
@@ -326,6 +369,7 @@ import { namedImport1, namedImport2 } from 'some-module4';
 import { originalImportName as localImportName } from 'some-module5';
 import * as namespaceImport from 'some-module6';
 
+var _savedGlobal = global;
 export const introscope = function (_scope = {}) {
     _scope.defaultImport = defaultImport;
     _scope.singleNamedImport = singleNamedImport;
@@ -339,7 +383,8 @@ export const introscope = function (_scope = {}) {
 `;
 
 exports[`plugin import 2`] = `
-"export const introscope = function (_scope = {}) {
+"var _savedGlobal = global;
+export const introscope = function (_scope = {}) {
 
     [_scope.defaultImport, _scope.singleNamedImport, _scope.namedImport1, _scope.namedImport2, _scope.localImportName, _scope.namespaceImport];
     return _scope;
@@ -347,7 +392,8 @@ exports[`plugin import 2`] = `
 `;
 
 exports[`plugin references 1`] = `
-"export const introscope = function (_scope = {}) {
+"var _savedGlobal = global;
+export const introscope = function (_scope = {}) {
             let x;
             (0, _scope.x)();
             !function () {
@@ -362,7 +408,8 @@ exports[`plugin references 1`] = `
 `;
 
 exports[`plugin scopes 1`] = `
-"export const introscope = function (_scope = {}) {
+"var _savedGlobal = global;
+export const introscope = function (_scope = {}) {
             let x = _scope.x = true;
             for (let x = 0; x != 0; x++);
             {
@@ -383,6 +430,7 @@ import { otherNamedImport } from 'otheModule';
 
 // @introscope \\"enable\\": true
 
+var _savedGlobal = global;
 export const introscope = function (_scope = {}) {
     _scope.introscope = introscope;
     _scope.renamed = renamed;
@@ -396,6 +444,7 @@ exports[`test does normal transpilation if enabled in opts 1`] = `
 import { introscope } from 'directModule';
 import { introscope as renamed } from 'renamedModule';
 import { otherNamedImport } from 'otheModule';
+var _savedGlobal = global;
 export const introscope = function (_scope = {}) {
     _scope.introscope = introscope;
     _scope.renamed = renamed;

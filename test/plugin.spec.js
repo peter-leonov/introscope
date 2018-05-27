@@ -91,6 +91,10 @@ describe('plugin', () => {
             globalFunction();
             !function(){ return [nestedGlobal1, global2] }();
         `);
+
+        shoot(`
+            function getGlobal () { return global };
+        `);
     });
 
     it('export', () => {
@@ -162,32 +166,32 @@ describe('options', () => {
             // @introscope "removeImports": true
             // other comment
             import sholdBeRemoved from 'some-module1'
-            sholdBeRemoved++
+            sholdBeRemoved = 'this should not'
         `);
         shoot(`
             // @other-at-comment bla bla bla
-            import sholdBeRemoved from 'some-module1'
-            sholdBeRemoved++
+            import sholdBeRemoved from 'some-module2'
+            sholdBeRemoved = 'this should not'
             // @introscope "removeImports": true
         `);
         shoot(
             `
             // @introscope "removeImports": false
-            import sholdNotBeRemoved from 'some-module1'
+            import sholdNotBeRemoved from 'some-module3'
             sholdNotBeRemoved++
         `,
             { removeImports: true },
         );
         shoot(`
             // @introscope "removeImports": true
-            import sholdNotBeRemoved from 'some-module1'
+            import sholdNotBeRemoved from 'some-module4'
             sholdNotBeRemoved++
             // last takes precedence
             // @introscope "removeImports": false
         `);
         shoot(`
-            import sholdNotBeRemoved from 'some-module1'
-            defaultImport1++
+            import sholdNotBeRemoved from 'some-module5'
+            sholdNotBeRemoved++
         `);
     });
 
