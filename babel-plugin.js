@@ -115,6 +115,7 @@ function processProgram({ types: t }, programPath, programOpts) {
     mergeIntoOptions(options, programOpts);
 
     const scopeId = programPath.scope.generateUidIdentifier('scope');
+    const globalsId = programPath.scope.generateUidIdentifier('globals');
 
     const scopeSet = (left, right) =>
         t.assignmentExpression('=', t.memberExpression(scopeId, left), right);
@@ -145,6 +146,18 @@ function processProgram({ types: t }, programPath, programOpts) {
             t.objectProperty(identifier, identifier, undefined, true),
         );
 
+    const saveGlobals = globalIds =>
+        t.variableDeclaration('var', [
+            t.variableDeclarator(
+                t.clone(globalsId),
+                t.objectExpression(
+                    globalIds.map(id =>
+                        t.objectProperty(t.clone(id), t.clone(id)),
+                    ),
+                ),
+            ),
+        ]);
+
     const wrapInFunction = (globalIds, body) =>
         t.functionExpression(
             null,
@@ -155,7 +168,15 @@ function processProgram({ types: t }, programPath, programOpts) {
                         globalIds.length
                             ? t.variableDeclaration(
                                   'var',
-                                  globalIds.map(id => t.variableDeclarator(id)),
+                                  globalIds.map(id =>
+                                      t.variableDeclarator(
+                                          t.clone(id),
+                                          t.memberExpression(
+                                              globalsId,
+                                              t.clone(id),
+                                          ),
+                                      ),
+                                  ),
                               )
                             : [],
                     )
@@ -367,6 +388,7 @@ function processProgram({ types: t }, programPath, programOpts) {
             not(byType('ImportDeclaration')),
         );
 
+        path.pushContainer('body', saveGlobals(globalIds));
         path.pushContainer(
             'body',
             moduleExports(wrapInFunction(globalIds, bodyWithoutImports)),
