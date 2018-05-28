@@ -9,9 +9,6 @@ const toPairs = obj => {
 const byType = type => node => node.type == type;
 const not = fn => (...args) => !fn(...args);
 
-const isInFlow = path =>
-    path && (path.isFlow() || !!path.findParent(path => path.isFlow()));
-
 const getGlobal = () => {
     if (typeof global != 'undefined') return global;
     if (typeof window != 'undefined') return window;
@@ -247,7 +244,7 @@ function processProgram({ types: t }, programPath, programOpts) {
     };
 
     const declarationToScope = (path, identifier) => {
-        if (isInFlow(path)) {
+        if (path.isFlow()) {
             // ignore types
         } else if (path.isNodeType('VariableDeclarator')) {
             variableDeclaratorToScope(path, identifier);
@@ -289,7 +286,7 @@ function processProgram({ types: t }, programPath, programOpts) {
 
     const replaceReferenceWithScope = path => {
         // do not touch flow types at all
-        if (isInFlow(path)) return;
+        if (path.isFlow()) return;
         // ExportNamedDeclaration gets properly processed by replaceMutationWithScope()
         if (path.node.type == 'ExportNamedDeclaration') return;
         // ExportSpecifier gets removed by unwrapOrRemoveExports()
@@ -307,7 +304,7 @@ function processProgram({ types: t }, programPath, programOpts) {
     };
 
     const replaceMutationWithScope = path => {
-        if (isInFlow(path)) return;
+        if (path.isFlow()) return;
         if (path.node.type == 'AssignmentExpression') {
             const left = path.get('left');
             left.replaceWith(t.memberExpression(scopeId, left.node));
@@ -316,7 +313,6 @@ function processProgram({ types: t }, programPath, programOpts) {
 
     const bindingToScope = binding => {
         if (!binding) return;
-        if (isInFlow(binding.path)) return;
         binding.referencePaths.forEach(replaceReferenceWithScope);
         binding.constantViolations.forEach(replaceMutationWithScope);
         return declarationToScope(binding.path, binding.identifier);

@@ -4,10 +4,12 @@ import plugin from '../babel-plugin';
 const shoot = (code, opts = {}) =>
     expect(
         transform(code, {
+            // passPerPreset: true,
             sourceType: 'module',
             plugins: [
                 'syntax-flow',
                 'syntax-object-rest-spread',
+                'transform-flow-strip-types',
                 [plugin, { enable: true, ...opts }],
             ],
         }).code,
@@ -143,6 +145,12 @@ describe('plugin', () => {
                 type A = {
                     flowObjectProperty: number,
                 };
+            `);
+        });
+
+        it('breaks out of a type cast node', () => {
+            shoot(`
+            (x(): number);
             `);
         });
     });

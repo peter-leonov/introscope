@@ -284,13 +284,21 @@ export const introscope = function (_scope = {}) {
 };"
 `;
 
+exports[`plugin flow breaks out of a type cast node 1`] = `
+"var _savedGlobal = global;
+export const introscope = function (_scope = {}) {
+            var x = _scope.x = _savedGlobal.x;
+
+            (0, _scope.x)();
+            return _scope;
+};"
+`;
+
 exports[`plugin flow ignores imported types 1`] = `
 "
-import type { TypeImportedTypeShouldBeIgnored } from 'x';
-import { type ImportedTypeShouldBeIgnored } from 'y';
+import 'y';
 var _savedGlobal = global;
 export const introscope = function (_scope = {}) {
-                type LocalTypeShouldBeIgnored = ImportedTypeShouldBeIgnored | TypeImportedTypeShouldBeIgnored;
                 return _scope;
 };"
 `;
@@ -298,9 +306,6 @@ export const introscope = function (_scope = {}) {
 exports[`plugin flow ignores object types 1`] = `
 "var _savedGlobal = global;
 export const introscope = function (_scope = {}) {
-    type A = {
-        flowObjectProperty: number
-    };
     return _scope;
 };"
 `;
@@ -310,10 +315,8 @@ exports[`plugin flow ignores type aliases 1`] = `
 export const introscope = function (_scope = {}) {
     _scope.typedFuntion = typedFuntion;
 
-    type SomeType = number;
-    type SomeOtherType = SomeType;
-    function typedFuntion(x: SomeType): SomeOtherType {
-        let typedVar: SomeType | SomeOtherType = 123;
+    function typedFuntion(x) {
+        let typedVar = 123;
     }
     return _scope;
 };"
@@ -322,8 +325,7 @@ export const introscope = function (_scope = {}) {
 exports[`plugin flow understands opaque types 1`] = `
 "var _savedGlobal = global;
 export const introscope = function (_scope = {}) {
-                opaque type OpaqueType = string;
-                let foo: OpaqueType = _scope.foo = \\"foo\\";
+                let foo = _scope.foo = \\"foo\\";
                 return _scope;
 };"
 `;

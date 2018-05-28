@@ -264,9 +264,21 @@ How it works? It iterates over all the symbols (functions, locals, globals) in t
 
 ## Usage with Flow
 
-### Support
+### Configure Babel
 
-Introscope supports Flow out of the box and should transform a code with any Flow type annotations, but as far as you'd most likely remove type annotations before you run your code in node it's also a little performance and stability win if you put `transform-flow-strip-types` plugin or `babel-preset-flow` preset before `introscope/babel-plugin`.
+For Introscope to work correctly it needs Flow type annotaions to be stripped, as we normally do to run code in node. To do so just put `syntax-flow` and `transform-flow-strip-types` plugins before `introscope/babel-plugin`:
+
+```js
+{
+    "plugins": [
+        "syntax-flow",
+        "transform-flow-strip-types",
+        "introscope/babel-plugin"
+    ]
+}
+```
+
+Same should work for TypeScript once Babel 7 comes out.
 
 ### Type safe tests
 
