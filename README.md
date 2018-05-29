@@ -462,6 +462,11 @@ https://github.com/speedskater/babel-plugin-rewire/blob/master/src/babel-plugin-
 
 ## Changelog
 
+**1.4.2**
+
+*   Require stripping Flow types for stability
+*   Support JSX
+
 **1.4.1**
 
 *   Add a full support spying on globals;
