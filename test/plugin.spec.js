@@ -7,11 +7,11 @@ const shoot = (code, opts = {}) =>
             // passPerPreset: true,
             sourceType: 'module',
             plugins: [
+                [plugin, { enable: true, ...opts }],
+                'transform-flow-strip-types',
                 'syntax-jsx',
                 'syntax-flow',
                 'syntax-object-rest-spread',
-                'transform-flow-strip-types',
-                [plugin, { enable: true, ...opts }],
             ],
         }).code,
     ).toMatchSnapshot();

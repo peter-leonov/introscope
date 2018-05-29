@@ -62,8 +62,11 @@ Add the babel plugin to the project's babel configuration (most likely `.babelrc
 
 ```json
 {
+    // presets get run after plugins, and it's ok as introscope
+    // understands all the new fancy stuff enabled in these presets
+    "presets": ["react", "es2015", "stage-3"],
     "plugins": [
-        // here go all other plugins
+        // ...here go all other plugins...
         // Please, try to keep Introscope's plugin the last one
         // so that it's harsh transformations do not affect others.
         "introscope/babel-plugin"
