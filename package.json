@@ -1,6 +1,6 @@
 {
     "name": "introscope",
-    "version": "1.4.1",
+    "version": "1.4.2",
     "description": "Automated mocking and spying tool for delightful ES6 modules testing",
     "repository": "github:peter-leonov/introscope",
     "author": "Peter Leonov",
