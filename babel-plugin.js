@@ -153,6 +153,12 @@ function processProgram({ types: t }, programPath, programOpts) {
             ),
         ]);
 
+    const jsxIdToId = node => {
+        const id = t.clone(node);
+        id.type = 'Identifier';
+        return id;
+    };
+
     const wrapInFunction = (globalIds, body) =>
         t.functionExpression(
             null,
@@ -165,10 +171,10 @@ function processProgram({ types: t }, programPath, programOpts) {
                                   'var',
                                   globalIds.map(id =>
                                       t.variableDeclarator(
-                                          t.clone(id),
+                                          jsxIdToId(id),
                                           t.memberExpression(
                                               t.clone(savedGlobal),
-                                              t.clone(id),
+                                              jsxIdToId(id),
                                           ),
                                       ),
                                   ),
@@ -292,6 +298,15 @@ function processProgram({ types: t }, programPath, programOpts) {
         // ExportSpecifier gets removed by unwrapOrRemoveExports()
         if (path.parent.type == 'ExportSpecifier') return;
         if (path.findParent(path => path.isObjectPattern())) return;
+
+        if (path.isNodeType('JSXIdentifier')) {
+            const scoped = t.jSXMemberExpression(
+                t.jSXIdentifier(scopeId.name),
+                path.node,
+            );
+            path.replaceWith(scoped);
+            return;
+        }
 
         const scoped = t.memberExpression(scopeId, path.node);
         if (path.parent && path.parent.type == 'CallExpression') {

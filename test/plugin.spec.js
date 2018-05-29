@@ -7,6 +7,7 @@ const shoot = (code, opts = {}) =>
             // passPerPreset: true,
             sourceType: 'module',
             plugins: [
+                'syntax-jsx',
                 'syntax-flow',
                 'syntax-object-rest-spread',
                 'transform-flow-strip-types',
@@ -112,6 +113,41 @@ describe('plugin', () => {
             export { toBeNameExport1, toBeNameExport2 }
             export * from 'some-module'
         `);
+    });
+
+    describe('JSX', () => {
+        it('components', () => {
+            shoot(`
+                let x = <Foo />
+            `);
+
+            shoot(`
+                let x = <Foo.Bar />
+            `);
+
+            shoot(`
+                const Baz = () => {};
+                let x = <Baz />
+            `);
+
+            shoot(`
+                let x = <Baz {...foo} />
+            `);
+
+            shoot(`
+                let x = <div/>
+            `);
+
+            shoot(`
+                let x = <a><b><X><Y/></X></b></a>
+            `);
+        });
+
+        it('tags', () => {
+            shoot(`
+                let x = <Foo />
+            `);
+        });
     });
 
     describe('flow', () => {

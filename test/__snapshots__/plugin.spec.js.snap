@@ -228,6 +228,75 @@ export const introscope = function (_scope = {}) {
 };"
 `;
 
+exports[`plugin JSX components 1`] = `
+"var _savedGlobal = global;
+export const introscope = function (_scope = {}) {
+                var Foo = _scope.Foo = _savedGlobal.Foo;
+
+                let x = _scope.x = <_scope.Foo />;
+                return _scope;
+};"
+`;
+
+exports[`plugin JSX components 2`] = `
+"var _savedGlobal = global;
+export const introscope = function (_scope = {}) {
+                var Foo = _scope.Foo = _savedGlobal.Foo;
+
+                let x = _scope.x = <_scope.Foo.Bar />;
+                return _scope;
+};"
+`;
+
+exports[`plugin JSX components 3`] = `
+"var _savedGlobal = global;
+export const introscope = function (_scope = {}) {
+                const Baz = _scope.Baz = () => {};
+                let x = _scope.x = <_scope.Baz />;
+                return _scope;
+};"
+`;
+
+exports[`plugin JSX components 4`] = `
+"var _savedGlobal = global;
+export const introscope = function (_scope = {}) {
+                var Baz = _scope.Baz = _savedGlobal.Baz,
+                    foo = _scope.foo = _savedGlobal.foo;
+
+                let x = _scope.x = <_scope.Baz {..._scope.foo} />;
+                return _scope;
+};"
+`;
+
+exports[`plugin JSX components 5`] = `
+"var _savedGlobal = global;
+export const introscope = function (_scope = {}) {
+                let x = _scope.x = <div />;
+                return _scope;
+};"
+`;
+
+exports[`plugin JSX components 6`] = `
+"var _savedGlobal = global;
+export const introscope = function (_scope = {}) {
+                var X = _scope.X = _savedGlobal.X,
+                    Y = _scope.Y = _savedGlobal.Y;
+
+                let x = _scope.x = <a><b><_scope.X><_scope.Y /></_scope.X></b></a>;
+                return _scope;
+};"
+`;
+
+exports[`plugin JSX tags 1`] = `
+"var _savedGlobal = global;
+export const introscope = function (_scope = {}) {
+                var Foo = _scope.Foo = _savedGlobal.Foo;
+
+                let x = _scope.x = <_scope.Foo />;
+                return _scope;
+};"
+`;
+
 exports[`plugin assignments 1`] = `
 "var _savedGlobal = global;
 export const introscope = function (_scope = {}) {
