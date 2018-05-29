@@ -82,6 +82,7 @@ const STANDARD_BUILTINS = [
     'Buffer',
     'console',
     'global',
+    '_asyncToGenerator',
 ];
 
 const mergeIntoOptions = (options, opts) => {
