@@ -1,0 +1,16 @@
+[ignore]
+.*/node_modules/.*
+.*/.history/.*
+
+[include]
+
+[libs]
+node_modules/introscope/flow-typed
+
+[lints]
+all=error
+
+[options]
+module.use_strict=true
+
+[strict]
