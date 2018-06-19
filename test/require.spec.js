@@ -1,5 +1,3 @@
-import { resolve } from 'path';
-
 const introscope = path => require(path + '?introscope').introscope;
 
 describe('require.introscope', () => {
