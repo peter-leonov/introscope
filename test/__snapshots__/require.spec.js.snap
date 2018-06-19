@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`source maps stack trace is correct 1`] = `
-"TypeError: Cannot read property 'nonExisting' of undefined
-    at Object._scope.throws (__dirname/error.js:5:29)
+"Error: foo
+    at Object._scope.throws (__dirname/error.js:6:11)
     at "
 `;
