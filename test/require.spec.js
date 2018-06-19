@@ -67,7 +67,7 @@ describe('source maps', () => {
                 const introscopedPart = err.stack.split(__filename)[0];
 
                 expect(
-                    introscopedPart.split(__dirname).join('__dirname')
+                    introscopedPart.split(__dirname).join('__dirname'),
                 ).toMatchSnapshot();
                 throw err;
             }

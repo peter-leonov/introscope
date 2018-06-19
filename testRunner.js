@@ -49,7 +49,7 @@ wrap(
         function() {
             arguments[0] = removeQuery(arguments[0]);
             return inner.apply(this, arguments);
-        }
+        },
 );
 
 wrap(
@@ -65,7 +65,7 @@ wrap(
                 arguments[0] = clearPath;
                 return inner.apply(this, arguments) + '?' + query;
             }
-        }
+        },
 );
 
 Transformer.createTransformer = undefined;
@@ -83,7 +83,7 @@ wrap(
             arguments[1] = removeQuery(arguments[1]);
 
             return inner.apply(this, arguments);
-        }
+        },
 );
 
 wrap(
@@ -104,7 +104,7 @@ wrap(
                 this._cacheFS[modulePath] = fs.readFileSync(realPath, 'utf8');
             }
             return inner.apply(this, arguments);
-        }
+        },
 );
 
 module.exports = require('jest-jasmine2');
