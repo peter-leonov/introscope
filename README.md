@@ -23,14 +23,14 @@ test('increment', () => {
 
 Intoscope is yet another mocking tool, but with much higher level of control, isolation and performance:
 
-*   easily test any stateful module: on every run you get a fresh module scope;
-*   test faster with a fresh module in each test: no need to reset mocks, spies, logs, etc;
-*   faster module loading: remove or mock any heavy import on the fly;
-*   intercept any top level variable definition: crucial for higher order functions;
-*   spy or mock with any tool: `introscope()` returns a plain JS object;
-*   easy to use: optimized for Jest and provides well fitting tooling;
-*   type safe: full support for Flow in your tests;
-*   simple to hack: just compose the factory function with you plugin.
+-   easily test any stateful module: on every run you get a fresh module scope;
+-   test faster with a fresh module in each test: no need to reset mocks, spies, logs, etc;
+-   faster module loading: remove or mock any heavy import on the fly;
+-   intercept any top level variable definition: crucial for higher order functions;
+-   spy or mock with any tool: `introscope()` returns a plain JS object;
+-   easy to use: optimized for Jest and provides well fitting tooling;
+-   type safe: full support for Flow in your tests;
+-   simple to hack: just compose the factory function with you plugin.
 
 See what Introscope does in [playground](https://astexplorer.net/#/gist/cddaef7ef9db928352f79ce3612aef77/4d6f06a3db399425b3b98bdf2fc142a12e06ba0d).
 
@@ -354,13 +354,13 @@ Introscope can be configured using babel plugin config and / or magic comments. 
 
 It's just a comment with leading `@introscope` substring followed by a JSON object body (without wrapping curly braces). Here is a list of avalable configuration options:
 
-*   `enable = true | false`: per file enable / disable transpilation; if `enable` equals `false` Introscope will only parse magic comments and stop, so it's quite a good tool for performance optimisation on super large files;
-*   `removeImports = true | false`: instucts introscope to remove all import diretives though keeping the local scope variables for the imports so a test can mock them;
-*   `ignore = [id1, id2, id3...]`: a list of IDs (functions, variables, imports) introscope should not touch; this means if there was a local constant variable with name `foo` and the magic comment has `ignore: ['foo']` than Introscope will not transform this variable to a scope property and the test could not change or mock the value; this is default for such globals like `Date`, `Math`, `Array` as testers normally do not care of those, but can be overritten with `-` prefix: `// @introscope "ignore": ["-Date"]`, this will remove `Date` from ignore list and make it avalable for mocking/spying.
+-   `enable = true | false`: per file enable / disable transpilation; if `enable` equals `false` Introscope will only parse magic comments and stop, so it's quite a good tool for performance optimisation on super large files;
+-   `removeImports = true | false`: instucts introscope to remove all import diretives though keeping the local scope variables for the imports so a test can mock them;
+-   `ignore = [id1, id2, id3...]`: a list of IDs (functions, variables, imports) introscope should not touch; this means if there was a local constant variable with name `foo` and the magic comment has `ignore: ['foo']` than Introscope will not transform this variable to a scope property and the test could not change or mock the value; this is default for such globals like `Date`, `Math`, `Array` as testers normally do not care of those, but can be overritten with `-` prefix: `// @introscope "ignore": ["-Date"]`, this will remove `Date` from ignore list and make it avalable for mocking/spying.
 
 ## Babel plugin options
 
-*   `disable = true | false`: disables plugin completely, useful in complex `.babelrc.js` configurations to make sure Introscope does not alter a build for some very specific environment;
+-   `disable = true | false`: disables plugin completely, useful in complex `.babelrc.js` configurations to make sure Introscope does not alter a build for some very specific environment;
 
 ## FAQ
 
@@ -455,29 +455,29 @@ https://github.com/speedskater/babel-plugin-rewire/blob/master/src/babel-plugin-
 
 ## Prior art
 
-*   Built-in per file mocking in [Jest](https://facebook.github.io/jest/docs/en/manual-mocks.html).
-*   File based per module mocking for node modules: [rewire](https://github.com/jhnns/rewire).
-*   Babel plugin which does closely as Introscope by changing the module variables in-place instead of creating a factory function: [babel-plugin-rewire](https://github.com/speedskater/babel-plugin-rewire).
-*   Mock modules in RequireJS: [requirejs-mock](https://github.com/ValeriiVasin/requirejs-mock).
+-   Built-in per file mocking in [Jest](https://facebook.github.io/jest/docs/en/manual-mocks.html).
+-   File based per module mocking for node modules: [rewire](https://github.com/jhnns/rewire).
+-   Babel plugin which does closely as Introscope by changing the module variables in-place instead of creating a factory function: [babel-plugin-rewire](https://github.com/speedskater/babel-plugin-rewire).
+-   Mock modules in RequireJS: [requirejs-mock](https://github.com/ValeriiVasin/requirejs-mock).
 
 ## Changelog
 
 **1.4.2**
 
-*   Require stripping Flow types for stability
-*   Support JSX
+-   Require stripping Flow types for stability
+-   Support JSX
 
 **1.4.1**
 
-*   Add a full support spying on globals;
-*   Test dynamic scopes with getters and setters for even more crazy testing superpowers;
-*   Add `global` to default ignores for less surprises.
+-   Add a full support spying on globals;
+-   Test dynamic scopes with getters and setters for even more crazy testing superpowers;
+-   Add `global` to default ignores for less surprises.
 
 **1.4.0**
 
-*   Add default action to Action Logger and set it to `KEEP` by default. This helps to just spy on default functions and values by default, and go crazy with setting default to mock only if needed.
+-   Add default action to Action Logger and set it to `KEEP` by default. This helps to just spy on default functions and values by default, and go crazy with setting default to mock only if needed.
 
-*   Fix Flow object property being treated by Babel as an identifier reference leading to parasite global variables.
+-   Fix Flow object property being treated by Babel as an identifier reference leading to parasite global variables.
 
 **1.3.1**
 
