@@ -1,0 +1,26 @@
+{
+    "name": "introscope-example",
+    "version": "1.0.4",
+    "repository": "github:peter-leonov/introscope",
+    "author": "Peter Leonov",
+    "license": "MIT",
+    "scripts": {
+        "test": "jest",
+        "check": "jest && flow check"
+    },
+    "devDependencies": {
+        "babel-cli": "^6.26.0",
+        "babel-core": "^6.26.0",
+        "babel-jest": "^22.4.1",
+        "babel-plugin-syntax-object-rest-spread": "^6.13.0",
+        "babel-preset-env": "^1.6.1",
+        "babel-preset-flow": "^6.23.0",
+        "flow-bin": "^0.68.0",
+        "introscope": "^1.4.1",
+        "jest": "^22.4.2",
+        "regenerator-runtime": "^0.11.1"
+    },
+    "dependencies": {
+        "flow-typed": "^2.4.0"
+    }
+}
