@@ -1,4 +1,9 @@
-import { showLoadingSpinner, trackEvent, checkForm, post, hideLoadingSpinner } from './lib';
+import { trackEvent, post } from './lib';
+
+const showLoadingSpinner = () => { /* bla-bla */ };
+const hideLoadingSpinner = () => { /* bla-bla */ };
+
+const checkForm = fields => !!fields.title;
 
 export const createTodoFactory = async (
     _checkForm: typeof checkForm,

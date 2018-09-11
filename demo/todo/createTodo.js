@@ -1,4 +1,7 @@
-import { showLoadingSpinner, trackEvent, post, hideLoadingSpinner } from './lib';
+import { trackEvent, post } from './lib';
+
+const showLoadingSpinner = () => { /* bla-bla */ };
+const hideLoadingSpinner = () => { /* bla-bla */ };
 
 const checkForm = fields => !!fields.title;
 
