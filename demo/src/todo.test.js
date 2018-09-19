@@ -1,5 +1,5 @@
 import { effectsLogger, KEEP, MOCK } from 'introscope/logger'
-import { introscope } from './createTodo'
+import { introscope } from './todo'
 
 const logger = effectsLogger(introscope);
 
