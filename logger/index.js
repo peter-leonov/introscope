@@ -3,7 +3,7 @@ const { proxySpy } = require('./proxySpy');
 const effectsLoggerLogRegistry = new WeakMap();
 const isEffectsLoggerLog = log => effectsLoggerLogRegistry.has(log);
 
-const newLog = () => {
+export const newLog = () => {
     const log = [];
     effectsLoggerLogRegistry.set(log, true);
     return log;
@@ -28,7 +28,7 @@ const SPY = {};
 
 const effectsLogger = scopeFactory => (
     plan,
-    { log = newLog(), defaultAction = KEEP } = {},
+    { log = newLog(), defaultAction = KEEP, recorder = {} } = {},
 ) => {
     // to not polute the log with scope creation
     let moduleLoggerEnabled = false;
@@ -41,6 +41,9 @@ const effectsLogger = scopeFactory => (
     const scope = scopeFactory(
         proxySpy(moduleLogger, 'module', Object.create(null)),
     );
+
+    // it's a hack for presentation :)
+    logger.recorder = recorder;
 
     for (const id in scope) {
         const action = id in plan ? plan[id] : defaultAction;

@@ -57,38 +57,58 @@ const proxySpyFactory = ({ serialize }) => {
                     if (that === undefined) {
                         logger(['call', id, serialize(args)]);
 
-                        if (logger.results) {
-                            if (logger.results.length === 0) {
+                        const recorder = logger.recorder || {};
+
+                        if (recorder.playback) {
+                            if (recorder.results.length === 0) {
                                 throw new Error(
                                     `not enough stored results for mock with name "${id}"`,
                                 );
                             } else {
-                                return deep('call', logger.results.shift());
+                                const result = recorder.results.shift();
+                                if (result[0] !== id) {
+                                    throw new Error(
+                                        `mismatching call order, wrong call with name "${
+                                            result[0]
+                                        }" for mock with name "${id}"`,
+                                    );
+                                }
+                                return deep('call', result[1]);
                             }
                         }
 
                         const result = Reflect.apply(...arguments);
-                        if (logger.records) {
-                            logger.records.push(result);
+                        if (recorder.recording) {
+                            recorder.results.push([id, result]);
                         }
 
                         return deep('call', result);
                     } else {
                         logger(['apply', id, serialize(that), serialize(args)]);
 
-                        if (logger.results) {
-                            if (logger.results.length === 0) {
+                        const recorder = logger.recorder || {};
+
+                        if (recorder.playback) {
+                            if (recorder.results.length === 0) {
                                 throw new Error(
                                     `not enough stored results for mock with name "${id}"`,
                                 );
                             } else {
-                                return deep('apply', logger.results.shift());
+                                const result = recorder.results.shift();
+                                if (result[0] !== id) {
+                                    throw new Error(
+                                        `mismatching call order, wrong call with name "${
+                                            result[0]
+                                        }" for mock with name "${id}"`,
+                                    );
+                                }
+                                return deep('apply', result[1]);
                             }
                         }
 
                         const result = Reflect.apply(...arguments);
-                        if (logger.records) {
-                            logger.records.push(result);
+                        if (recorder.recording) {
+                            recorder.results.push([id, result]);
                         }
 
                         return deep('apply', result);

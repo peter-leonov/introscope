@@ -121,19 +121,25 @@ describe('proxySpy', () => {
 
     describe('record', () => {
         it('returns recorded values', () => {
+            const recorder = {
+                playback: true,
+                results: [['a', 'a1'], ['b', 'b1'], ['a', 'a2'], ['c', 'c1']],
+            };
+
             const { logger: loggerA, mock: a } = newMock(function a() {
                 return 'a';
             });
-            loggerA.results = ['A1', 'A2'];
+            loggerA.recorder = recorder;
 
             const { logger: loggerB, mock: b } = newMock(function b() {
                 return 'b';
             });
-            loggerB.results = ['B1'];
+            loggerB.recorder = recorder;
 
-            expect(a()).toBe('A1');
-            expect(b()).toBe('B1');
-            expect(a()).toBe('A2');
+            expect(a()).toBe('a1');
+            expect(b()).toBe('b1');
+            expect(a()).toBe('a2');
+            expect(() => a()).toThrow('mismatch');
             expect(() => a()).toThrow('results');
             expect(() => b()).toThrow('results');
             expect(() => a()).toThrow('results');
@@ -141,33 +147,48 @@ describe('proxySpy', () => {
         });
 
         it('records returned values', () => {
+            const recorder = {
+                recording: true,
+                results: [],
+            };
+
             const as = ['a1', 'a2', 'a3'];
             const { logger: loggerA, mock: a } = newMock(function a() {
                 return as.shift();
             });
-            loggerA.records = [];
+            loggerA.recorder = recorder;
 
             const bs = ['b1', 'b2'];
             const { logger: loggerB, mock: b } = newMock(function b() {
                 return bs.shift();
             });
-            loggerB.records = [];
+            loggerB.recorder = recorder;
 
             a();
-            expect(loggerA.records).toEqual(['a1']);
-            expect(loggerB.records).toEqual([]);
+            expect(recorder.results).toEqual([['a', 'a1']]);
             b();
-            expect(loggerA.records).toEqual(['a1']);
-            expect(loggerB.records).toEqual(['b1']);
+            expect(recorder.results).toEqual([['a', 'a1'], ['b', 'b1']]);
             a();
-            expect(loggerA.records).toEqual(['a1', 'a2']);
-            expect(loggerB.records).toEqual(['b1']);
+            expect(recorder.results).toEqual([
+                ['a', 'a1'],
+                ['b', 'b1'],
+                ['a', 'a2'],
+            ]);
             b();
-            expect(loggerA.records).toEqual(['a1', 'a2']);
-            expect(loggerB.records).toEqual(['b1', 'b2']);
+            expect(recorder.results).toEqual([
+                ['a', 'a1'],
+                ['b', 'b1'],
+                ['a', 'a2'],
+                ['b', 'b2'],
+            ]);
             a();
-            expect(loggerA.records).toEqual(['a1', 'a2', 'a3']);
-            expect(loggerB.records).toEqual(['b1', 'b2']);
+            expect(recorder.results).toEqual([
+                ['a', 'a1'],
+                ['b', 'b1'],
+                ['a', 'a2'],
+                ['b', 'b2'],
+                ['a', 'a3'],
+            ]);
         });
     });
 });
