@@ -31,18 +31,24 @@ describe('serializeWithSpies', () => {
 });
 
 describe('proxySpy', () => {
-    const newMock = (v, conf) => {
+    const mockLogger = () => {
         // object oriented programming? have never heard of it :D
         const log = newLog();
         let enabled = true;
         log.disable = () => (enabled = false);
         const logger = (...args) => enabled && log.push(...args);
 
+        return { log, logger };
+    };
+    const newMock = (v, conf, name) => {
+        const { log, logger } = mockLogger();
+
         return {
             log,
+            logger,
             mock: proxySpy(
                 logger,
-                'mockName',
+                name || (v && v.name) || 'mockName',
                 v || function() {}, // function has all the Proxy methods available
                 conf,
             ),
@@ -110,6 +116,28 @@ describe('proxySpy', () => {
             const { log, mock } = newMock({ [foo]: {} }, { deep: true });
             mock[foo][Symbol('bar')];
             expect(log).toMatchSnapshot();
+        });
+    });
+
+    describe('record', () => {
+        it('returns recorded values', () => {
+            const { logger: loggerA, mock: a } = newMock(function a() {
+                return 'a';
+            });
+            loggerA.results = ['A1', 'A2'];
+
+            const { logger: loggerB, mock: b } = newMock(function b() {
+                return 'b';
+            });
+            loggerB.results = ['B1'];
+
+            expect(a()).toBe('A1');
+            expect(b()).toBe('B1');
+            expect(a()).toBe('A2');
+            expect(() => a()).toThrow('results');
+            expect(() => b()).toThrow('results');
+            expect(() => a()).toThrow('results');
+            expect(() => b()).toThrow('results');
         });
     });
 });

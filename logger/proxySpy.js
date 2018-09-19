@@ -56,10 +56,32 @@ const proxySpyFactory = ({ serialize }) => {
                 apply(_, that, args) {
                     if (that === undefined) {
                         logger(['call', id, serialize(args)]);
-                        return deep('call', Reflect.apply(...arguments));
+
+                        if (logger.results) {
+                            if (logger.results.length === 0) {
+                                throw new Error(
+                                    `not enough stored results for mock with name "${id}"`,
+                                );
+                            } else {
+                                return deep('call', logger.results.shift());
+                            }
+                        } else {
+                            return deep('call', Reflect.apply(...arguments));
+                        }
                     } else {
                         logger(['apply', id, serialize(that), serialize(args)]);
-                        return deep('apply', Reflect.apply(...arguments));
+
+                        if (logger.results) {
+                            if (logger.results.length === 0) {
+                                throw new Error(
+                                    `not enough stored results for mock with name "${id}"`,
+                                );
+                            } else {
+                                return deep('apply', logger.results.shift());
+                            }
+                        } else {
+                            return deep('apply', Reflect.apply(...arguments));
+                        }
                     }
                 },
                 get(_, prop) {
