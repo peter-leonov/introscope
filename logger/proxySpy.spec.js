@@ -139,5 +139,35 @@ describe('proxySpy', () => {
             expect(() => a()).toThrow('results');
             expect(() => b()).toThrow('results');
         });
+
+        it('records returned values', () => {
+            const as = ['a1', 'a2', 'a3'];
+            const { logger: loggerA, mock: a } = newMock(function a() {
+                return as.shift();
+            });
+            loggerA.records = [];
+
+            const bs = ['b1', 'b2'];
+            const { logger: loggerB, mock: b } = newMock(function b() {
+                return bs.shift();
+            });
+            loggerB.records = [];
+
+            a();
+            expect(loggerA.records).toEqual(['a1']);
+            expect(loggerB.records).toEqual([]);
+            b();
+            expect(loggerA.records).toEqual(['a1']);
+            expect(loggerB.records).toEqual(['b1']);
+            a();
+            expect(loggerA.records).toEqual(['a1', 'a2']);
+            expect(loggerB.records).toEqual(['b1']);
+            b();
+            expect(loggerA.records).toEqual(['a1', 'a2']);
+            expect(loggerB.records).toEqual(['b1', 'b2']);
+            a();
+            expect(loggerA.records).toEqual(['a1', 'a2', 'a3']);
+            expect(loggerB.records).toEqual(['b1', 'b2']);
+        });
     });
 });

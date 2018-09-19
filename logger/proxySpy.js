@@ -65,9 +65,14 @@ const proxySpyFactory = ({ serialize }) => {
                             } else {
                                 return deep('call', logger.results.shift());
                             }
-                        } else {
-                            return deep('call', Reflect.apply(...arguments));
                         }
+
+                        const result = Reflect.apply(...arguments);
+                        if (logger.records) {
+                            logger.records.push(result);
+                        }
+
+                        return deep('call', result);
                     } else {
                         logger(['apply', id, serialize(that), serialize(args)]);
 
@@ -79,9 +84,14 @@ const proxySpyFactory = ({ serialize }) => {
                             } else {
                                 return deep('apply', logger.results.shift());
                             }
-                        } else {
-                            return deep('apply', Reflect.apply(...arguments));
                         }
+
+                        const result = Reflect.apply(...arguments);
+                        if (logger.records) {
+                            logger.records.push(result);
+                        }
+
+                        return deep('apply', result);
                     }
                 },
                 get(_, prop) {
