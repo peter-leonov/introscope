@@ -1852,9 +1852,9 @@ ini@~1.3.0:
   version "1.3.5"
   resolved "https://registry.yarnpkg.com/ini/-/ini-1.3.5.tgz#eee25f56db1c9ec6085e0c22778083f596abf927"
 
-introscope@^1.4.1:
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/introscope/-/introscope-1.4.1.tgz#5a1e728c08ec68bef9adad7c183fb35f01108ea3"
+introscope@^1.5.0:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/introscope/-/introscope-1.5.0.tgz#05dd802542a9015811223b1a89d8332383bdf3d3"
   dependencies:
     lodash "^4.17.10"
 
