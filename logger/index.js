@@ -3,7 +3,7 @@ const { proxySpy } = require('./proxySpy');
 const effectsLoggerLogRegistry = new WeakMap();
 const isEffectsLoggerLog = log => effectsLoggerLogRegistry.has(log);
 
-export const newLog = () => {
+const newLog = () => {
     const log = [];
     effectsLoggerLogRegistry.set(log, true);
     return log;

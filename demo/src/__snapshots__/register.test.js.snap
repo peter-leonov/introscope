@@ -1,0 +1,369 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`register email: empty, password: empty, terms: accepted 1`] = `
+EffectsLog [
+  trackEvent(
+    "register",
+  ),
+  showLoadingSpinner(
+  ),
+  showErrorMessage(
+    "EMAIL_EMPTY",
+  ),
+  showErrorMessage(
+    "PASSWORD_EMPTY",
+  ),
+  showErrorMessage(
+    "WRONG_INPUT",
+  ),
+  trackEvent(
+    "register.error",
+  ),
+]
+`;
+
+exports[`register email: empty, password: empty, terms: unaccepted 1`] = `
+EffectsLog [
+  trackEvent(
+    "register",
+  ),
+  showLoadingSpinner(
+  ),
+  showErrorMessage(
+    "EMAIL_EMPTY",
+  ),
+  showErrorMessage(
+    "PASSWORD_EMPTY",
+  ),
+  showErrorMessage(
+    "WRONG_INPUT",
+  ),
+  trackEvent(
+    "register.error",
+  ),
+]
+`;
+
+exports[`register email: empty, password: normal, terms: accepted 1`] = `
+EffectsLog [
+  trackEvent(
+    "register",
+  ),
+  showLoadingSpinner(
+  ),
+  showErrorMessage(
+    "EMAIL_EMPTY",
+  ),
+  showErrorMessage(
+    "WRONG_INPUT",
+  ),
+  trackEvent(
+    "register.error",
+  ),
+]
+`;
+
+exports[`register email: empty, password: normal, terms: unaccepted 1`] = `
+EffectsLog [
+  trackEvent(
+    "register",
+  ),
+  showLoadingSpinner(
+  ),
+  showErrorMessage(
+    "EMAIL_EMPTY",
+  ),
+  showErrorMessage(
+    "WRONG_INPUT",
+  ),
+  trackEvent(
+    "register.error",
+  ),
+]
+`;
+
+exports[`register email: empty, password: short, terms: accepted 1`] = `
+EffectsLog [
+  trackEvent(
+    "register",
+  ),
+  showLoadingSpinner(
+  ),
+  showErrorMessage(
+    "EMAIL_EMPTY",
+  ),
+  showErrorMessage(
+    "PASSWORD_SHORT",
+  ),
+  showErrorMessage(
+    "WRONG_INPUT",
+  ),
+  trackEvent(
+    "register.error",
+  ),
+]
+`;
+
+exports[`register email: empty, password: short, terms: unaccepted 1`] = `
+EffectsLog [
+  trackEvent(
+    "register",
+  ),
+  showLoadingSpinner(
+  ),
+  showErrorMessage(
+    "EMAIL_EMPTY",
+  ),
+  showErrorMessage(
+    "PASSWORD_SHORT",
+  ),
+  showErrorMessage(
+    "WRONG_INPUT",
+  ),
+  trackEvent(
+    "register.error",
+  ),
+]
+`;
+
+exports[`register email: normal, password: empty, terms: accepted 1`] = `
+EffectsLog [
+  trackEvent(
+    "register",
+  ),
+  showLoadingSpinner(
+  ),
+  showErrorMessage(
+    "PASSWORD_EMPTY",
+  ),
+  showErrorMessage(
+    "WRONG_INPUT",
+  ),
+  trackEvent(
+    "register.error",
+  ),
+]
+`;
+
+exports[`register email: normal, password: empty, terms: unaccepted 1`] = `
+EffectsLog [
+  trackEvent(
+    "register",
+  ),
+  showLoadingSpinner(
+  ),
+  showErrorMessage(
+    "PASSWORD_EMPTY",
+  ),
+  showErrorMessage(
+    "WRONG_INPUT",
+  ),
+  trackEvent(
+    "register.error",
+  ),
+]
+`;
+
+exports[`register email: normal, password: normal, terms: accepted 1`] = `
+EffectsLog [
+  trackEvent(
+    "register",
+  ),
+  showLoadingSpinner(
+  ),
+  trackEvent(
+    "register.success",
+  ),
+  post(
+    "/register",
+    Object {
+      "email": "foo@bar.com",
+      "password": "123456",
+    },
+  ),
+  hideLoadingSpinner(
+  ),
+]
+`;
+
+exports[`register email: normal, password: normal, terms: unaccepted 1`] = `
+EffectsLog [
+  trackEvent(
+    "register",
+  ),
+  showLoadingSpinner(
+  ),
+  showErrorMessage(
+    "TERMS_EMPY",
+  ),
+  trackEvent(
+    "register.terms",
+  ),
+  hideLoadingSpinner(
+  ),
+]
+`;
+
+exports[`register email: normal, password: short, terms: accepted 1`] = `
+EffectsLog [
+  trackEvent(
+    "register",
+  ),
+  showLoadingSpinner(
+  ),
+  showErrorMessage(
+    "PASSWORD_SHORT",
+  ),
+  showErrorMessage(
+    "WRONG_INPUT",
+  ),
+  trackEvent(
+    "register.error",
+  ),
+]
+`;
+
+exports[`register email: normal, password: short, terms: unaccepted 1`] = `
+EffectsLog [
+  trackEvent(
+    "register",
+  ),
+  showLoadingSpinner(
+  ),
+  showErrorMessage(
+    "PASSWORD_SHORT",
+  ),
+  showErrorMessage(
+    "WRONG_INPUT",
+  ),
+  trackEvent(
+    "register.error",
+  ),
+]
+`;
+
+exports[`register email: wrong, password: empty, terms: accepted 1`] = `
+EffectsLog [
+  trackEvent(
+    "register",
+  ),
+  showLoadingSpinner(
+  ),
+  showErrorMessage(
+    "EMAIL_WRONG",
+  ),
+  showErrorMessage(
+    "PASSWORD_EMPTY",
+  ),
+  showErrorMessage(
+    "WRONG_INPUT",
+  ),
+  trackEvent(
+    "register.error",
+  ),
+]
+`;
+
+exports[`register email: wrong, password: empty, terms: unaccepted 1`] = `
+EffectsLog [
+  trackEvent(
+    "register",
+  ),
+  showLoadingSpinner(
+  ),
+  showErrorMessage(
+    "EMAIL_WRONG",
+  ),
+  showErrorMessage(
+    "PASSWORD_EMPTY",
+  ),
+  showErrorMessage(
+    "WRONG_INPUT",
+  ),
+  trackEvent(
+    "register.error",
+  ),
+]
+`;
+
+exports[`register email: wrong, password: normal, terms: accepted 1`] = `
+EffectsLog [
+  trackEvent(
+    "register",
+  ),
+  showLoadingSpinner(
+  ),
+  showErrorMessage(
+    "EMAIL_WRONG",
+  ),
+  showErrorMessage(
+    "WRONG_INPUT",
+  ),
+  trackEvent(
+    "register.error",
+  ),
+]
+`;
+
+exports[`register email: wrong, password: normal, terms: unaccepted 1`] = `
+EffectsLog [
+  trackEvent(
+    "register",
+  ),
+  showLoadingSpinner(
+  ),
+  showErrorMessage(
+    "EMAIL_WRONG",
+  ),
+  showErrorMessage(
+    "WRONG_INPUT",
+  ),
+  trackEvent(
+    "register.error",
+  ),
+]
+`;
+
+exports[`register email: wrong, password: short, terms: accepted 1`] = `
+EffectsLog [
+  trackEvent(
+    "register",
+  ),
+  showLoadingSpinner(
+  ),
+  showErrorMessage(
+    "EMAIL_WRONG",
+  ),
+  showErrorMessage(
+    "PASSWORD_SHORT",
+  ),
+  showErrorMessage(
+    "WRONG_INPUT",
+  ),
+  trackEvent(
+    "register.error",
+  ),
+]
+`;
+
+exports[`register email: wrong, password: short, terms: unaccepted 1`] = `
+EffectsLog [
+  trackEvent(
+    "register",
+  ),
+  showLoadingSpinner(
+  ),
+  showErrorMessage(
+    "EMAIL_WRONG",
+  ),
+  showErrorMessage(
+    "PASSWORD_SHORT",
+  ),
+  showErrorMessage(
+    "WRONG_INPUT",
+  ),
+  trackEvent(
+    "register.error",
+  ),
+]
+`;
