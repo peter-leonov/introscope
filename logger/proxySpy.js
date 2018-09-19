@@ -38,15 +38,15 @@ const isSpyable = v =>
     typeof v == 'function' || (typeof v == 'object' && v !== null);
 
 const proxySpyFactory = ({ serialize }) => {
-    const proxySpy = (log, id, v, conf = { deep: false }) => {
+    const proxySpy = (logger, id, v, conf = { deep: false }) => {
         if (!isSpyable(v)) return v;
 
         const cached = getFromCache(v, id);
         if (cached) return cached;
 
-        // wrap in a new proxy with the same log
+        // wrap in a new proxy with the same logger
         const deep = conf.deep
-            ? (id2, v) => proxySpy(log, `${id}.${String(id2)}`, v)
+            ? (id2, v) => proxySpy(logger, `${id}.${String(id2)}`, v)
             : (_, v) => v;
 
         return putToRegistry(
@@ -55,19 +55,19 @@ const proxySpyFactory = ({ serialize }) => {
             new Proxy(v, {
                 apply(_, that, args) {
                     if (that === undefined) {
-                        log(['call', id, serialize(args)]);
+                        logger(['call', id, serialize(args)]);
                         return deep('call', Reflect.apply(...arguments));
                     } else {
-                        log(['apply', id, serialize(that), serialize(args)]);
+                        logger(['apply', id, serialize(that), serialize(args)]);
                         return deep('apply', Reflect.apply(...arguments));
                     }
                 },
                 get(_, prop) {
-                    log(['get', id, prop]);
+                    logger(['get', id, prop]);
                     return deep(prop, Reflect.get(...arguments));
                 },
                 set(_, prop, value) {
-                    log(['set', String(id), prop, serialize(value)]);
+                    logger(['set', String(id), prop, serialize(value)]);
                     return Reflect.set(...arguments);
                 },
             }),
