@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`generates a kinda uniq name 1`] = `"/var/tmp/file-1537390034475-4313593178224871"`;
