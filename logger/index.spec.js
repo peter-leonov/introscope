@@ -18,10 +18,10 @@ const introscope = (scope = {}) => {
 import { effectsLogger, SPY, KEEP, MOCK } from '.';
 import { getSpyTarget } from './proxySpy';
 
-const effectsScope = effectsLogger(introscope);
-
 describe('todos', () => {
     it('addTodo', () => {
+        const effectsScope = effectsLogger(introscope);
+
         const {
             scope: { addTodo },
             effects,
@@ -314,5 +314,71 @@ describe('functionMocker', () => {
         m.fn2();
         m.fn3()();
         expect(m()).toMatchSnapshot();
+    });
+});
+
+describe('recorder works', () => {
+    it('recording', () => {
+        const recorder = {
+            recording: true,
+            results: [],
+        };
+
+        const { scope } = effectsLogger(() => ({
+            a: () => 'a1',
+            b: () => 'b1',
+        }))(
+            {
+                a: SPY,
+                b: SPY,
+            },
+            { recorder },
+        );
+
+        scope.a();
+        scope.b();
+
+        expect(recorder.results).toMatchSnapshot();
+    });
+
+    it('paying back', () => {
+        const recorder = {
+            playback: true,
+            results: [['a', 'a1'], ['b', 'b1']],
+        };
+
+        const { scope } = effectsLogger(() => ({
+            a: () => {},
+            b: () => {},
+        }))(
+            {
+                a: SPY,
+                b: SPY,
+            },
+            { recorder },
+        );
+
+        expect(scope.a()).toBe('a1');
+        expect(scope.b()).toBe('b1');
+    });
+
+    it('doing nothing', () => {
+        const recorder = {
+            results: [],
+        };
+
+        const { scope } = effectsLogger(() => ({
+            a: () => 'a',
+            b: () => 'b',
+        }))(
+            {
+                a: SPY,
+                b: SPY,
+            },
+            { recorder },
+        );
+
+        expect(scope.a()).toBe('a');
+        expect(scope.b()).toBe('b');
     });
 });

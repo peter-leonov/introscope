@@ -105,6 +105,19 @@ exports[`functionMocker mocks 2`] = `[Function]`;
 
 exports[`functionMocker returns value 1`] = `"returned value"`;
 
+exports[`recorder works recording 1`] = `
+Array [
+  Array [
+    "a",
+    "a1",
+  ],
+  Array [
+    "b",
+    "b1",
+  ],
+]
+`;
+
 exports[`todos addTodo 1`] = `
 EffectsLog [
   module.count =
