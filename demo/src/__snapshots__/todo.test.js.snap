@@ -3,7 +3,7 @@
 exports[`createTodo() with bad fields 1`] = `
 EffectsLog [
   trackEvent(
-    "todo.save",
+    "todo.update",
     "id",
   ),
   showLoadingSpinner(
@@ -15,7 +15,7 @@ EffectsLog [
     "fields",
   ),
   trackEvent(
-    "todo.save.failure",
+    "todo.update.failure",
     "id",
   ),
   showErrorMessage(
@@ -29,7 +29,7 @@ EffectsLog [
 exports[`createTodo() with good fields 1`] = `
 EffectsLog [
   trackEvent(
-    "todo.save",
+    "todo.update",
     "id",
   ),
   showLoadingSpinner(
@@ -45,7 +45,7 @@ EffectsLog [
     "fields",
   ),
   trackEvent(
-    "todo.save.success",
+    "todo.update.success",
     "id",
   ),
   hideLoadingSpinner(
