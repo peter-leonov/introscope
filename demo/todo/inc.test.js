@@ -1,4 +1,4 @@
-import { introscope } from './mini'
+import { introscope } from './inc'
 
 test('inc() adds 1', async () => {
     const { inc } = introscope();
