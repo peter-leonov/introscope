@@ -4,8 +4,6 @@ import { getRecorder } from './recorder';
 
 const logger = effectsLogger(introscope);
 
-
-
 test('generates a kinda uniq name', async () => {
     const recorder = getRecorder('tempfile');
 
