@@ -1,13 +1,8 @@
 import { readFileSync, writeFileSync } from 'fs';
 
 expect.extend({
-    toRecord(recorder) {
-        const filename = this.snapshotState._snapshotPath.replace(
-            /snap$/,
-            'record',
-        );
-        recorder.load(filename);
-        // console.log(this);
+    __getExpectContext(_, cb) {
+        cb(this);
         return {
             pass: true,
             message: '',
@@ -16,35 +11,42 @@ expect.extend({
 });
 
 class Recorder {
-    constructor() {
-        this.resultsFile = undefined;
-        this.recording = false;
-        this.playback = false;
-    }
-
-    load(resultsFile) {
+    constructor(resultsFile, mode) {
         this.resultsFile = resultsFile;
 
-        try {
-            const results = JSON.parse(readFileSync(this.resultsFile));
-            this.playback = true;
-            this.results = results;
+        if (mode == 'playback') {
+            try {
+                const results = JSON.parse(readFileSync(this.resultsFile));
+                this.playback = true;
+                this.results = results;
+            } catch (_) {}
             return;
-        } catch (_) {}
+        }
 
-        this.recording = true;
-        this.results = [];
+        if (mode == 'record') {
+            this.recording = true;
+            this.results = [];
+            return;
+        }
     }
 
     save() {
         if (!this.recording) return;
 
-        writeFileSync(this.resultsFile, JSON.stringify(this.results));
+        writeFileSync(this.resultsFile, JSON.stringify(this.results, null, 2));
     }
 }
 
 export const getRecorder = () => {
-    const recorder = new Recorder();
-    expect(recorder).toRecord();
-    return recorder;
+    let context;
+    expect(null).__getExpectContext(c => (context = c));
+
+    const filename = context.snapshotState._snapshotPath.replace(
+        /snap$/,
+        'record',
+    );
+    const mode =
+        context.snapshotState._updateSnapshot === 'all' ? 'record' : 'playback';
+
+    return new Recorder(filename, mode);
 };
