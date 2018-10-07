@@ -7,7 +7,7 @@ const logger = effectsLogger(introscope);
 test('generates a kinda uniq name', async () => {
     // const recorder = getRecorder();
 
-    const { scope } = logger(
+    const { scope, effects } = logger(
         {
             now: SPY,
             rand: SPY,
@@ -17,5 +17,6 @@ test('generates a kinda uniq name', async () => {
 
     expect(scope.tempfile()).toMatchSnapshot();
 
+    expect(effects()).toMatchSnapshot();
     // recorder.save();
 });
