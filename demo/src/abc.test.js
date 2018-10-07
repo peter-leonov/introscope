@@ -3,7 +3,7 @@ import { introscope } from './abc';
 
 const logger = effectsLogger(introscope);
 
-test('generates a kinda uniq name', () => {
+test('f calls a then b then c', () => {
     const { scope, effects } = logger({
         a: SPY,
         b: SPY,
