@@ -1,0 +1,7 @@
+{
+    "editor.formatOnSave": true,
+    "workbench.statusBar.visible": false,
+    "workbench.activityBar.visible": false,
+    "editor.folding": false,
+    "editor.glyphMargin": false
+}
