@@ -1,10 +1,10 @@
-import { introscope } from './tempfile';
 import { effectsLogger, SPY } from 'introscope/logger';
 import { getRecorder } from './recorder';
+import { introscope } from './tempfile';
 
 const logger = effectsLogger(introscope);
 
-test('generates a kinda uniq name', async () => {
+test('generates a kinda uniq name', () => {
     const recorder = getRecorder();
 
     const { scope, effects } = logger(
