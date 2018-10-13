@@ -1,7 +1,7 @@
 {
-    "editor.formatOnSave": true,
-    "workbench.statusBar.visible": false,
+    "javascript.validate.enable": false,
     "workbench.activityBar.visible": false,
+    "workbench.statusBar.visible": false,
     "editor.folding": false,
     "editor.glyphMargin": false
 }
