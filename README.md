@@ -1,6 +1,6 @@
 # Introscope
 
-A reflection (aka, monkey-patching) babel plugin and a set of tools for delightful unit testing of modern ES6 modules. It allows you to override imports, locals, globals and built-ins (like `Date` or `Math`) independently for each unit test by instrumenting your ES6 modules on the fly.
+A babel plugin and a set of tools for delightful unit testing of modern ES6 modules. It allows you to override imports, locals, globals and built-ins (like `Date` or `Math`) independently for each unit test by instrumenting your ES6 modules on the fly.
 
 ```js
 // increment.js
@@ -30,11 +30,13 @@ Intoscope is yet another mocking tool, but with much higher level of control, is
 -   spy or mock with any tool: `introscope()` returns a plain JS object;
 -   easy to use: optimized for Jest and provides well fitting tooling;
 -   type safe: full support for Flow in your tests;
--   simple to hack: just compose the factory function with you plugin.
+-   simple to hack: just compose the factory function with your plugin.
 
-See what Introscope does in [playground](https://astexplorer.net/#/gist/cddaef7ef9db928352f79ce3612aef77/4d6f06a3db399425b3b98bdf2fc142a12e06ba0d).
+See what Introscope does with code in [playground](https://astexplorer.net/#/gist/cddaef7ef9db928352f79ce3612aef77/4d6f06a3db399425b3b98bdf2fc142a12e06ba0d).
 
 ## Known issues
+
+Currently Introscope supports Babel 6.26 and Jest 22.4. Support for Babel 7 and Jest 22.6 is coming.
 
 Please, see a short ☺️ list here: [issues labeled as bug](https://github.com/peter-leonov/introscope/labels/bug)
 
@@ -60,7 +62,7 @@ npm install -D introscope
 
 Add the babel plugin to the project's babel configuration (most likely `.babelrc`):
 
-```json
+```js
 {
     // presets get run after plugins, and it's ok as introscope
     // understands all the new fancy stuff enabled in these presets
