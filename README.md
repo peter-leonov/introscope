@@ -2,20 +2,24 @@
 
 A babel plugin and a set of tools for delightful unit testing of modern ES6 modules. It allows you to override imports, locals, globals and built-ins (like `Date` or `Math`) independently for each unit test by instrumenting your ES6 modules on the fly.
 
+![](inc.gif)
+
+## Hooking example
+
 ```js
-// increment.js
-const INCREMENT_BY = 1;
-const increment = v => v + INCREMENT_BY;
+// inc.js
+const ONE = 1; // notice, not exported
+export const inc = a => a + ONE;
 
-// increment.spec.js
-import { introscope } from './increment.js';
+// inc.test.js
+import { introscope } from './inc'
 
-test('increment', () => {
+test('inc', () => {
     const scope = introscope();
-    expect(scope.increment(1)).toBe(2);
 
-    scope.INCREMENT_BY = 1000;
-    expect(scope.increment(1)).toBe(1001);
+    expect(scope.inc(1)).toBe(2);
+    scope.ONE = 100; // just for lulz
+    expect(scope.inc(1)).toBe(101);
 });
 ```
 
