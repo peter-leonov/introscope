@@ -3,5 +3,6 @@
     "workbench.activityBar.visible": false,
     "workbench.statusBar.visible": false,
     "editor.folding": false,
-    "editor.glyphMargin": false
+    "editor.glyphMargin": false,
+    "workbench.editor.showTabs": false
 }

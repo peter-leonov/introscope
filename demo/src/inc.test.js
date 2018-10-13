@@ -1,6 +1,6 @@
 import { introscope } from './inc'
 
-test('inc() adds 1', async () => {
-    const { inc } = introscope();
-    expect(inc(1)).toBe(2);
+test('inc', () => {
+    const scope = introscope();
+    expect(scope.inc(1)).toBe(2);
 });

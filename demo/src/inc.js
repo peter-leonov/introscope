@@ -1,2 +1,3 @@
-// try removing export :)
-export const inc = a => a + 1;
+const ONE = 1;
+
+export const inc = a => a + ONE;
