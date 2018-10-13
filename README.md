@@ -2,7 +2,7 @@
 
 A babel plugin and a set of tools for delightful unit testing of modern ES6 modules. It allows you to override imports, locals, globals and built-ins (like `Date` or `Math`) independently for each unit test by instrumenting your ES6 modules on the fly.
 
-![](inc.gif)
+![a Hooking Example micro screencast](inc.gif)
 
 ## Hooking example
 
