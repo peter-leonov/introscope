@@ -3,7 +3,7 @@ const { newLog } = require('.');
 require('./jest');
 
 describe('serializeWithSpies', () => {
-    const newSpy = name => proxySpy(() => {}, name, {});
+    const newSpy = name => proxySpy(() => {}, undefined, name, {});
 
     it('stringifies spies', () => {
         expect(serializeWithSpies(newSpy('A'))).toMatchSnapshot();
@@ -40,7 +40,7 @@ describe('proxySpy', () => {
 
         return { log, logger };
     };
-    const newMock = (v, conf, name) => {
+    const newMock = (v, { conf, name, recorder } = {}) => {
         const { log, logger } = mockLogger();
 
         return {
@@ -48,6 +48,7 @@ describe('proxySpy', () => {
             logger,
             mock: proxySpy(
                 logger,
+                recorder,
                 name || (v && v.name) || 'mockName',
                 v || function() {}, // function has all the Proxy methods available
                 conf,
@@ -89,10 +90,10 @@ describe('proxySpy', () => {
         it('returns same spies for same object + id', () => {
             const obj = {};
 
-            const same1 = proxySpy(() => {}, 'same', obj);
-            const same2 = proxySpy(() => {}, 'same', obj);
-            const other1 = proxySpy(() => {}, 'other', obj);
-            const other2 = proxySpy(() => {}, 'same', {});
+            const same1 = proxySpy(() => {}, undefined, 'same', obj);
+            const same2 = proxySpy(() => {}, undefined, 'same', obj);
+            const other1 = proxySpy(() => {}, undefined, 'other', obj);
+            const other2 = proxySpy(() => {}, undefined, 'same', {});
 
             expect(same1).toBe(same2);
             expect(same1).not.toBe(other1);
@@ -102,7 +103,10 @@ describe('proxySpy', () => {
 
     describe('deep', () => {
         it('returns spied values', () => {
-            const { log, mock } = newMock({ foo: () => {} }, { deep: true });
+            const { log, mock } = newMock(
+                { foo: () => {} },
+                { conf: { deep: true } },
+            );
             // gets loged as property get
             const foo = mock.foo;
             // gets logged as call
@@ -113,7 +117,10 @@ describe('proxySpy', () => {
 
         it('supports Symbols', () => {
             const foo = Symbol('foo');
-            const { log, mock } = newMock({ [foo]: {} }, { deep: true });
+            const { log, mock } = newMock(
+                { [foo]: {} },
+                { conf: { deep: true } },
+            );
             mock[foo][Symbol('bar')];
             expect(log).toMatchSnapshot();
         });
@@ -126,15 +133,19 @@ describe('proxySpy', () => {
                 results: [['a', 'a1'], ['b', 'b1'], ['a', 'a2'], ['c', 'c1']],
             };
 
-            const { logger: loggerA, mock: a } = newMock(function a() {
-                return 'a';
-            });
-            loggerA.recorder = recorder;
+            const { logger: loggerA, mock: a } = newMock(
+                function a() {
+                    return 'a';
+                },
+                { recorder },
+            );
 
-            const { logger: loggerB, mock: b } = newMock(function b() {
-                return 'b';
-            });
-            loggerB.recorder = recorder;
+            const { logger: loggerB, mock: b } = newMock(
+                function b() {
+                    return 'b';
+                },
+                { recorder },
+            );
 
             expect(a()).toBe('a1');
             expect(b()).toBe('b1');
@@ -153,16 +164,20 @@ describe('proxySpy', () => {
             };
 
             const as = ['a1', 'a2', 'a3'];
-            const { logger: loggerA, mock: a } = newMock(function a() {
-                return as.shift();
-            });
-            loggerA.recorder = recorder;
+            const { logger: loggerA, mock: a } = newMock(
+                function a() {
+                    return as.shift();
+                },
+                { recorder },
+            );
 
             const bs = ['b1', 'b2'];
-            const { logger: loggerB, mock: b } = newMock(function b() {
-                return bs.shift();
-            });
-            loggerB.recorder = recorder;
+            const { logger: loggerB, mock: b } = newMock(
+                function b() {
+                    return bs.shift();
+                },
+                { recorder },
+            );
 
             a();
             expect(recorder.results).toEqual([['a', 'a1']]);

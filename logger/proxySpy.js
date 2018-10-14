@@ -38,7 +38,7 @@ const isSpyable = v =>
     typeof v == 'function' || (typeof v == 'object' && v !== null);
 
 const proxySpyFactory = ({ serialize }) => {
-    const proxySpy = (logger, id, v, conf = { deep: false }) => {
+    const proxySpy = (logger, recorder, id, v, conf = { deep: false }) => {
         if (!isSpyable(v)) return v;
 
         const cached = getFromCache(v, id);
@@ -46,7 +46,7 @@ const proxySpyFactory = ({ serialize }) => {
 
         // wrap in a new proxy with the same logger
         const deep = conf.deep
-            ? (id2, v) => proxySpy(logger, `${id}.${String(id2)}`, v)
+            ? (id2, v) => proxySpy(logger, recorder, `${id}.${String(id2)}`, v)
             : (_, v) => v;
 
         return putToRegistry(
@@ -57,9 +57,7 @@ const proxySpyFactory = ({ serialize }) => {
                     if (that === undefined) {
                         logger(['call', id, serialize(args)]);
 
-                        const recorder = logger.recorder || {};
-
-                        if (recorder.playback) {
+                        if (recorder && recorder.playback) {
                             if (recorder.results.length === 0) {
                                 throw new Error(
                                     `not enough stored results for mock with name "${id}"`,
@@ -78,7 +76,7 @@ const proxySpyFactory = ({ serialize }) => {
                         }
 
                         const result = Reflect.apply(...arguments);
-                        if (recorder.recording) {
+                        if (recorder && recorder.recording) {
                             recorder.results.push([id, result]);
                         }
 
@@ -86,9 +84,7 @@ const proxySpyFactory = ({ serialize }) => {
                     } else {
                         logger(['apply', id, serialize(that), serialize(args)]);
 
-                        const recorder = logger.recorder || {};
-
-                        if (recorder.playback) {
+                        if (recorder && recorder.playback) {
                             if (recorder.results.length === 0) {
                                 throw new Error(
                                     `not enough stored results for mock with name "${id}"`,
@@ -107,7 +103,7 @@ const proxySpyFactory = ({ serialize }) => {
                         }
 
                         const result = Reflect.apply(...arguments);
-                        if (recorder.recording) {
+                        if (recorder && recorder.recording) {
                             recorder.results.push([id, result]);
                         }
 
