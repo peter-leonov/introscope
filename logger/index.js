@@ -59,6 +59,11 @@ const effectsLogger = scopeFactory => (
         }
 
         if (action === SPY) {
+            scope[id] = proxySpy(logger, undefined, id, scope[id]);
+            continue;
+        }
+
+        if (action === RECORD) {
             scope[id] = proxySpy(logger, recorder, id, scope[id]);
             continue;
         }
@@ -71,7 +76,7 @@ const effectsLogger = scopeFactory => (
         if (typeof scope[id] == 'function') {
             if (id in plan && typeof plan[id] != 'function') {
                 console.warn(
-                    `TestPlan: Mocking a function "${id}" with a non-function mock "${typeof plan[
+                    `EffectsLogger: Mocking a function "${id}" with a non-function mock "${typeof plan[
                         id
                     ]}"`,
                 );
@@ -88,7 +93,7 @@ const effectsLogger = scopeFactory => (
         if (typeof scope[id] == 'object' && scope[id] !== null) {
             if (id in plan && typeof plan[id] != 'object') {
                 console.warn(
-                    `TestPlan: Mocking an object "${id}" with a non-object mock "${typeof plan[
+                    `EffectsLogger: Mocking an object "${id}" with a non-object mock "${typeof plan[
                         id
                     ]}"`,
                 );
@@ -137,6 +142,7 @@ module.exports = {
     SPY,
     KEEP,
     MOCK,
+    RECORD,
     effectsLogger,
     isEffectsLoggerLog,
     newLog,

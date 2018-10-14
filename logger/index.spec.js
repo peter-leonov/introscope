@@ -15,7 +15,7 @@ const introscope = (scope = {}) => {
     return scope;
 };
 
-import { effectsLogger, SPY, KEEP, MOCK } from '.';
+import { effectsLogger, KEEP, MOCK, SPY, RECORD } from '.';
 import { getSpyTarget } from './proxySpy';
 
 describe('todos', () => {
@@ -327,16 +327,19 @@ describe('recorder works', () => {
         const { scope } = effectsLogger(() => ({
             a: () => 'a1',
             b: () => 'b1',
+            c: () => 'c',
         }))(
             {
-                a: SPY,
-                b: SPY,
+                a: RECORD,
+                b: RECORD,
+                c: SPY,
             },
             { recorder },
         );
 
         scope.a();
         scope.b();
+        scope.c();
 
         expect(recorder.results).toMatchSnapshot();
     });
@@ -350,16 +353,19 @@ describe('recorder works', () => {
         const { scope } = effectsLogger(() => ({
             a: () => {},
             b: () => {},
+            c: () => 'c',
         }))(
             {
-                a: SPY,
-                b: SPY,
+                a: RECORD,
+                b: RECORD,
+                c: SPY,
             },
             { recorder },
         );
 
         expect(scope.a()).toBe('a1');
         expect(scope.b()).toBe('b1');
+        expect(scope.c()).toBe('c');
     });
 
     it('doing nothing', () => {
