@@ -1,4 +1,5 @@
 const { proxySpy } = require('./proxySpy');
+const { getRecorder } = require('./recorder');
 
 const effectsLoggerLogRegistry = new WeakMap();
 const isEffectsLoggerLog = log => effectsLoggerLogRegistry.has(log);
@@ -16,6 +17,7 @@ const functionMocker = (log = newLog()) =>
             return v =>
                 proxySpy(
                     (...args) => log.push(...args),
+                    undefined,
                     prop,
                     v || function() {},
                 );
@@ -31,10 +33,11 @@ const namedFunction = name => {
 const KEEP = {};
 const MOCK = {};
 const SPY = {};
+const RECORD = {};
 
 const effectsLogger = scopeFactory => (
     plan,
-    { log = newLog(), defaultAction = KEEP, recorder = {} } = {},
+    { log = newLog(), defaultAction = KEEP, recorder = getRecorder() } = {},
 ) => {
     // to not polute the log with scope creation
     let moduleLoggerEnabled = false;
@@ -45,11 +48,8 @@ const effectsLogger = scopeFactory => (
         moduleLoggerEnabled && type != 'get' && log.push([type, ...args]);
 
     const scope = scopeFactory(
-        proxySpy(moduleLogger, 'module', Object.create(null)),
+        proxySpy(moduleLogger, undefined, 'module', Object.create(null)),
     );
-
-    // it's a hack for presentation :)
-    logger.recorder = recorder;
 
     for (const id in scope) {
         const action = id in plan ? plan[id] : defaultAction;
@@ -59,10 +59,11 @@ const effectsLogger = scopeFactory => (
         }
 
         if (action === SPY) {
-            scope[id] = proxySpy(logger, id, scope[id]);
+            scope[id] = proxySpy(logger, recorder, id, scope[id]);
             continue;
         }
 
+        // see the code below
         if (plan[id] === MOCK) {
             delete plan[id];
         }
@@ -77,6 +78,7 @@ const effectsLogger = scopeFactory => (
             }
             scope[id] = proxySpy(
                 logger,
+                undefined,
                 id,
                 plan[id] || namedFunction(`${id}AutoMock`),
             );
@@ -93,6 +95,7 @@ const effectsLogger = scopeFactory => (
             }
             scope[id] = proxySpy(
                 logger,
+                undefined,
                 id,
                 plan[id] || (Array.isArray(scope[id]) ? [] : {}),
             );
@@ -108,7 +111,7 @@ const effectsLogger = scopeFactory => (
                 typeof plan[id] == 'function' ||
                 (typeof plan[id] == 'object' && plan[id] !== null)
             ) {
-                scope[id] = proxySpy(logger, id, plan[id]);
+                scope[id] = proxySpy(logger, undefined, id, plan[id]);
             } else {
                 // all primitive values stay as they are
                 scope[id] = plan[id];
