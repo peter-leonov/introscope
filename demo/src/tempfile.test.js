@@ -1,19 +1,13 @@
-import { effectsLogger, SPY } from 'introscope/logger';
-import { getRecorder } from './recorder';
+import { effectsLogger, RECORD } from 'introscope/logger';
 import { introscope } from './tempfile';
 
 const logger = effectsLogger(introscope);
 
 test('tempfile', () => {
-    const recorder = getRecorder();
-
-    const { scope, effects } = logger(
-        {
-            now: SPY,
-            rand: SPY,
-        },
-        { recorder },
-    );
+    const { scope, effects, recorder } = logger({
+        now: RECORD,
+        rand: RECORD,
+    });
 
     expect(scope.tempfile()).toMatchSnapshot();
 
