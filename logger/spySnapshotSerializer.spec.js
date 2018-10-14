@@ -3,7 +3,7 @@ const { spySnapshotSerializer } = require('./spySnapshotSerializer');
 
 global.expect.addSnapshotSerializer(spySnapshotSerializer);
 
-const newSpy = v => proxySpy(() => {}, 'spy', v);
+const newSpy = v => proxySpy(() => {}, undefined, 'spy', v);
 
 describe('spySnapshotSerializer', () => {
     it('naked spy', () => {
