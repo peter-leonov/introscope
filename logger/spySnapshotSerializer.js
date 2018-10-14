@@ -15,6 +15,7 @@ const spySnapshotSerializer = {
         );
     },
 };
+
 module.exports = {
     spySnapshotSerializer,
 };

@@ -1,4 +1,4 @@
-import { readFileSync, writeFileSync } from 'fs';
+const { readFileSync, writeFileSync } = require('fs');
 
 expect.extend({
     __getExpectContext(_, cb) {
@@ -37,7 +37,7 @@ class Recorder {
     }
 }
 
-export const getRecorder = () => {
+const getRecorder = () => {
     let context;
     expect(null).__getExpectContext(c => (context = c));
 
@@ -49,4 +49,8 @@ export const getRecorder = () => {
         context.snapshotState._updateSnapshot === 'all' ? 'record' : 'playback';
 
     return new Recorder(filename, mode);
+};
+
+module.exports = {
+    getRecorder,
 };
