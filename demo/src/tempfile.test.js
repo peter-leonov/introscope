@@ -4,7 +4,7 @@ import { introscope } from './tempfile';
 
 const logger = effectsLogger(introscope);
 
-test('generates a kinda uniq name', () => {
+test('tempfile', () => {
     const recorder = getRecorder();
 
     const { scope, effects } = logger(
