@@ -12,7 +12,7 @@ const ONE = 1; // notice, not exported
 export const inc = a => a + ONE;
 
 // inc.test.js
-import { introscope } from './inc'
+import { introscope } from './inc';
 
 test('inc', () => {
     const scope = introscope();
@@ -22,6 +22,7 @@ test('inc', () => {
     expect(scope.inc(1)).toBe(101);
 });
 ```
+
 ## Effects example
 
 ![effects example](abc.gif)
@@ -303,7 +304,7 @@ describe('todos', () => {
 });
 ```
 
-How it works? It iterates over all the symbols (functions, locals, globals) in the scope returned by `introscope()` and for each function creates an empty mock. With symbols marked with `KEEP` it does nothing and for symbols marked as `SPY` it wraps them. All the mocks write to the same side effects log (plain array, btw) wchi then can be inspected manually or, better, sent to Jest's `expect().matchSnaphot()`. There is a custom serializer available to make log snapshots more readable.
+How it works? It iterates over all the symbols (functions, locals, globals) in the scope returned by `introscope()` and for each function creates an empty mock. With symbols marked with `KEEP` it does nothing and for symbols marked as `SPY` it wraps them (there is also a `RECORD` type which plays returned values back, in beta now). All the mocks write to the same side effects log (plain array, btw) wchi then can be inspected manually or, better, sent to Jest's `expect().matchSnaphot()`. There is a custom serializer available to make log snapshots more readable.
 
 ## Usage with React
 
