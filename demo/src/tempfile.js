@@ -1,4 +1,4 @@
 const now = () => Date.now();
-const rand = () => (Math.random() * 1e16).toFixed();
+const rand = () => Math.random();
 
 export const tempfile = () => `/var/tmp/${now()}-${rand()}`;
