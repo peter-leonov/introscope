@@ -88,7 +88,7 @@ describe('effectsLogger', () => {
             });
 
             expect(typeof scope.foo).toBe('function');
-            expect(scope.foo.name).toBe('autoMock');
+            expect(scope.foo.name).toBe('fooAutoMock');
         });
 
         it('MOCK object', () => {

@@ -22,6 +22,12 @@ const functionMocker = (log = newLog()) =>
         },
     });
 
+const namedFunction = name => {
+    const fn = function() {};
+    Object.defineProperty(fn, 'name', { value: name });
+    return fn;
+};
+
 const KEEP = {};
 const MOCK = {};
 const SPY = {};
@@ -72,7 +78,7 @@ const effectsLogger = scopeFactory => (
             scope[id] = proxySpy(
                 logger,
                 id,
-                plan[id] || function autoMock() {},
+                plan[id] || namedFunction(`${id}AutoMock`),
             );
             continue;
         }
@@ -102,7 +108,7 @@ const effectsLogger = scopeFactory => (
                 typeof plan[id] == 'function' ||
                 (typeof plan[id] == 'object' && plan[id] !== null)
             ) {
-                scope[id] = proxySpy(logger, id, plan[id] || function() {});
+                scope[id] = proxySpy(logger, id, plan[id]);
             } else {
                 // all primitive values stay as they are
                 scope[id] = plan[id];
