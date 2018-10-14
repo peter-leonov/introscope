@@ -135,7 +135,7 @@ const effectsLogger = scopeFactory => (
 
     loggerEnabled = true;
     moduleLoggerEnabled = true;
-    return { scope, effects, m: functionMocker(log) };
+    return { scope, effects, recorder, m: functionMocker(log) };
 };
 
 module.exports = {

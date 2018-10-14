@@ -318,6 +318,14 @@ describe('functionMocker', () => {
 });
 
 describe('recorder works', () => {
+    it('api', () => {
+        const recorder = {};
+
+        const { scope } = effectsLogger(() => ({}))({}, { recorder });
+
+        expect(recorder).toBe(recorder);
+    });
+
     it('recording', () => {
         const recorder = {
             recording: true,
