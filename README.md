@@ -6,12 +6,16 @@ A babel plugin and a set of tools for delightful unit testing of modern ES6 modu
 
 ![scope example](inc.gif)
 
+**inc.js**
+
 ```js
-// inc.js
 const ONE = 1; // notice, not exported
 export const inc = a => a + ONE;
+```
 
-// inc.test.js
+**inc.test.js**
+
+```js
 import { introscope } from './inc';
 
 test('inc', () => {
@@ -27,8 +31,9 @@ test('inc', () => {
 
 ![effects example](abc.gif)
 
+**abc.js**
+
 ```js
-// abc.js
 const a = () => {};
 const b = () => {};
 const c = () => {};
@@ -38,8 +43,11 @@ export const abc = () => {
     b(2);
     c(3);
 };
+```
 
-// abc.test.js
+**abc.test.js**
+
+```js
 import { effectsLogger, SPY } from 'introscope/logger';
 import { introscope } from './abc';
 
@@ -56,6 +64,45 @@ test('abc', () => {
 
     expect(effects()).toMatchSnapshot();
 });
+```
+
+## Recorder example
+
+![recorder example](tempfile.gif)
+
+**tempfile.js**
+
+```js
+const now = () => Date.now();
+const rand = () => Math.random();
+
+export const tempfile = () => `/var/tmp/${now()}-${rand()}`;
+```
+
+**tempfile.test.js**
+
+```js
+import { effectsLogger, RECORD } from 'introscope/logger';
+import { introscope } from './tempfile';
+
+const recordedScope = effectsLogger(introscope);
+
+test('tempfile', () => {
+    const { scope, recorder } = recordedScope({
+        now: RECORD,
+        rand: RECORD,
+    });
+
+    expect(scope.tempfile()).toMatchSnapshot();
+
+    recorder.save();
+});
+```
+
+**tempfile.test.js.record**
+
+```js
+[['now', 1539533182792], ['rand', 0.20456280736087873]];
 ```
 
 ## What so special?
