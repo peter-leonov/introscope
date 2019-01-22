@@ -122,7 +122,9 @@ See what Introscope does with code in [playground](https://astexplorer.net/#/gis
 
 ## Known issues
 
-Currently Introscope supports Babel 6.26 and Jest 22.4. Support for Babel 7 and Jest 22.6 is coming.
+Currently Introscope supports the smooth integration with Jest 22.4 only. But is still usable with the `@introscope "enable": true` magic comment.
+
+Support for TypeScript using Babel 7 is planned.
 
 Please, see a short ☺️ list here: [issues labeled as bug](https://github.com/peter-leonov/introscope/labels/bug)
 
@@ -372,8 +374,6 @@ For Introscope to work correctly it needs Flow type annotaions to be stripped, a
     ]
 }
 ```
-
-Same should work for TypeScript once Babel 7 comes out.
 
 ### Type safe tests
 
