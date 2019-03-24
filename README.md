@@ -540,6 +540,10 @@ https://github.com/speedskater/babel-plugin-rewire/blob/master/src/babel-plugin-
 
 ## Changelog
 
+**1.7.1**
+
+-   Remove gifs from the npm module 🤦‍♂️
+
 **1.7.0**
 
 -   Require the magic comment by default
