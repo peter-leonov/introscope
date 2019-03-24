@@ -105,7 +105,7 @@ function processProgram({ types: t }, programPath, programOpts) {
     const options = {
         enable: isInASTExpoler(),
         ignore: new Set(STANDARD_BUILTINS),
-        instrumentImports: 'query',
+        instrumentImports: false, // 'query'
         removeImports: false,
         exportName: 'introscope',
         global: 'global',
@@ -358,10 +358,10 @@ function processProgram({ types: t }, programPath, programOpts) {
                             'Error parsing Introscope config:',
                             comment,
                         );
+                    }
+                    mergeIntoOptions(options, config);
                 }
-                mergeIntoOptions(options, config);
-            }
-        });
+            });
     };
 
     const program = path => {
