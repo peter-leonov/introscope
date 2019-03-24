@@ -345,14 +345,19 @@ function processProgram({ types: t }, programPath, programOpts) {
         const comments =
             path.parent.comments ||
             path.parent.tokens.filter(byType('CommentLine'));
-        comments.map(node => node.value).forEach(comment => {
-            const [_, configJSON] = comment.split(/^\s*@introscope\s+/);
-            if (configJSON) {
-                let config = {};
-                try {
-                    config = JSON.parse(`{${configJSON}}`);
-                } catch (ex) {
-                    console.error('Error parsing Introscope config:', comment);
+        comments
+            .map(node => node.value)
+            .forEach(comment => {
+                const [_, configJSON] = comment.split(/^\s*@introscope\s+/);
+                if (configJSON) {
+                    let config = {};
+                    try {
+                        config = JSON.parse(`{${configJSON}}`);
+                    } catch (ex) {
+                        console.error(
+                            'Error parsing Introscope config:',
+                            comment,
+                        );
                 }
                 mergeIntoOptions(options, config);
             }
