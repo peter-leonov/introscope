@@ -171,7 +171,15 @@ Third, add this magic comment to the end of the module (or beginning, or anywher
 
 There is a way to avoid adding the magic comment, but it's fairly unstable and works only for older versions of Jest. If you badly hate adding little cure magic comments to your modules, please, help Introscope with making Jest team to get [#6282](https://github.com/facebook/jest/pull/6282) merged.
 
-Done! Start using Introscope in tests:
+Done! You're ready to run some test (if you have any 😅):
+
+```sh
+yarn jest
+# or
+npm run env -- jest
+```
+
+Start using Introscope in tests:
 
 ```js
 import { introscope } from './tested-module';
