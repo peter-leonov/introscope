@@ -7,3 +7,5 @@ export const abc = () => {
     b(2);
     c(3);
 };
+
+// @introscope "enable": true

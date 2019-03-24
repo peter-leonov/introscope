@@ -2,5 +2,5 @@
     "presets": [
         ["@babel/preset-env", { "targets": { "node": "current" } }]
     ],
-    // "plugins": ["introscope/babel-plugin"]
+    "plugins": ["introscope/babel-plugin"]
 }
