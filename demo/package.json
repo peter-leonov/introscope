@@ -8,11 +8,12 @@
         "test": "jest",
         "check": "jest && flow check"
     },
-    "dependencies": {
+    "dependencies": {},
+    "devDependencies": {
         "@babel/core": "^7.4.0",
         "@babel/preset-env": "^7.4.2",
         "babel-jest": "^24.5.0",
-        "introscope": "^1.6.3",
+        "introscope": "^1.7.1",
         "jest": "^24.5.0"
     }
 }

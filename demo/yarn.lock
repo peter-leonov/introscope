@@ -1579,9 +1579,9 @@ inherits@2, inherits@~2.0.3:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/inherits/-/inherits-2.0.3.tgz#633c2c83e3da42a502f52466022480f4208261de"
 
-introscope@^1.6.3:
-  version "1.6.3"
-  resolved "https://registry.yarnpkg.com/introscope/-/introscope-1.6.3.tgz#2e16b7ccd58cb7d2037a39edc9454c9728644c8c"
+introscope@^1.7.1:
+  version "1.7.1"
+  resolved "https://registry.yarnpkg.com/introscope/-/introscope-1.7.1.tgz#37fec6ac3c68ca582b3af0147b7569021f53f995"
   dependencies:
     lodash "^4.17.10"
 
