@@ -11,6 +11,8 @@ A babel plugin and a set of tools for delightful unit testing of modern ES6 modu
 ```js
 const ONE = 1; // notice, not exported
 export const inc = a => a + ONE;
+
+// @introscope "enable": true
 ```
 
 **inc.test.js**
@@ -43,6 +45,8 @@ export const abc = () => {
     b(2);
     c(3);
 };
+
+// @introscope "enable": true
 ```
 
 **abc.test.js**
@@ -77,6 +81,8 @@ const now = () => Date.now();
 const rand = () => Math.random();
 
 export const tempfile = () => `/var/tmp/${now()}-${rand()}`;
+
+// @introscope "enable": true
 ```
 
 **tempfile.test.js**
@@ -122,64 +128,64 @@ See what Introscope does with code in [playground](https://astexplorer.net/#/gis
 
 ## Known issues
 
-Currently Introscope supports the smooth integration with Jest 22.4 only. But is still usable with the `@introscope "enable": true` magic comment.
-
 Support for TypeScript using Babel 7 is planned.
 
 Please, see a short ☺️ list here: [issues labeled as bug](https://github.com/peter-leonov/introscope/labels/bug)
 
-## Description
+## Longer description
 
 **TL;DR;** no need to export all the functions/variables of your module just to make it testable, Introscope does it automatically by changing the module source on the fly in testing environment.
 
 Introscope is (mostly) a babel plugin which allows a unit test code look inside an ES module without rewriting the code of the module. Introscope does it by transpiling the module source to a factory function which exposes the full internal scope of a module on the fly. This helps separate how the actual application consumes the module via it's exported API and how it gets tested using Introscope with all functions/variables visible, mockable and spy-able.
 
-It has handy [integration with Jest](#usage) (tested with v22.4.3 and v23.1.0) and [Proxy based robust spies](#effectslogger). Support for more popular unit testing tools to come soon.
+It has handy [integration with Jest](#usage) (tested with Jest v24.5.0 and Babel v7.4.0) and [Proxy based robust spies](#effectslogger). Support for more popular unit testing tools to come soon.
 
 ## Usage
 
-Introscope works best with Jest but other frameworks can utilise Introscope with [magic comments](#magic-comments).
+Installation from scratch looks like the following.
 
-Install:
+First, install the Jest and Babel powered test environment together with Introscope:
 
 ```sh
-yarn add -D introscope
+yarn add -D jest babel-jest @babel/core @babel/preset-env introscope
 # or
-npm install -D introscope
+npm install -D jest babel-jest @babel/core @babel/preset-env introscope
 ```
 
-Add the babel plugin to the project's babel configuration (most likely `.babelrc`):
+Second, edit `.babelrc` like this:
 
-```js
+```json
 {
-    // presets get run after plugins, and it's ok as introscope
-    // understands all the new fancy stuff enabled in these presets
-    "presets": ["react", "es2015", "stage-3"],
-    "plugins": [
-        // ...here go all other plugins...
-        // Please, try to keep Introscope's plugin the last one
-        // so that it's harsh transformations do not affect others.
-        "introscope/babel-plugin"
-    ]
+    "presets": [["@babel/preset-env", { "targets": { "node": "current" } }]],
+    "plugins": ["introscope/babel-plugin"]
 }
 ```
 
-and for easy integration with Jest modify it's configuration (most likely `jest.config.js`):
+The perameters to the `@babel/preset-env` preset are needed to make async/await syntax work and are not relevant to Introscope, it's just to make the modern JS code running.
+
+Third, add this magic comment to the end of the module (or beginning, or anywhere you like) you are going to test:
 
 ```js
-module.exports = {
-    // this makes babel plugin know which file to transform
-    testRunner: 'introscope/testRunner',
-};
+// @introscope "enable": true
 ```
 
-Done! Start using Introscope in tests:
+There is a way to avoid adding the magic comment, but it's fairly unstable and works only for older versions of Jest. If you badly hate adding little cure magic comments to your modules, please, help Introscope with making Jest team to get [#6282](https://github.com/facebook/jest/pull/6282) merged.
+
+Done! You're ready to run some test (if you have any 😅):
+
+```sh
+yarn jest
+# or
+npm run env -- jest
+```
+
+Start using Introscope in tests:
 
 ```js
 import { introscope } from './tested-module';
 
-// or using common modules (note the `?introscope` suffix)
-const { introscope } = require('./tested-module?introscope');
+// or using common modules
+const { introscope } = require('./tested-module');
 ```
 
 For safety reasons this plugin does nothing in non test environments, e.g. in production or development environment it's a no-op. Jest sets `NODE_ENV` to `'test'` automatically. Please, see your favirite test runner docs for more.
@@ -202,6 +208,8 @@ const ensureOkStatus = response => {
 };
 
 export const getTodos = httpGet('/todos').then(ensureOkStatus);
+
+// @introscope "enable": true
 ```
 
 and transpiles it's code on the fly to this (comments added manually):
@@ -305,6 +313,7 @@ const newTodo = (id, title) => {
 const addTodo = (title, cb) => {
     cb(newTodo(++count, title));
 };
+// @introscope "enable": true
 
 // todo.spec.js
 import { introscope } from './increment.js';
@@ -353,7 +362,7 @@ describe('todos', () => {
 });
 ```
 
-How it works? It iterates over all the symbols (functions, locals, globals) in the scope returned by `introscope()` and for each function creates an empty mock. With symbols marked with `KEEP` it does nothing and for symbols marked as `SPY` it wraps them (there is also a `RECORD` type which plays returned values back, in beta now). All the mocks write to the same side effects log (plain array, btw) wchi then can be inspected manually or, better, sent to Jest's `expect().matchSnaphot()`. There is a custom serializer available to make log snapshots more readable.
+How does it work? It iterates over all the symbols (functions, locals, globals) in the scope returned by `introscope()` and for each function creates an empty mock. With symbols marked with `KEEP` it does nothing and for symbols marked as `SPY` it wraps them (there is also a `RECORD` type which plays returned values back, in beta now). All the mocks write to the same side effects log (plain array, btw) wchi then can be inspected manually or, better, sent to Jest's `expect().matchSnaphot()`. There is a custom serializer available to make log snapshots more readable.
 
 ## Usage with React
 
@@ -456,17 +465,6 @@ It's just a comment with leading `@introscope` substring followed by a JSON obje
 
 Yes. The babel plugin does use only one additional traverse. All the variables look up logic is done by Babel parser for free at compile time.
 
-### Why adding [jest runner](https://github.com/peter-leonov/introscope/blob/master/testRunner.js)?
-
-Because by manual transpiling code in a unit test we break a lot of things:
-
-1.  Jest will not add the introscoped file to watch mode
-2.  Jest automatically instruments code for coverage report
-3.  Jest can be configured to look for modules in non standard way
-4.  Jest can be configured with additional Babel plugins
-5.  Flow will not know where to get types from
-6.  Jump to file will not work in editors
-
 ## TODOs
 
 ### Imported values in curried functions
@@ -549,6 +547,14 @@ https://github.com/speedskater/babel-plugin-rewire/blob/master/src/babel-plugin-
 -   Mock modules in RequireJS: [requirejs-mock](https://github.com/ValeriiVasin/requirejs-mock).
 
 ## Changelog
+
+**1.7.1**
+
+-   Remove gifs from the npm module 🤦‍♂️
+
+**1.7.0**
+
+-   Require the magic comment by default
 
 **1.4.2**
 

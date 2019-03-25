@@ -1,0 +1,7 @@
+.git
+node_modules
+.history
+.vscode
+dist
+*.log
+*.gif

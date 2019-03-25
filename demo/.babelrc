@@ -1,4 +1,4 @@
 {
-    "presets": ["flow", "env"],
-    "plugins": ["syntax-object-rest-spread", "introscope/babel-plugin"]
+    "presets": [["@babel/preset-env", { "targets": { "node": "current" } }]],
+    "plugins": ["introscope/babel-plugin"]
 }

@@ -43,3 +43,5 @@ export const register = async ({ email, password, terms }) => {
 
     hideLoadingSpinner();
 };
+
+// @introscope "enable": true
