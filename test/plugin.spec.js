@@ -1,4 +1,4 @@
-import { transform } from 'babel-core';
+import { transform } from '@babel/core';
 import plugin from '../babel-plugin';
 
 const shoot = (code, opts = {}) =>
@@ -8,8 +8,8 @@ const shoot = (code, opts = {}) =>
             sourceType: 'module',
             plugins: [
                 [plugin, { enable: true, ...opts }],
-                'syntax-jsx',
-                'syntax-object-rest-spread',
+                '@babel/syntax-jsx',
+                '@babel/syntax-object-rest-spread',
             ],
         }).code,
     ).toMatchSnapshot();
@@ -21,10 +21,10 @@ const shootFlow = (code, opts = {}) =>
             sourceType: 'module',
             plugins: [
                 [plugin, { enable: true, ...opts }],
-                'transform-flow-strip-types',
-                'syntax-jsx',
-                'syntax-flow',
-                'syntax-object-rest-spread',
+                '@babel/transform-flow-strip-types',
+                '@babel/syntax-jsx',
+                '@babel/syntax-flow',
+                '@babel/syntax-object-rest-spread',
             ],
         }).code,
     ).toMatchSnapshot();

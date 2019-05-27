@@ -9,20 +9,18 @@
         "test": "jest",
         "check": "jest && flow check"
     },
-    "peerDependencies": {
-        "babel-core": "^6.26.0"
-    },
+    "peerDependencies": {},
     "devDependencies": {
-        "babel-cli": "^6.26.0",
-        "babel-core": "^6.26.0",
-        "babel-jest": "^23.0.1",
-        "babel-plugin-syntax-flow": "^6.18.0",
-        "babel-plugin-syntax-jsx": "^6.18.0",
-        "babel-plugin-syntax-object-rest-spread": "^6.13.0",
-        "babel-plugin-transform-flow-strip-types": "^6.22.0",
-        "babel-preset-env": "^1.6.1",
+        "@babel/cli": "^7.4.4",
+        "@babel/core": "^7.4.5",
+        "@babel/plugin-syntax-flow": "^7.2.0",
+        "@babel/plugin-syntax-jsx": "^7.2.0",
+        "@babel/plugin-syntax-object-rest-spread": "^7.2.0",
+        "@babel/plugin-transform-flow-strip-types": "^7.4.4",
+        "@babel/preset-env": "^7.4.5",
+        "babel-jest": "^24.8.0",
         "flow-bin": "^0.68.0",
-        "jest": "^23.1.0",
+        "jest": "^24.8.0",
         "regenerator-runtime": "^0.11.1"
     },
     "dependencies": {}
