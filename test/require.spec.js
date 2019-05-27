@@ -1,6 +1,7 @@
-const introscope = path => require(path + '?introscope').introscope;
 
-describe('require.introscope', () => {
+describe.skip('require.introscope', () => {
+    const introscope = path => require(path + '?introscope').introscope;
+
     it('does not cache when require() goes first', () => {
         // in each require order test filenames should be uniqe
         const file = './require1';
@@ -52,17 +53,19 @@ describe('require.introscope', () => {
 });
 
 describe('source maps', () => {
+    const introscope = path => require(path).introscope;
+
     it('stack trace is correct', () => {
         expect.assertions(4);
 
         const errorScope = introscope('./error.js');
         expect(typeof errorScope).toBe('function');
         const scope = errorScope();
-        expect(typeof scope.throws).toBe('function');
+        expect(typeof scope.throwsAnError).toBe('function');
 
         expect(() => {
             try {
-                scope.throws();
+                scope.throwsAnError();
             } catch (err) {
                 const introscopedPart = err.stack.split(__filename)[0];
 

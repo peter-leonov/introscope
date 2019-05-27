@@ -2,6 +2,6 @@
 
 exports[`source maps stack trace is correct 1`] = `
 "Error: foo
-    at Object._scope.throws (__dirname/error.js:6:11)
-    at "
+    at Object._scope.throwsAnError (__dirname/error.js:6:11)
+    at throwsAnError ("
 `;
