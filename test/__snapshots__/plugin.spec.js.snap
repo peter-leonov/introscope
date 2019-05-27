@@ -362,7 +362,9 @@ exports[`plugin flow breaks out of a type cast node 1`] = `
 "var _savedGlobal = global;
 export const introscope = function (_scope = {}) {
   var x = _scope.x = _savedGlobal.x;
-  (0, _scope.x)();
+  const y1 = _scope.y1 = _scope.x;
+  const y2 = _scope.y2 = _scope.x; // built-in type
+
   return _scope;
 };"
 `;

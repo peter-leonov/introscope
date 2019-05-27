@@ -199,7 +199,9 @@ describe('plugin', () => {
 
         it('breaks out of a type cast node', () => {
             shootFlow(`
-            (x(): number);
+            type LocalType = string;
+            const y1 = (x: LocalType);
+            const y2 = (x: number); // built-in type
             `);
         });
     });
