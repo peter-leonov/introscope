@@ -368,38 +368,37 @@ export const introscope = function (_scope = {}) {
 `;
 
 exports[`plugin flow ignores imported types 1`] = `
-"
-import 'y';
-var _savedGlobal = global;
+"var _savedGlobal = global;
 export const introscope = function (_scope = {}) {
-                return _scope;
+  return _scope;
 };"
 `;
 
 exports[`plugin flow ignores object types 1`] = `
 "var _savedGlobal = global;
 export const introscope = function (_scope = {}) {
-    return _scope;
+  return _scope;
 };"
 `;
 
 exports[`plugin flow ignores type aliases 1`] = `
 "var _savedGlobal = global;
 export const introscope = function (_scope = {}) {
-    _scope.typedFuntion = typedFuntion;
+  _scope.typedFuntion = typedFuntion;
 
-    function typedFuntion(x) {
-        let typedVar = 123;
-    }
-    return _scope;
+  function typedFuntion(x) {
+    let typedVar = 123;
+  }
+
+  return _scope;
 };"
 `;
 
 exports[`plugin flow understands opaque types 1`] = `
 "var _savedGlobal = global;
 export const introscope = function (_scope = {}) {
-                let foo = _scope.foo = \\"foo\\";
-                return _scope;
+  let foo = _scope.foo = \\"foo\\";
+  return _scope;
 };"
 `;
 

@@ -328,7 +328,21 @@ function processProgram({ types: t }, programPath, programOpts) {
     };
 
     const bindingToScope = binding => {
-        if (!binding) return;
+        if (!binding || !binding.path) return;
+        if (binding.path.node.type == 'TypeAlias') return;
+        if (binding.path.node.type == 'ImportSpecifier') {
+            if (binding.path.node.importKind == 'type') return;
+        };
+        if (binding.path.node.type == 'OpaqueType') {
+            return;
+        };
+
+        const parentPath = binding.path.parentPath
+        if (parentPath) {
+            if (parentPath.node.type == 'ImportDeclaration') {
+                if (parentPath.node.importKind == 'type') return;
+            }
+        }
         binding.referencePaths.forEach(replaceReferenceWithScope);
         binding.constantViolations.forEach(replaceMutationWithScope);
         return declarationToScope(binding.path, binding.identifier);
