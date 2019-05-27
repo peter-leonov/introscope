@@ -540,8 +540,8 @@ export const introscope = function (_scope = {}) {
 
 exports[`test in test code does transpile only introscope import 1`] = `
 "
-import { introscope } from 'directModule?introscope';
-import { introscope as renamed } from 'renamedModule?introscope';
+import { introscope } from 'directModule';
+import { introscope as renamed } from 'renamedModule';
 import { otherNamedImport } from 'otheModule';"
 `;
 
