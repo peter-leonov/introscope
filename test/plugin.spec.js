@@ -8,6 +8,19 @@ const shoot = (code, opts = {}) =>
             sourceType: 'module',
             plugins: [
                 [plugin, { enable: true, ...opts }],
+                'syntax-jsx',
+                'syntax-object-rest-spread',
+            ],
+        }).code,
+    ).toMatchSnapshot();
+
+const shootFlow = (code, opts = {}) =>
+    expect(
+        transform(code, {
+            // passPerPreset: true,
+            sourceType: 'module',
+            plugins: [
+                [plugin, { enable: true, ...opts }],
                 'transform-flow-strip-types',
                 'syntax-jsx',
                 'syntax-flow',
@@ -152,7 +165,7 @@ describe('plugin', () => {
 
     describe('flow', () => {
         it('ignores imported types', () => {
-            shoot(`
+            shootFlow(`
                 import type { TypeImportedTypeShouldBeIgnored } from 'x'
                 import { type ImportedTypeShouldBeIgnored } from 'y'
                 type LocalTypeShouldBeIgnored = ImportedTypeShouldBeIgnored | TypeImportedTypeShouldBeIgnored;
@@ -160,7 +173,7 @@ describe('plugin', () => {
         });
 
         it('ignores type aliases', () => {
-            shoot(`
+            shootFlow(`
                 type SomeType = number;
                 type SomeOtherType = SomeType;
                 function typedFuntion(x: SomeType): SomeOtherType {
@@ -170,14 +183,14 @@ describe('plugin', () => {
         });
 
         it('understands opaque types', () => {
-            shoot(`
+            shootFlow(`
                 opaque type OpaqueType = string;
                 let foo: OpaqueType = "foo"
             `);
         });
 
         it('ignores object types', () => {
-            shoot(`
+            shootFlow(`
                 type A = {
                     flowObjectProperty: number,
                 };
@@ -185,7 +198,7 @@ describe('plugin', () => {
         });
 
         it('breaks out of a type cast node', () => {
-            shoot(`
+            shootFlow(`
             (x(): number);
             `);
         });
