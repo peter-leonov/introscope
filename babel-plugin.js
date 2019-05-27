@@ -14,7 +14,7 @@ const getGlobal = () => {
     if (typeof window != 'undefined') return window;
 };
 
-const isInASTExpoler = () => /astexplorer[.]net/.test(getGlobal().location);
+const isInASTExploler = () => /astexplorer[.]net/.test(getGlobal().location);
 
 // from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects
 const STANDARD_BUILTINS = [
@@ -103,7 +103,7 @@ const mergeIntoOptions = (options, opts) => {
 
 function processProgram({ types: t }, programPath, programOpts) {
     const options = {
-        enable: isInASTExpoler(),
+        enable: isInASTExploler(),
         ignore: new Set(STANDARD_BUILTINS),
         instrumentImports: false, // 'query'
         removeImports: false,
@@ -451,7 +451,7 @@ function processProgram({ types: t }, programPath, programOpts) {
 const maybeMonkeyPatchIsReferenced = t => {
     // astexplorer.net injects an infinite loop protection
     // which uses stale date value: https://github.com/ForbesLindesay/halting-problem/blob/master/lib/runtime.js#L3
-    if (isInASTExpoler()) return;
+    if (isInASTExploler()) return;
 
     const isFixed = () => {
         const node = t.identifier('a');
