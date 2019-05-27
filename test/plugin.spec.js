@@ -1,4 +1,4 @@
-import { transform } from 'babel-core';
+import { transform } from '@babel/core';
 import plugin from '../babel-plugin';
 
 const shoot = (code, opts = {}) =>
@@ -8,10 +8,23 @@ const shoot = (code, opts = {}) =>
             sourceType: 'module',
             plugins: [
                 [plugin, { enable: true, ...opts }],
-                'transform-flow-strip-types',
-                'syntax-jsx',
-                'syntax-flow',
-                'syntax-object-rest-spread',
+                '@babel/syntax-jsx',
+                '@babel/syntax-object-rest-spread',
+            ],
+        }).code,
+    ).toMatchSnapshot();
+
+const shootFlow = (code, opts = {}) =>
+    expect(
+        transform(code, {
+            // passPerPreset: true,
+            sourceType: 'module',
+            plugins: [
+                [plugin, { enable: true, ...opts }],
+                '@babel/transform-flow-strip-types',
+                '@babel/syntax-jsx',
+                '@babel/syntax-flow',
+                '@babel/syntax-object-rest-spread',
             ],
         }).code,
     ).toMatchSnapshot();
@@ -152,7 +165,7 @@ describe('plugin', () => {
 
     describe('flow', () => {
         it('ignores imported types', () => {
-            shoot(`
+            shootFlow(`
                 import type { TypeImportedTypeShouldBeIgnored } from 'x'
                 import { type ImportedTypeShouldBeIgnored } from 'y'
                 type LocalTypeShouldBeIgnored = ImportedTypeShouldBeIgnored | TypeImportedTypeShouldBeIgnored;
@@ -160,7 +173,7 @@ describe('plugin', () => {
         });
 
         it('ignores type aliases', () => {
-            shoot(`
+            shootFlow(`
                 type SomeType = number;
                 type SomeOtherType = SomeType;
                 function typedFuntion(x: SomeType): SomeOtherType {
@@ -170,14 +183,14 @@ describe('plugin', () => {
         });
 
         it('understands opaque types', () => {
-            shoot(`
+            shootFlow(`
                 opaque type OpaqueType = string;
                 let foo: OpaqueType = "foo"
             `);
         });
 
         it('ignores object types', () => {
-            shoot(`
+            shootFlow(`
                 type A = {
                     flowObjectProperty: number,
                 };
@@ -185,8 +198,28 @@ describe('plugin', () => {
         });
 
         it('breaks out of a type cast node', () => {
-            shoot(`
-            (x(): number);
+            shootFlow(`
+            type LocalType = string;
+            const y1 = (x: LocalType);
+            const y2 = (x.abc: number); // built-in type
+            `);
+        });
+        it('breaks out of a global type cast node', () => {
+            shootFlow(`
+            const y3 = (x: GlobalType); // global type
+            `);
+        });
+
+        it('does not break typeof', () => {
+            shootFlow(`
+            const localVar = 777;
+            let x: typeof localVar;
+            `);
+        });
+
+        it('ignores built-in utility types', () => {
+            shootFlow(`
+            function foo(a: $Keys<A>) {}
             `);
         });
     });

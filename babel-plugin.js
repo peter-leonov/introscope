@@ -14,7 +14,7 @@ const getGlobal = () => {
     if (typeof window != 'undefined') return window;
 };
 
-const isInASTExpoler = () => /astexplorer[.]net/.test(getGlobal().location);
+const isInASTExploler = () => /astexplorer[.]net/.test(getGlobal().location);
 
 // from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects
 const STANDARD_BUILTINS = [
@@ -103,7 +103,7 @@ const mergeIntoOptions = (options, opts) => {
 
 function processProgram({ types: t }, programPath, programOpts) {
     const options = {
-        enable: isInASTExpoler(),
+        enable: isInASTExploler(),
         ignore: new Set(STANDARD_BUILTINS),
         instrumentImports: false, // 'query'
         removeImports: false,
@@ -294,6 +294,8 @@ function processProgram({ types: t }, programPath, programOpts) {
     const replaceReferenceWithScope = path => {
         // do not touch flow types at all
         if (path.isFlow()) return;
+        if (path.container.type == 'GenericTypeAnnotation') return;
+        // if (path.parentPath.isFlow()) return;
         // ExportNamedDeclaration gets properly processed by replaceMutationWithScope()
         if (path.node.type == 'ExportNamedDeclaration') return;
         // ExportSpecifier gets removed by unwrapOrRemoveExports()
@@ -328,7 +330,21 @@ function processProgram({ types: t }, programPath, programOpts) {
     };
 
     const bindingToScope = binding => {
-        if (!binding) return;
+        if (!binding || !binding.path) return;
+        if (binding.path.node.type == 'TypeAlias') return;
+        if (binding.path.node.type == 'ImportSpecifier') {
+            if (binding.path.node.importKind == 'type') return;
+        };
+        if (binding.path.node.type == 'OpaqueType') {
+            return;
+        };
+
+        const parentPath = binding.path.parentPath
+        if (parentPath) {
+            if (parentPath.node.type == 'ImportDeclaration') {
+                if (parentPath.node.importKind == 'type') return;
+            }
+        }
         binding.referencePaths.forEach(replaceReferenceWithScope);
         binding.constantViolations.forEach(replaceMutationWithScope);
         return declarationToScope(binding.path, binding.identifier);
@@ -426,6 +442,9 @@ function processProgram({ types: t }, programPath, programOpts) {
     };
 
     function test(path, statepath) {
+        if (!options.enable) {
+            return false;
+        }
         if (options.instrumentImports != 'query') return;
 
         const imports = path.node.body.filter(byType('ImportDeclaration'));
@@ -448,7 +467,7 @@ function processProgram({ types: t }, programPath, programOpts) {
 const maybeMonkeyPatchIsReferenced = t => {
     // astexplorer.net injects an infinite loop protection
     // which uses stale date value: https://github.com/ForbesLindesay/halting-problem/blob/master/lib/runtime.js#L3
-    if (isInASTExpoler()) return;
+    if (isInASTExploler()) return;
 
     const isFixed = () => {
         const node = t.identifier('a');

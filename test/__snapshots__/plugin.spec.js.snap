@@ -3,551 +3,590 @@
 exports[`example works 1`] = `
 "// api.js
 import httpGet from 'some-http-library';
-
 var _savedGlobal = global;
 export const introscope = function (_scope = {}) {
-    _scope.httpGet = httpGet;
-    const ensureOkStatus = _scope.ensureOkStatus = response => {
-        if (response.status !== 200) {
-            throw new Error('Non OK status');
-        }
-        return response;
-    };
+  _scope.httpGet = httpGet;
 
-    const getTodos = _scope.getTodos = (0, _scope.httpGet)('/todos').then((0, _scope.ensureOkStatus));
-    // @introscope \\"enable\\": true
+  const ensureOkStatus = _scope.ensureOkStatus = response => {
+    if (response.status !== 200) {
+      throw new Error('Non OK status');
+    }
 
-    return _scope;
+    return response;
+  };
+
+  const getTodos = _scope.getTodos = (0, _scope.httpGet)('/todos').then((0, _scope.ensureOkStatus)); // @introscope \\"enable\\": true
+
+  return _scope;
 };"
 `;
 
 exports[`introscope import should stay 1`] = `
-"
-import { scope } from 'introscope';
+"import { scope } from 'introscope';
 var _savedGlobal = global;
 export const introscope = function (_scope = {}) {
-    var constantA = _scope.constantA = _savedGlobal.constantA,
-        functionB = _scope.functionB = _savedGlobal.functionB;
-    _scope.scope = scope;
-    const introscope = _scope.introscope = (0, _scope.scope)({
-        constantA: _scope.constantA,
-        functionB: _scope.functionB
-        // other identifiers of your module
-    });
-    return _scope;
+  var constantA = _scope.constantA = _savedGlobal.constantA,
+      functionB = _scope.functionB = _savedGlobal.functionB;
+  _scope.scope = scope;
+  const introscope = _scope.introscope = (0, _scope.scope)({
+    constantA: _scope.constantA,
+    functionB: _scope.functionB // other identifiers of your module
+
+  });
+  return _scope;
 };"
 `;
 
-exports[`options disable 1`] = `
-"
-let shouldBeUntouched = true;"
-`;
+exports[`options disable 1`] = `"let shouldBeUntouched = true;"`;
 
 exports[`options disable 2`] = `
 "var _savedGlobal = global;
 export const introscope = function (_scope = {}) {
-            // inline \\"disable\\" is ignored, use \\"enable\\": false
-            // @introscope \\"disable\\": true
-            let shouldBeTransformed = _scope.shouldBeTransformed = true;
-            return _scope;
+  // inline \\"disable\\" is ignored, use \\"enable\\": false
+  // @introscope \\"disable\\": true
+  let shouldBeTransformed = _scope.shouldBeTransformed = true;
+  return _scope;
 };"
 `;
 
 exports[`options disable 3`] = `
 "var _savedGlobal = global;
 export const introscope = function (_scope = {}) {
-            let shouldBeTransformed = _scope.shouldBeTransformed = true;
-            return _scope;
+  let shouldBeTransformed = _scope.shouldBeTransformed = true;
+  return _scope;
 };"
 `;
 
-exports[`options does nothing if NODE_ENV != "test" 1`] = `
-"
-var shouldBeUntouched = true;"
-`;
+exports[`options does nothing if NODE_ENV != "test" 1`] = `"var shouldBeUntouched = true;"`;
 
-exports[`options does nothing if NODE_ENV != "test" 2`] = `
-"
-var shouldBeUntouched = true;"
-`;
+exports[`options does nothing if NODE_ENV != "test" 2`] = `"var shouldBeUntouched = true;"`;
 
 exports[`options does nothing if NODE_ENV != "test" 3`] = `
 "var _savedGlobal = global;
 export const introscope = function (_scope = {}) {
-            var shouldBeTransformed = _scope.shouldBeTransformed = true;
-            return _scope;
+  var shouldBeTransformed = _scope.shouldBeTransformed = true;
+  return _scope;
 };"
 `;
 
-exports[`options enable 1`] = `
-"
-let shouldBeUntouched = true;"
-`;
+exports[`options enable 1`] = `"let shouldBeUntouched = true;"`;
 
 exports[`options enable 2`] = `
-"
-// @introscope \\"enable\\": false
+"// @introscope \\"enable\\": false
 let shouldBeUntouched = true;"
 `;
 
 exports[`options enable 3`] = `
 "var _savedGlobal = global;
 export const introscope = function (_scope = {}) {
-            // @introscope \\"enable\\": true
-            let shouldBeTransformed = _scope.shouldBeTransformed = true;
-            return _scope;
+  // @introscope \\"enable\\": true
+  let shouldBeTransformed = _scope.shouldBeTransformed = true;
+  return _scope;
 };"
 `;
 
 exports[`options exportName uses default 1`] = `
-"
-// no exportName
+"// no exportName
 var _savedGlobal = global;
 export const introscope = function (_scope = {}) {
-                return _scope;
+  return _scope;
 };"
 `;
 
 exports[`options exportName works with magic comment 1`] = `
-"
-// @introscope \\"exportName\\": \\"microscope1\\"
+"// @introscope \\"exportName\\": \\"microscope1\\"
 var _savedGlobal = global;
 export const microscope1 = function (_scope = {}) {
-                return _scope;
+  return _scope;
 };"
 `;
 
 exports[`options exportName works with plugin options 1`] = `
-"
-// code
+"// code
 var _savedGlobal = global;
 export const microscope = function (_scope = {}) {
-                return _scope;
+  return _scope;
 };"
 `;
 
 exports[`options ignore adds 1`] = `
 "var _savedGlobal = global;
 export const introscope = function (_scope = {}) {
-    var deepGlobal = _scope.deepGlobal = _savedGlobal.deepGlobal;
-    _scope.throwError = throwError;
-
-    // @introscope \\"ignore\\": [\\"localIgnored\\", \\"deepGlobalIgnored\\"]
-    const x = _scope.x = { deep: { global: { variable: _scope.deepGlobal, variableIgnored: deepGlobalIgnored } } };
-    const localIgnored = 1;
-    localIgnored++;
-    function throwError(message) {
-        throw message;
+  var deepGlobal = _scope.deepGlobal = _savedGlobal.deepGlobal;
+  _scope.throwError = throwError;
+  // @introscope \\"ignore\\": [\\"localIgnored\\", \\"deepGlobalIgnored\\"]
+  const x = _scope.x = {
+    deep: {
+      global: {
+        variable: _scope.deepGlobal,
+        variableIgnored: deepGlobalIgnored
+      }
     }
-    return _scope;
+  };
+  const localIgnored = 1;
+  localIgnored++;
+
+  function throwError(message) {
+    throw message;
+  }
+
+  return _scope;
 };"
 `;
 
 exports[`options ignore id 1`] = `
 "var _savedGlobal = global;
 export const introscope = function (_scope = {}) {
-    // @introscope \\"ignore\\": []
-    [Error, Date];
-    return _scope;
+  // @introscope \\"ignore\\": []
+  [Error, Date];
+  return _scope;
 };"
 `;
 
 exports[`options ignore ignores builtins 1`] = `
 "var _savedGlobal = global;
 export const introscope = function (_scope = {}) {
-    [Infinity, NaN, undefined, null, eval, isFinite, isNaN, parseFloat, parseInt, decodeURI, decodeURIComponent, encodeURI, encodeURIComponent, escape, unescape, Object, Function, Boolean, Symbol, Error, EvalError, InternalError, RangeError, ReferenceError, SyntaxError, TypeError, URIError, Number, Math, Date, String, RegExp, Array, Int8Array, Uint8Array, Uint8ClampedArray, Int16Array, Uint16Array, Int32Array, Uint32Array, Float32Array, Float64Array, Map, Set, WeakMap, WeakSet, SIMD, ArrayBuffer, SharedArrayBuffer, Atomics, DataView, JSON, Promise, Generator, GeneratorFunction, AsyncFunction, Reflect, Proxy, Intl, WebAssembly, arguments, Buffer];
-    return _scope;
+  [Infinity, NaN, undefined, null, eval, isFinite, isNaN, parseFloat, parseInt, decodeURI, decodeURIComponent, encodeURI, encodeURIComponent, escape, unescape, Object, Function, Boolean, Symbol, Error, EvalError, InternalError, RangeError, ReferenceError, SyntaxError, TypeError, URIError, Number, Math, Date, String, RegExp, Array, Int8Array, Uint8Array, Uint8ClampedArray, Int16Array, Uint16Array, Int32Array, Uint32Array, Float32Array, Float64Array, Map, Set, WeakMap, WeakSet, SIMD, ArrayBuffer, SharedArrayBuffer, Atomics, DataView, JSON, Promise, Generator, GeneratorFunction, AsyncFunction, Reflect, Proxy, Intl, WebAssembly, arguments, Buffer];
+  return _scope;
 };"
 `;
 
 exports[`options ignore removes 1`] = `
 "var _savedGlobal = global;
 export const introscope = function (_scope = {}) {
-    var Error = _scope.Error = _savedGlobal.Error,
-        Date = _scope.Date = _savedGlobal.Date;
-
-    // @introscope \\"ignore\\": [\\"-Error\\", \\"-Date\\"]
-    [_scope.Error, _scope.Date];
-    return _scope;
+  var Error = _scope.Error = _savedGlobal.Error,
+      Date = _scope.Date = _savedGlobal.Date;
+  // @introscope \\"ignore\\": [\\"-Error\\", \\"-Date\\"]
+  [_scope.Error, _scope.Date];
+  return _scope;
 };"
 `;
 
 exports[`options removeImports 1`] = `
 "var _savedGlobal = global;
 export const introscope = function (_scope = {}) {
-            _scope.sholdBeRemoved = 'this should not';
-            return _scope;
+  _scope.sholdBeRemoved = 'this should not';
+  return _scope;
 };"
 `;
 
 exports[`options removeImports 2`] = `
 "var _savedGlobal = global;
 export const introscope = function (_scope = {}) {
-            _scope.sholdBeRemoved = 'this should not';
-            // @introscope \\"removeImports\\": true
+  _scope.sholdBeRemoved = 'this should not'; // @introscope \\"removeImports\\": true
 
-            return _scope;
+  return _scope;
 };"
 `;
 
 exports[`options removeImports 3`] = `
-"
-// @introscope \\"removeImports\\": false
+"// @introscope \\"removeImports\\": false
 import sholdNotBeRemoved from 'some-module3';
 var _savedGlobal = global;
 export const introscope = function (_scope = {}) {
-            _scope.sholdNotBeRemoved = sholdNotBeRemoved;
-            _scope.sholdNotBeRemoved++;
-            return _scope;
+  _scope.sholdNotBeRemoved = sholdNotBeRemoved;
+  _scope.sholdNotBeRemoved++;
+  return _scope;
 };"
 `;
 
 exports[`options removeImports 4`] = `
-"
-// @introscope \\"removeImports\\": true
+"// @introscope \\"removeImports\\": true
 import sholdNotBeRemoved from 'some-module4';
 var _savedGlobal = global;
 export const introscope = function (_scope = {}) {
-            _scope.sholdNotBeRemoved = sholdNotBeRemoved;
-            _scope.sholdNotBeRemoved++;
-            // last takes precedence
-            // @introscope \\"removeImports\\": false
+  _scope.sholdNotBeRemoved = sholdNotBeRemoved;
+  _scope.sholdNotBeRemoved++; // last takes precedence
+  // @introscope \\"removeImports\\": false
 
-            return _scope;
+  return _scope;
 };"
 `;
 
 exports[`options removeImports 5`] = `
-"
-import sholdNotBeRemoved from 'some-module5';
+"import sholdNotBeRemoved from 'some-module5';
 var _savedGlobal = global;
 export const introscope = function (_scope = {}) {
-            _scope.sholdNotBeRemoved = sholdNotBeRemoved;
-            _scope.sholdNotBeRemoved++;
-            return _scope;
+  _scope.sholdNotBeRemoved = sholdNotBeRemoved;
+  _scope.sholdNotBeRemoved++;
+  return _scope;
 };"
 `;
 
 exports[`plugin JSX components 1`] = `
 "var _savedGlobal = global;
 export const introscope = function (_scope = {}) {
-                var Foo = _scope.Foo = _savedGlobal.Foo;
-
-                let x = _scope.x = <_scope.Foo />;
-                return _scope;
+  var Foo = _scope.Foo = _savedGlobal.Foo;
+  let x = _scope.x = <_scope.Foo />;
+  return _scope;
 };"
 `;
 
 exports[`plugin JSX components 2`] = `
 "var _savedGlobal = global;
 export const introscope = function (_scope = {}) {
-                var Foo = _scope.Foo = _savedGlobal.Foo;
-
-                let x = _scope.x = <_scope.Foo.Bar />;
-                return _scope;
+  var Foo = _scope.Foo = _savedGlobal.Foo;
+  let x = _scope.x = <_scope.Foo.Bar />;
+  return _scope;
 };"
 `;
 
 exports[`plugin JSX components 3`] = `
 "var _savedGlobal = global;
 export const introscope = function (_scope = {}) {
-                const Baz = _scope.Baz = () => {};
-                let x = _scope.x = <_scope.Baz />;
-                return _scope;
+  const Baz = _scope.Baz = () => {};
+
+  let x = _scope.x = <_scope.Baz />;
+  return _scope;
 };"
 `;
 
 exports[`plugin JSX components 4`] = `
 "var _savedGlobal = global;
 export const introscope = function (_scope = {}) {
-                var Baz = _scope.Baz = _savedGlobal.Baz,
-                    foo = _scope.foo = _savedGlobal.foo;
-
-                let x = _scope.x = <_scope.Baz {..._scope.foo} />;
-                return _scope;
+  var Baz = _scope.Baz = _savedGlobal.Baz,
+      foo = _scope.foo = _savedGlobal.foo;
+  let x = _scope.x = <_scope.Baz {..._scope.foo} />;
+  return _scope;
 };"
 `;
 
 exports[`plugin JSX components 5`] = `
 "var _savedGlobal = global;
 export const introscope = function (_scope = {}) {
-                let x = _scope.x = <div />;
-                return _scope;
+  let x = _scope.x = <div />;
+  return _scope;
 };"
 `;
 
 exports[`plugin JSX components 6`] = `
 "var _savedGlobal = global;
 export const introscope = function (_scope = {}) {
-                var X = _scope.X = _savedGlobal.X,
-                    Y = _scope.Y = _savedGlobal.Y;
-
-                let x = _scope.x = <a><b><_scope.X><_scope.Y /></_scope.X></b></a>;
-                return _scope;
+  var X = _scope.X = _savedGlobal.X,
+      Y = _scope.Y = _savedGlobal.Y;
+  let x = _scope.x = <a><b><_scope.X><_scope.Y /></_scope.X></b></a>;
+  return _scope;
 };"
 `;
 
 exports[`plugin JSX tags 1`] = `
 "var _savedGlobal = global;
 export const introscope = function (_scope = {}) {
-                var Foo = _scope.Foo = _savedGlobal.Foo;
-
-                let x = _scope.x = <_scope.Foo />;
-                return _scope;
+  var Foo = _scope.Foo = _savedGlobal.Foo;
+  let x = _scope.x = <_scope.Foo />;
+  return _scope;
 };"
 `;
 
 exports[`plugin assignments 1`] = `
 "var _savedGlobal = global;
 export const introscope = function (_scope = {}) {
-            let x;
-            _scope.x++;
-            _scope.x = 1;
-            return _scope;
+  let x;
+  _scope.x++;
+  _scope.x = 1;
+  return _scope;
 };"
 `;
 
 exports[`plugin declarations 1`] = `
 "var _savedGlobal = global;
 export const introscope = function (_scope = {}) {
-            _scope.functionName = functionName;
+  _scope.functionName = functionName;
+  let noInitValue;
 
-            let noInitValue;
-            for (var forVar = _scope.forVar = 0; _scope.forVar != 0; _scope.forVar++);
-            let singleInit = _scope.singleInit = 1;
-            let doubleInit1 = _scope.doubleInit1 = 1,
-                doubleInit2 = _scope.doubleInit2 = 2;
-            var sameDoubleInit = 1,
-                sameDoubleInit = _scope.sameDoubleInit = 2;
+  for (var forVar = _scope.forVar = 0; _scope.forVar != 0; _scope.forVar++);
 
-            let { singleDestructing } = 1,
-                _temp = _scope.singleDestructing = singleDestructing;
-            var { objectDestruction1, objectDestruction2, nestedProperty: { objectNestedDestruction1 } } = { objectDestruction1: _scope.objectDestruction1, objectDestruction2: _scope.objectDestruction2, nestedProperty: { objectNestedDestruction1: _scope.objectNestedDestruction1 } },
-                _temp4 = _scope.objectNestedDestruction1 = objectNestedDestruction1,
-                _temp3 = _scope.objectDestruction2 = objectDestruction2,
-                _temp2 = _scope.objectDestruction1 = objectDestruction1,
-                let2 = _scope.let2 = _scope.objectDestruction1;
-            let { ...objectRest } = 1,
-                _temp5 = _scope.objectRest = objectRest;
-            var [arrayDestruction1, arrayDestruction2, [arrayNestedDestruction]] = [_scope.arrayDestruction1, _scope.arrayDestruction2, [_scope.arrayNestedDestruction]],
-                _temp8 = _scope.arrayNestedDestruction = arrayNestedDestruction,
-                _temp7 = _scope.arrayDestruction2 = arrayDestruction2,
-                _temp6 = _scope.arrayDestruction1 = arrayDestruction1;
-            let [...arrayRest] = 1,
-                _temp9 = _scope.arrayRest = arrayRest;
+  let singleInit = _scope.singleInit = 1;
+  let doubleInit1 = _scope.doubleInit1 = 1,
+      doubleInit2 = _scope.doubleInit2 = 2;
+  var sameDoubleInit = _scope.sameDoubleInit = 1,
+      sameDoubleInit = 2;
 
-            _scope.ClassName = class ClassName {};
-            ;new _scope.ClassName();
-            (0, _scope.functionName)();function functionName() {}
-            return _scope;
+  let {
+    singleDestructing
+  } = 1,
+      _temp = _scope.singleDestructing = singleDestructing;
+
+  var {
+    objectDestruction1,
+    objectDestruction2,
+    nestedProperty: {
+      objectNestedDestruction1
+    }
+  } = {
+    objectDestruction1: _scope.objectDestruction1,
+    objectDestruction2: _scope.objectDestruction2,
+    nestedProperty: {
+      objectNestedDestruction1: _scope.objectNestedDestruction1
+    }
+  },
+      _temp4 = _scope.objectNestedDestruction1 = objectNestedDestruction1,
+      _temp3 = _scope.objectDestruction2 = objectDestruction2,
+      _temp2 = _scope.objectDestruction1 = objectDestruction1,
+      let2 = _scope.let2 = _scope.objectDestruction1;
+
+  let { ...objectRest
+  } = 1,
+      _temp5 = _scope.objectRest = objectRest;
+
+  var [arrayDestruction1, arrayDestruction2, [arrayNestedDestruction]] = [_scope.arrayDestruction1, _scope.arrayDestruction2, [_scope.arrayNestedDestruction]],
+      _temp8 = _scope.arrayNestedDestruction = arrayNestedDestruction,
+      _temp7 = _scope.arrayDestruction2 = arrayDestruction2,
+      _temp6 = _scope.arrayDestruction1 = arrayDestruction1;
+
+  let [...arrayRest] = 1,
+      _temp9 = _scope.arrayRest = arrayRest;
+
+  _scope.ClassName = class ClassName {};
+  ;
+  new _scope.ClassName();
+  (0, _scope.functionName)();
+
+  function functionName() {}
+
+  return _scope;
 };"
 `;
 
 exports[`plugin export 1`] = `
 "var _savedGlobal = global;
 export const introscope = function (_scope = {}) {
-            let defaultExport, toBeNameExport1, toBeNameExport2;
-            _scope.default = _scope.defaultExport;
-            const namedSingleExport = _scope.namedSingleExport = 'namedSingleExportValue';
-            return _scope;
+  let defaultExport, toBeNameExport1, toBeNameExport2;
+  _scope.default = _scope.defaultExport;
+  const namedSingleExport = _scope.namedSingleExport = 'namedSingleExportValue';
+  return _scope;
+};"
+`;
+
+exports[`plugin flow breaks out of a global type cast node 1`] = `
+"var _savedGlobal = global;
+export const introscope = function (_scope = {}) {
+  var x = _scope.x = _savedGlobal.x,
+      GlobalType = _scope.GlobalType = _savedGlobal.GlobalType;
+  const y3 = _scope.y3 = _scope.x; // global type
+
+  return _scope;
 };"
 `;
 
 exports[`plugin flow breaks out of a type cast node 1`] = `
 "var _savedGlobal = global;
 export const introscope = function (_scope = {}) {
-            var x = _scope.x = _savedGlobal.x;
+  var x = _scope.x = _savedGlobal.x;
+  const y1 = _scope.y1 = _scope.x;
+  const y2 = _scope.y2 = _scope.x.abc; // built-in type
 
-            (0, _scope.x)();
-            return _scope;
+  return _scope;
+};"
+`;
+
+exports[`plugin flow does not break typeof 1`] = `
+"var _savedGlobal = global;
+export const introscope = function (_scope = {}) {
+  const localVar = _scope.localVar = 777;
+  let x;
+  return _scope;
+};"
+`;
+
+exports[`plugin flow ignores built-in utility types 1`] = `
+"var _savedGlobal = global;
+export const introscope = function (_scope = {}) {
+  var $Keys = _scope.$Keys = _savedGlobal.$Keys,
+      A = _scope.A = _savedGlobal.A;
+  _scope.foo = foo;
+
+  function foo(a) {}
+
+  return _scope;
 };"
 `;
 
 exports[`plugin flow ignores imported types 1`] = `
-"
-import 'y';
-var _savedGlobal = global;
+"var _savedGlobal = global;
 export const introscope = function (_scope = {}) {
-                return _scope;
+  return _scope;
 };"
 `;
 
 exports[`plugin flow ignores object types 1`] = `
 "var _savedGlobal = global;
 export const introscope = function (_scope = {}) {
-    return _scope;
+  return _scope;
 };"
 `;
 
 exports[`plugin flow ignores type aliases 1`] = `
 "var _savedGlobal = global;
 export const introscope = function (_scope = {}) {
-    _scope.typedFuntion = typedFuntion;
+  _scope.typedFuntion = typedFuntion;
 
-    function typedFuntion(x) {
-        let typedVar = 123;
-    }
-    return _scope;
+  function typedFuntion(x) {
+    let typedVar = 123;
+  }
+
+  return _scope;
 };"
 `;
 
 exports[`plugin flow understands opaque types 1`] = `
 "var _savedGlobal = global;
 export const introscope = function (_scope = {}) {
-                let foo = _scope.foo = \\"foo\\";
-                return _scope;
+  let foo = _scope.foo = \\"foo\\";
+  return _scope;
 };"
 `;
 
 exports[`plugin globals 1`] = `
 "var _savedGlobal = global;
 export const introscope = function (_scope = {}) {
-            var global2 = _scope.global2 = _savedGlobal.global2,
-                global1 = _scope.global1 = _savedGlobal.global1,
-                globalFunction = _scope.globalFunction = _savedGlobal.globalFunction,
-                nestedGlobal1 = _scope.nestedGlobal1 = _savedGlobal.nestedGlobal1;
-
-            let x = _scope.x = _scope.global1;
-            _scope.global2 = 1;
-            _scope.global2 = 1;
-            (0, _scope.globalFunction)();
-            !function () {
-                        return [_scope.nestedGlobal1, _scope.global2];
-            }();
-            return _scope;
+  var global2 = _scope.global2 = _savedGlobal.global2,
+      global1 = _scope.global1 = _savedGlobal.global1,
+      globalFunction = _scope.globalFunction = _savedGlobal.globalFunction,
+      nestedGlobal1 = _scope.nestedGlobal1 = _savedGlobal.nestedGlobal1;
+  let x = _scope.x = _scope.global1;
+  _scope.global2 = 1;
+  _scope.global2 = 1;
+  (0, _scope.globalFunction)();
+  !function () {
+    return [_scope.nestedGlobal1, _scope.global2];
+  }();
+  return _scope;
 };"
 `;
 
 exports[`plugin globals 2`] = `
 "var _savedGlobal = global;
 export const introscope = function (_scope = {}) {
-            var global = _scope.global = _savedGlobal.global;
-            _scope.getGlobal = getGlobal;
+  var global = _scope.global = _savedGlobal.global;
+  _scope.getGlobal = getGlobal;
 
-            function getGlobal() {
-                        return _scope.global;
-            };
-            // @introscope \\"ignore\\": [\\"-global\\"]
+  function getGlobal() {
+    return _scope.global;
+  }
 
-            return _scope;
+  ; // @introscope \\"ignore\\": [\\"-global\\"]
+
+  return _scope;
 };"
 `;
 
 exports[`plugin globals 3`] = `
 "var _savedGlobal = global;
 export const introscope = function (_scope = {}) {
-            _scope.getGlobal = getGlobal;
+  _scope.getGlobal = getGlobal;
 
-            function getGlobal() {
-                        return global;
-            };
-            return _scope;
+  function getGlobal() {
+    return global;
+  }
+
+  ;
+  return _scope;
 };"
 `;
 
 exports[`plugin import 1`] = `
-"
-import 'some-module1';
+"import 'some-module1';
 import defaultImport from 'some-module2';
 import { singleNamedImport } from 'some-module3';
 import { namedImport1, namedImport2 } from 'some-module4';
 import { originalImportName as localImportName } from 'some-module5';
 import * as namespaceImport from 'some-module6';
-
 var _savedGlobal = global;
 export const introscope = function (_scope = {}) {
-    _scope.defaultImport = defaultImport;
-    _scope.singleNamedImport = singleNamedImport;
-    _scope.namedImport1 = namedImport1;
-    _scope.namedImport2 = namedImport2;
-    _scope.localImportName = localImportName;
-    _scope.namespaceImport = namespaceImport;
-    [_scope.defaultImport, _scope.singleNamedImport, _scope.namedImport1, _scope.namedImport2, _scope.localImportName, _scope.namespaceImport];
-    return _scope;
+  _scope.defaultImport = defaultImport;
+  _scope.singleNamedImport = singleNamedImport;
+  _scope.namedImport1 = namedImport1;
+  _scope.namedImport2 = namedImport2;
+  _scope.localImportName = localImportName;
+  _scope.namespaceImport = namespaceImport;
+  [_scope.defaultImport, _scope.singleNamedImport, _scope.namedImport1, _scope.namedImport2, _scope.localImportName, _scope.namespaceImport];
+  return _scope;
 };"
 `;
 
 exports[`plugin import 2`] = `
 "var _savedGlobal = global;
 export const introscope = function (_scope = {}) {
-
-    [_scope.defaultImport, _scope.singleNamedImport, _scope.namedImport1, _scope.namedImport2, _scope.localImportName, _scope.namespaceImport];
-    return _scope;
+  [_scope.defaultImport, _scope.singleNamedImport, _scope.namedImport1, _scope.namedImport2, _scope.localImportName, _scope.namespaceImport];
+  return _scope;
 };"
 `;
 
 exports[`plugin references 1`] = `
 "var _savedGlobal = global;
 export const introscope = function (_scope = {}) {
-            let x;
-            (0, _scope.x)();
-            !function () {
-                        _scope.x++;
-            };
-            () => {
-                        return { x: _scope.x };
-            };
-            !{ x: _scope.x };
-            return _scope;
+  let x;
+  (0, _scope.x)();
+  !function () {
+    _scope.x++;
+  };
+
+  () => {
+    return {
+      x: _scope.x
+    };
+  };
+
+  !{
+    x: _scope.x
+  };
+  return _scope;
 };"
 `;
 
 exports[`plugin scopes 1`] = `
 "var _savedGlobal = global;
 export const introscope = function (_scope = {}) {
-            let x = _scope.x = true;
-            for (let x = 0; x != 0; x++);
-            {
-                        let x = false;
-            }
-            !function () {
-                        var x = false;
-            };
-            return _scope;
+  let x = _scope.x = true;
+
+  for (let x = 0; x != 0; x++);
+
+  {
+    let x = false;
+  }
+  !function () {
+    var x = false;
+  };
+  return _scope;
 };"
 `;
 
 exports[`test does normal transpilation if enabled in code 1`] = `
-"
-import { introscope } from 'directModule';
+"import { introscope } from 'directModule';
 import { introscope as renamed } from 'renamedModule';
-import { otherNamedImport } from 'otheModule';
-
-// @introscope \\"enable\\": true
+import { otherNamedImport } from 'otheModule'; // @introscope \\"enable\\": true
 
 var _savedGlobal = global;
 export const introscope = function (_scope = {}) {
-    _scope.introscope = introscope;
-    _scope.renamed = renamed;
-    _scope.otherNamedImport = otherNamedImport;
-    return _scope;
+  _scope.introscope = introscope;
+  _scope.renamed = renamed;
+  _scope.otherNamedImport = otherNamedImport;
+  return _scope;
 };"
 `;
 
 exports[`test does normal transpilation if enabled in opts 1`] = `
-"
-import { introscope } from 'directModule';
+"import { introscope } from 'directModule';
 import { introscope as renamed } from 'renamedModule';
 import { otherNamedImport } from 'otheModule';
 var _savedGlobal = global;
 export const introscope = function (_scope = {}) {
-    _scope.introscope = introscope;
-    _scope.renamed = renamed;
-    _scope.otherNamedImport = otherNamedImport;
-    return _scope;
+  _scope.introscope = introscope;
+  _scope.renamed = renamed;
+  _scope.otherNamedImport = otherNamedImport;
+  return _scope;
 };"
 `;
 
 exports[`test in test code does transpile only introscope import 1`] = `
-"
-import { introscope } from 'directModule?introscope';
-import { introscope as renamed } from 'renamedModule?introscope';
+"import { introscope } from 'directModule';
+import { introscope as renamed } from 'renamedModule';
 import { otherNamedImport } from 'otheModule';"
 `;
 
 exports[`test in test code does transpile only introscope import 2`] = `
-"
-import { introscope } from 'directModule';
+"import { introscope } from 'directModule';
 import { introscope as renamed } from 'renamedModule';
 import { otherNamedImport } from 'otheModule';"
 `;

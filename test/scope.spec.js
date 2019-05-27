@@ -1,4 +1,4 @@
-import { transform } from 'babel-core';
+import { transform } from '@babel/core';
 import plugin from '../babel-plugin';
 
 // bring back normal node global
@@ -8,8 +8,8 @@ const applyPlugin = (code, opts = {}) =>
     transform(code, {
         sourceType: 'module',
         plugins: [
-            'syntax-flow',
-            'syntax-object-rest-spread',
+            '@babel/plugin-syntax-flow',
+            '@babel/plugin-syntax-object-rest-spread',
             [plugin, { enable: true, es6export: false, ...opts }],
         ],
     }).code;
