@@ -358,12 +358,23 @@ export const introscope = function (_scope = {}) {
 };"
 `;
 
+exports[`plugin flow breaks out of a global type cast node 1`] = `
+"var _savedGlobal = global;
+export const introscope = function (_scope = {}) {
+  var x = _scope.x = _savedGlobal.x,
+      GlobalType = _scope.GlobalType = _savedGlobal.GlobalType;
+  const y3 = _scope.y3 = _scope.x; // global type
+
+  return _scope;
+};"
+`;
+
 exports[`plugin flow breaks out of a type cast node 1`] = `
 "var _savedGlobal = global;
 export const introscope = function (_scope = {}) {
   var x = _scope.x = _savedGlobal.x;
   const y1 = _scope.y1 = _scope.x;
-  const y2 = _scope.y2 = _scope.x; // built-in type
+  const y2 = _scope.y2 = _scope.x.abc; // built-in type
 
   return _scope;
 };"

@@ -201,7 +201,12 @@ describe('plugin', () => {
             shootFlow(`
             type LocalType = string;
             const y1 = (x: LocalType);
-            const y2 = (x: number); // built-in type
+            const y2 = (x.abc: number); // built-in type
+            `);
+        });
+        it('breaks out of a global type cast node', () => {
+            shootFlow(`
+            const y3 = (x: GlobalType); // global type
             `);
         });
     });

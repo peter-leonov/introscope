@@ -294,6 +294,8 @@ function processProgram({ types: t }, programPath, programOpts) {
     const replaceReferenceWithScope = path => {
         // do not touch flow types at all
         if (path.isFlow()) return;
+        if (path.container.type == 'GenericTypeAnnotation') return;
+        // if (path.parentPath.isFlow()) return;
         // ExportNamedDeclaration gets properly processed by replaceMutationWithScope()
         if (path.node.type == 'ExportNamedDeclaration') return;
         // ExportSpecifier gets removed by unwrapOrRemoveExports()
