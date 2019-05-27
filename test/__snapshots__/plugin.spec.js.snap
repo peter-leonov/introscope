@@ -380,6 +380,28 @@ export const introscope = function (_scope = {}) {
 };"
 `;
 
+exports[`plugin flow does not break typeof 1`] = `
+"var _savedGlobal = global;
+export const introscope = function (_scope = {}) {
+  const localVar = _scope.localVar = 777;
+  let x;
+  return _scope;
+};"
+`;
+
+exports[`plugin flow ignores built-in utility types 1`] = `
+"var _savedGlobal = global;
+export const introscope = function (_scope = {}) {
+  var $Keys = _scope.$Keys = _savedGlobal.$Keys,
+      A = _scope.A = _savedGlobal.A;
+  _scope.foo = foo;
+
+  function foo(a) {}
+
+  return _scope;
+};"
+`;
+
 exports[`plugin flow ignores imported types 1`] = `
 "var _savedGlobal = global;
 export const introscope = function (_scope = {}) {

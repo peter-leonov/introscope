@@ -209,6 +209,19 @@ describe('plugin', () => {
             const y3 = (x: GlobalType); // global type
             `);
         });
+
+        it('does not break typeof', () => {
+            shootFlow(`
+            const localVar = 777;
+            let x: typeof localVar;
+            `);
+        });
+
+        it('ignores built-in utility types', () => {
+            shootFlow(`
+            function foo(a: $Keys<A>) {}
+            `);
+        });
     });
 });
 
