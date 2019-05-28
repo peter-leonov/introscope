@@ -437,6 +437,28 @@ export const introscope = function (_scope = {}) {
 };"
 `;
 
+exports[`plugin globals does not break locals with same name as globals 1`] = `
+"var _savedGlobal = global;
+export const introscope = function (_scope = {}) {
+  var someGlobal = _scope.someGlobal = _savedGlobal.someGlobal;
+  _scope.aFunctionWaskingGlobal = aFunctionWaskingGlobal;
+
+  _scope.someGlobal.x1();
+
+  function aFunctionWaskingGlobal() {
+    let someGlobal = 123;
+    someGlobal.y();
+  }
+
+  ;
+
+  _scope.someGlobal.x2();
+
+  _scope.someGlobal = 123;
+  return _scope;
+};"
+`;
+
 exports[`plugin globals supports global functions 1`] = `
 "var _savedGlobal = global;
 export const introscope = function (_scope = {}) {

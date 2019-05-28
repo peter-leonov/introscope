@@ -133,6 +133,18 @@ describe('plugin', () => {
                 function getGlobal () { return global };
             `);
         });
+
+        it('does not break locals with same name as globals', () => {
+            shoot(`
+            someGlobal.x1()
+            function aFunctionWaskingGlobal () {
+                let someGlobal = 123
+                someGlobal.y()
+            };
+            someGlobal.x2()
+            someGlobal = 123
+            `);
+        });
     });
 
     it('export', () => {
