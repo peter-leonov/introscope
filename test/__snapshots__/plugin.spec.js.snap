@@ -597,6 +597,76 @@ var introscope = function introscope() {
 exports.introscope = introscope;"
 `;
 
+exports[`plugin typescript does not break typeof 1`] = `
+"\\"use strict\\";
+
+Object.defineProperty(exports, \\"__esModule\\", {
+  value: true
+});
+exports.introscope = void 0;
+var _savedGlobal = global;
+
+var introscope = function introscope() {
+  var _scope = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+  var typePropertyA = _scope.typePropertyA = _savedGlobal.typePropertyA,
+      typePropertyB = _scope.typePropertyB = _savedGlobal.typePropertyB,
+      typePropertyC = _scope.typePropertyC = _savedGlobal.typePropertyC;
+  var localVar = _scope.localVar = 777;
+  var x;
+  var y;
+  var z;
+  return _scope;
+};
+
+exports.introscope = introscope;"
+`;
+
+exports[`plugin typescript does not mask local var with a type property 1`] = `
+"\\"use strict\\";
+
+Object.defineProperty(exports, \\"__esModule\\", {
+  value: true
+});
+exports.introscope = void 0;
+var _savedGlobal = global;
+
+var introscope = function introscope() {
+  var _scope = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+  var localVar = _scope.localVar = _savedGlobal.localVar;
+  var typePropertyA = _scope.typePropertyA = 777;
+  var x;
+  return _scope;
+};
+
+exports.introscope = introscope;"
+`;
+
+exports[`plugin typescript ignores built-in utility types 1`] = `
+"\\"use strict\\";
+
+Object.defineProperty(exports, \\"__esModule\\", {
+  value: true
+});
+exports.introscope = void 0;
+var _savedGlobal = global;
+
+var introscope = function introscope() {
+  var _scope = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+  var Readonly = _scope.Readonly = _savedGlobal.Readonly,
+      A = _scope.A = _savedGlobal.A;
+  _scope.foo = foo;
+
+  function foo(a) {}
+
+  return _scope;
+};
+
+exports.introscope = introscope;"
+`;
+
 exports[`plugin typescript ignores imported types 1`] = `
 "\\"use strict\\";
 

@@ -288,6 +288,15 @@ describe('plugin', () => {
             shootTypeScript(`
             const localVar = 777;
             let x: typeof localVar;
+            let y: typeof localVar.typePropertyA;
+            let z: typeof localVar.typePropertyB.typePropertyC;
+            `);
+        });
+
+        it('does not mask local var with a type property', () => {
+            shootTypeScript(`
+            const typePropertyA = 777;
+            let x: typeof localVar.typePropertyA;
             `);
         });
 

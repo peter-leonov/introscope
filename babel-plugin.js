@@ -293,7 +293,7 @@ function processProgram({ types: t }, programPath, programOpts) {
 
     const replaceReferenceWithScope = path => {
         // ignore references from TypeScript type sub-language
-        if (path.parent.type == 'TSTypeAliasDeclaration') return;
+        if (path.parent.type.startsWith('TS')) return;
         // do not touch flow types at all
         if (path.isFlow()) return;
         if (path.container.type == 'GenericTypeAnnotation') return;
