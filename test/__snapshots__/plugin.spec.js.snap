@@ -552,6 +552,50 @@ export const introscope = function (_scope = {}) {
 };"
 `;
 
+exports[`plugin typescript ignores imported types 1`] = `
+"\\"use strict\\";
+
+Object.defineProperty(exports, \\"__esModule\\", {
+  value: true
+});
+exports.introscope = void 0;
+
+var _y = require(\\"y\\");
+
+var _savedGlobal = global;
+
+var introscope = function introscope() {
+  var _scope = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+  var LocalTypeShouldBeIgnored = _scope.LocalTypeShouldBeIgnored = _savedGlobal.LocalTypeShouldBeIgnored;
+  _scope.ImportedTypeShouldBeIgnored = _y.ImportedTypeShouldBeIgnored;
+  var checkNotEmpty = _scope.checkNotEmpty = 1;
+  return _scope;
+};
+
+exports.introscope = introscope;"
+`;
+
+exports[`plugin typescript ignores type declaration 1`] = `
+"\\"use strict\\";
+
+Object.defineProperty(exports, \\"__esModule\\", {
+  value: true
+});
+exports.introscope = void 0;
+var _savedGlobal = global;
+
+var introscope = function introscope() {
+  var _scope = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+  var LocalTypeShouldBeIgnored = _scope.LocalTypeShouldBeIgnored = _savedGlobal.LocalTypeShouldBeIgnored;
+  var checkNotEmpty = _scope.checkNotEmpty = 1;
+  return _scope;
+};
+
+exports.introscope = introscope;"
+`;
+
 exports[`test does normal transpilation if enabled in code 1`] = `
 "import { introscope } from 'directModule';
 import { introscope as renamed } from 'renamedModule';

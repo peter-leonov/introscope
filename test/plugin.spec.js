@@ -236,11 +236,19 @@ describe('plugin', () => {
     });
 
     describe('typescript', () => {
+        it('ignores type declaration', () => {
+            shootTypeScript(`
+                type LocalTypeShouldBeIgnored = string;
+                const checkNotEmpty = 1
+                `);
+        });
+
         it('ignores imported types', () => {
             shootTypeScript(`
                 import { ImportedTypeShouldBeIgnored } from 'y'
                 type LocalTypeShouldBeIgnored = ImportedTypeShouldBeIgnored;
-            `);
+                const checkNotEmpty = 1
+                `);
         });
 
         it('ignores type aliases', () => {
