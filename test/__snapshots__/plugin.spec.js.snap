@@ -552,6 +552,51 @@ export const introscope = function (_scope = {}) {
 };"
 `;
 
+exports[`plugin typescript breaks out of a global type cast node 1`] = `
+"\\"use strict\\";
+
+Object.defineProperty(exports, \\"__esModule\\", {
+  value: true
+});
+exports.introscope = void 0;
+var _savedGlobal = global;
+
+var introscope = function introscope() {
+  var _scope = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+  var x = _scope.x = _savedGlobal.x,
+      GlobalType = _scope.GlobalType = _savedGlobal.GlobalType;
+  var y3 = _scope.y3 = _scope.x; // global type
+
+  return _scope;
+};
+
+exports.introscope = introscope;"
+`;
+
+exports[`plugin typescript breaks out of a type cast node 1`] = `
+"\\"use strict\\";
+
+Object.defineProperty(exports, \\"__esModule\\", {
+  value: true
+});
+exports.introscope = void 0;
+var _savedGlobal = global;
+
+var introscope = function introscope() {
+  var _scope = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+  var LocalType = _scope.LocalType = _savedGlobal.LocalType,
+      x = _scope.x = _savedGlobal.x;
+  var y1 = _scope.y1 = _scope.x;
+  var y2 = _scope.y2 = _scope.x.abc; // built-in type
+
+  return _scope;
+};
+
+exports.introscope = introscope;"
+`;
+
 exports[`plugin typescript ignores imported types 1`] = `
 "\\"use strict\\";
 
@@ -569,6 +614,53 @@ var introscope = function introscope() {
 
   var LocalTypeShouldBeIgnored = _scope.LocalTypeShouldBeIgnored = _savedGlobal.LocalTypeShouldBeIgnored;
   _scope.ImportedTypeShouldBeIgnored = _y.ImportedTypeShouldBeIgnored;
+  var checkNotEmpty = _scope.checkNotEmpty = 1;
+  return _scope;
+};
+
+exports.introscope = introscope;"
+`;
+
+exports[`plugin typescript ignores object types 1`] = `
+"\\"use strict\\";
+
+Object.defineProperty(exports, \\"__esModule\\", {
+  value: true
+});
+exports.introscope = void 0;
+var _savedGlobal = global;
+
+var introscope = function introscope() {
+  var _scope = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+  var A = _scope.A = _savedGlobal.A;
+  var checkNotEmpty = _scope.checkNotEmpty = 1;
+  return _scope;
+};
+
+exports.introscope = introscope;"
+`;
+
+exports[`plugin typescript ignores type aliases 1`] = `
+"\\"use strict\\";
+
+Object.defineProperty(exports, \\"__esModule\\", {
+  value: true
+});
+exports.introscope = void 0;
+var _savedGlobal = global;
+
+var introscope = function introscope() {
+  var _scope = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+  var SomeType = _scope.SomeType = _savedGlobal.SomeType,
+      SomeOtherType = _scope.SomeOtherType = _savedGlobal.SomeOtherType;
+  _scope.typedFuntion = typedFuntion;
+
+  function typedFuntion(x) {
+    var typedVar = 123;
+  }
+
   var checkNotEmpty = _scope.checkNotEmpty = 1;
   return _scope;
 };

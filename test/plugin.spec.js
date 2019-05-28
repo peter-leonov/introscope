@@ -258,6 +258,7 @@ describe('plugin', () => {
                 function typedFuntion(x: SomeType): SomeOtherType {
                     let typedVar: SomeType | SomeOtherType = 123
                 }
+                const checkNotEmpty = 1
             `);
         });
 
@@ -266,6 +267,7 @@ describe('plugin', () => {
                 type A = {
                     flowObjectProperty: number,
                 };
+                const checkNotEmpty = 1
             `);
         });
 
