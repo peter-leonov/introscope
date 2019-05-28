@@ -110,23 +110,29 @@ describe('plugin', () => {
         `);
     });
 
-    it('globals', () => {
-        shoot(`
-            let x = global1;
-            global2 = 1;
-            global2 = 1;
-            globalFunction();
-            !function(){ return [nestedGlobal1, global2] }();
-        `);
+    describe('globals', () => {
+        it('supports global functions', () => {
+            shoot(`
+                let x = global1;
+                global2 = 1;
+                global2 = 1;
+                globalFunction();
+                !function(){ return [nestedGlobal1, global2] }();
+            `);
+        });
 
-        shoot(`
-            function getGlobal () { return global };
-            // @introscope "ignore": ["-global"]
-        `);
+        it('supports ignore for globals', () => {
+            shoot(`
+                function getGlobal () { return global };
+                // @introscope "ignore": ["-global"]
+            `);
+        });
 
-        shoot(`
-            function getGlobal () { return global };
-        `);
+        it('supports nested globals', () => {
+            shoot(`
+                function getGlobal () { return global };
+            `);
+        });
     });
 
     it('export', () => {
