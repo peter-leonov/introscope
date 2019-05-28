@@ -292,9 +292,18 @@ function processProgram({ types: t }, programPath, programOpts) {
     };
 
     const replaceReferenceWithScope = path => {
-        // do not touch flow types at all
         if (path.isFlow()) return;
+        if (path.parent.type == 'TSAsExpression') {
+            // do not ignore the expression leaf of the `as`:
+            //  (this_should_be_transformed as this_should_not)
+            if (path.parent.expression != path.node) return;
+        } else if (path.parent.type.startsWith('TS')) {
+            // ignore references from TypeScript type sub-language
+            return;
+        }
+        // do not touch flow types at all
         if (path.container.type == 'GenericTypeAnnotation') return;
+        if (path.container.type == 'TSTypeReference') return;
         // if (path.parentPath.isFlow()) return;
         // ExportNamedDeclaration gets properly processed by replaceMutationWithScope()
         if (path.node.type == 'ExportNamedDeclaration') return;
@@ -334,12 +343,12 @@ function processProgram({ types: t }, programPath, programOpts) {
         if (binding.path.node.type == 'TypeAlias') return;
         if (binding.path.node.type == 'ImportSpecifier') {
             if (binding.path.node.importKind == 'type') return;
-        };
+        }
         if (binding.path.node.type == 'OpaqueType') {
             return;
-        };
+        }
 
-        const parentPath = binding.path.parentPath
+        const parentPath = binding.path.parentPath;
         if (parentPath) {
             if (parentPath.node.type == 'ImportDeclaration') {
                 if (parentPath.node.importKind == 'type') return;
