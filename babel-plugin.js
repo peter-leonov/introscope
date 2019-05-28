@@ -292,10 +292,16 @@ function processProgram({ types: t }, programPath, programOpts) {
     };
 
     const replaceReferenceWithScope = path => {
-        // ignore references from TypeScript type sub-language
-        if (path.parent.type.startsWith('TS')) return;
-        // do not touch flow types at all
         if (path.isFlow()) return;
+        if (path.parent.type == 'TSAsExpression') {
+            // do not ignore the expression leaf of the `as`:
+            //  (this_should_be_transformed as this_should_not)
+            if (path.parent.expression != path.node) return;
+        } else if (path.parent.type.startsWith('TS')) {
+            // ignore references from TypeScript type sub-language
+            return;
+        }
+        // do not touch flow types at all
         if (path.container.type == 'GenericTypeAnnotation') return;
         if (path.container.type == 'TSTypeReference') return;
         // if (path.parentPath.isFlow()) return;
