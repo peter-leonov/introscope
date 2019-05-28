@@ -29,6 +29,17 @@ const shootFlow = (code, opts = {}) =>
         }).code,
     ).toMatchSnapshot();
 
+const shootTypeScript = (code, opts = {}) =>
+    expect(
+        transform(code, {
+            // passPerPreset: true,
+            sourceType: 'module',
+            presets: ['@babel/typescript'],
+            plugins: [[plugin, { enable: true, ...opts }]],
+            filename: './test.ts',
+        }).code,
+    ).toMatchSnapshot();
+
 describe('plugin', () => {
     it('import', () => {
         const code = `
@@ -220,6 +231,59 @@ describe('plugin', () => {
         it('ignores built-in utility types', () => {
             shootFlow(`
             function foo(a: $Keys<A>) {}
+            `);
+        });
+    });
+
+    describe('typescript', () => {
+        it('ignores imported types', () => {
+            shootTypeScript(`
+                import { ImportedTypeShouldBeIgnored } from 'y'
+                type LocalTypeShouldBeIgnored = ImportedTypeShouldBeIgnored;
+            `);
+        });
+
+        it('ignores type aliases', () => {
+            shootTypeScript(`
+                type SomeType = number;
+                type SomeOtherType = SomeType;
+                function typedFuntion(x: SomeType): SomeOtherType {
+                    let typedVar: SomeType | SomeOtherType = 123
+                }
+            `);
+        });
+
+        it('ignores object types', () => {
+            shootTypeScript(`
+                type A = {
+                    flowObjectProperty: number,
+                };
+            `);
+        });
+
+        it('breaks out of a type cast node', () => {
+            shootTypeScript(`
+            type LocalType = string;
+            const y1 = x as LocalType;
+            const y2 = x.abc as number; // built-in type
+            `);
+        });
+        it('breaks out of a global type cast node', () => {
+            shootTypeScript(`
+            const y3 = x as GlobalType; // global type
+            `);
+        });
+
+        it('does not break typeof', () => {
+            shootTypeScript(`
+            const localVar = 777;
+            let x: typeof localVar;
+            `);
+        });
+
+        it('ignores built-in utility types', () => {
+            shootTypeScript(`
+            function foo(a: Readonly<A>) {}
             `);
         });
     });
