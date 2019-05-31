@@ -88,7 +88,15 @@ const STANDARD_BUILTINS = [
     '_asyncToGenerator',
 ];
 
+let hackyCount = undefined
+
 const mergeIntoOptions = (options, opts) => {
+    if (opts.hackyCount !== undefined) {
+        if (hackyCount === undefined) {
+            hackyCount = opts.hackyCount
+        }
+    }
+
     opts = Object.assign({}, opts);
     const ignore = opts.ignore;
     if (ignore) {
@@ -103,6 +111,9 @@ const mergeIntoOptions = (options, opts) => {
     }
     Object.assign(options, opts);
 };
+
+let howDeepIsYourLove = 0
+let howDeepYourLoveMustBe = undefined
 
 function processProgram({ types: t }, programPath, programOpts) {
     const options = {
@@ -395,6 +406,11 @@ function processProgram({ types: t }, programPath, programOpts) {
     const program = path => {
         parseConfig(path);
         if (!options.enable) {
+            return false;
+        }
+
+        howDeepIsYourLove++
+        if (howDeepIsYourLove > hackyCount) {
             return false;
         }
 
