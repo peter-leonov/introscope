@@ -113,7 +113,6 @@ const mergeIntoOptions = (options, opts) => {
 };
 
 let howDeepIsYourLove = 0
-let howDeepYourLoveMustBe = undefined
 
 function processProgram({ types: t }, programPath, programOpts) {
     const options = {
