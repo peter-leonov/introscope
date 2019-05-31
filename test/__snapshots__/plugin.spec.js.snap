@@ -437,7 +437,29 @@ export const introscope = function (_scope = {}) {
 };"
 `;
 
-exports[`plugin globals 1`] = `
+exports[`plugin globals does not break locals with same name as globals 1`] = `
+"var _savedGlobal = global;
+export const introscope = function (_scope = {}) {
+  var someGlobal = _scope.someGlobal = _savedGlobal.someGlobal;
+  _scope.aFunctionWaskingGlobal = aFunctionWaskingGlobal;
+
+  _scope.someGlobal.x1();
+
+  function aFunctionWaskingGlobal() {
+    let someGlobal = 123;
+    someGlobal.y();
+  }
+
+  ;
+
+  _scope.someGlobal.x2();
+
+  _scope.someGlobal = 123;
+  return _scope;
+};"
+`;
+
+exports[`plugin globals supports global functions 1`] = `
 "var _savedGlobal = global;
 export const introscope = function (_scope = {}) {
   var global2 = _scope.global2 = _savedGlobal.global2,
@@ -455,7 +477,7 @@ export const introscope = function (_scope = {}) {
 };"
 `;
 
-exports[`plugin globals 2`] = `
+exports[`plugin globals supports ignore for globals 1`] = `
 "var _savedGlobal = global;
 export const introscope = function (_scope = {}) {
   var global = _scope.global = _savedGlobal.global;
@@ -471,7 +493,7 @@ export const introscope = function (_scope = {}) {
 };"
 `;
 
-exports[`plugin globals 3`] = `
+exports[`plugin globals supports nested globals 1`] = `
 "var _savedGlobal = global;
 export const introscope = function (_scope = {}) {
   _scope.getGlobal = getGlobal;

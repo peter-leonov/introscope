@@ -1,3 +1,6 @@
+// think of rewriting all this mess with just reusing rewriteModuleStatementsAndPrepareHeader from:
+// https://github.com/babel/babel/blob/master/packages/babel-plugin-transform-modules-commonjs/src/index.js#L147
+
 const toPairs = obj => {
     const pairs = [];
     for (const key in obj) {
@@ -435,10 +438,13 @@ function processProgram({ types: t }, programPath, programOpts) {
         );
 
         // globals become locals after wrapInFunction()
-        // TODO: make it more explicit in the code
+        let once = false;
         const globalBindings = {};
         path.traverse({
             Scope(path, state) {
+                // process scope of only the introscope() function
+                if (once) return;
+                once = true;
                 programGlobalNames.forEach(globalName => {
                     const binding = path.scope.getBinding(globalName);
                     globalBindings[globalName] = binding;
