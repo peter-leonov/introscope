@@ -88,7 +88,15 @@ const STANDARD_BUILTINS = [
     '_asyncToGenerator',
 ];
 
+let hackyCount = undefined
+
 const mergeIntoOptions = (options, opts) => {
+    if (opts.hackyCount !== undefined) {
+        if (hackyCount === undefined) {
+            hackyCount = opts.hackyCount
+        }
+    }
+
     opts = Object.assign({}, opts);
     const ignore = opts.ignore;
     if (ignore) {
@@ -103,6 +111,8 @@ const mergeIntoOptions = (options, opts) => {
     }
     Object.assign(options, opts);
 };
+
+let howDeepIsYourLove = 0
 
 function processProgram({ types: t }, programPath, programOpts) {
     const options = {
@@ -398,6 +408,11 @@ function processProgram({ types: t }, programPath, programOpts) {
             return false;
         }
 
+        howDeepIsYourLove++
+        if (howDeepIsYourLove > hackyCount) {
+            return false;
+        }
+
         const globalIds = toPairs(path.scope.globals)
             .filter(([name, _]) => !options.ignore.has(name))
             .map(([_, identifier]) => identifier);
@@ -457,9 +472,6 @@ function processProgram({ types: t }, programPath, programOpts) {
     };
 
     function test(path, statepath) {
-        if (!options.enable) {
-            return false;
-        }
         if (options.instrumentImports != 'query') return;
 
         const imports = path.node.body.filter(byType('ImportDeclaration'));
