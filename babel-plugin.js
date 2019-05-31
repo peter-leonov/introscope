@@ -472,9 +472,6 @@ function processProgram({ types: t }, programPath, programOpts) {
     };
 
     function test(path, statepath) {
-        if (!options.enable) {
-            return false;
-        }
         if (options.instrumentImports != 'query') return;
 
         const imports = path.node.body.filter(byType('ImportDeclaration'));
